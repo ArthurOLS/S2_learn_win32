@@ -12,3 +12,4 @@ SandboxUI project is used to test all the widges I might use.
 1. Add click-and-lock type button
 1. Add continuous-press type button
 1. Add radio group type, to stand for a switch in real world
+2. Use clang-format
