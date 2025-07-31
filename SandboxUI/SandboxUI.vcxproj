@@ -127,12 +127,16 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="00-app\app.h" />
+    <ClInclude Include="01-ui\ui.h" />
     <ClInclude Include="framework.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="SandboxUI.h" />
     <ClInclude Include="targetver.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="00-app\app.cpp" />
+    <ClCompile Include="01-ui\ui.cpp" />
     <ClCompile Include="SandboxUI.cpp" />
   </ItemGroup>
   <ItemGroup>

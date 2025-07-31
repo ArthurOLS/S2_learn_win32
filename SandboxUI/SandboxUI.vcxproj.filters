@@ -13,6 +13,12 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="00-app">
+      <UniqueIdentifier>{cf8dfc77-fbf8-41ab-98bf-1a7ac6fd4a81}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01-ui">
+      <UniqueIdentifier>{d7765163-2f76-4f9d-b91b-b42f3d1ebcec}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -27,10 +33,22 @@
     <ClInclude Include="SandboxUI.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="00-app\app.h">
+      <Filter>00-app</Filter>
+    </ClInclude>
+    <ClInclude Include="01-ui\ui.h">
+      <Filter>01-ui</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="SandboxUI.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="00-app\app.cpp">
+      <Filter>00-app</Filter>
+    </ClCompile>
+    <ClCompile Include="01-ui\ui.cpp">
+      <Filter>01-ui</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
