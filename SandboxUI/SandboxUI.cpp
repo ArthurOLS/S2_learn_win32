@@ -3,6 +3,12 @@
 
 #include "framework.h"
 #include "SandboxUI.h"
+/*******************************************************************************
+************************************ Includes **********************************
+*******************************************************************************/
+#include "01-ui/ui.h"
+
+
 
 #define MAX_LOADSTRING 100
 
@@ -149,6 +155,10 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
             // TODO: Add any drawing code that uses hdc here...
             EndPaint(hWnd, &ps);
         }
+        break;
+
+    case WM_CREATE: //************
+        ui1_init_widgets(hWnd);
         break;
     case WM_DESTROY:
         PostQuitMessage(0);

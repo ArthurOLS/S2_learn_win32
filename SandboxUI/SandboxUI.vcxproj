@@ -128,6 +128,8 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="00-app\app.h" />
+    <ClInclude Include="00-app\top_config.h" />
+    <ClInclude Include="01-ui\button_id.h" />
     <ClInclude Include="01-ui\ui.h" />
     <ClInclude Include="framework.h" />
     <ClInclude Include="Resource.h" />

@@ -39,6 +39,12 @@
     <ClInclude Include="01-ui\ui.h">
       <Filter>01-ui</Filter>
     </ClInclude>
+    <ClInclude Include="01-ui\button_id.h">
+      <Filter>01-ui</Filter>
+    </ClInclude>
+    <ClInclude Include="00-app\top_config.h">
+      <Filter>00-app</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="SandboxUI.cpp">
