@@ -9,7 +9,7 @@ SandboxUI project is used to test all the widges I might use.
 2. [Organize the directory tree | code snippets](11-documents/02-organized-directory-tree/organize.md)
 3. [Change 3 icons](./11-documents/01-change-icon-in-3-places/change-ico.md)
 4. [Add a label](./11-documents/03-add-a-label/add-label.md)
-5. [Change default font]
+5. [Change default font](./11-documents/04-change-default-font/font.md)
 6. Add click-type button
 7. Use button as a led
 8. Add button array (a group of buttons)

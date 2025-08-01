@@ -19,3 +19,6 @@ Key takeaway:
 
 ![2](image-3.png)
 
+The common font size is 9 and 12pt. 
+
+![3](image-4.png)
