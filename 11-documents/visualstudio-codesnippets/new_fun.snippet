@@ -1,0 +1,34 @@
+<CodeSnippets xmlns="http://schemas.microsoft.com/VisualStudio/2005/CodeSnippet">
+  <CodeSnippet Format="1.0.0">
+    <Header>
+      <Title>New A Function</Title>
+      <Shortcut>newfun</Shortcut>
+      <Description>Insert function with Doxygen-style comment</Description>
+      <Author>Arthur</Author>
+      <SnippetTypes>
+        <SnippetType>Expansion</SnippetType>
+      </SnippetTypes>
+    </Header>
+    <Snippet>
+      <Declarations>
+        <Literal>
+          <ID>funcName</ID>
+          <Default>no_name</Default>
+        </Literal>
+      </Declarations>
+      <Code Language="CPP">
+        <![CDATA[
+/*******************************************************************************
+* @brief  Brief_description_of_the_function
+* @param  xxxx
+* @param  xxxx
+* @return xxxx
+*******************************************************************************/
+void $funcName$(int) {
+    $end$
+}
+        ]]>
+      </Code>
+    </Snippet>
+  </CodeSnippet>
+</CodeSnippets>

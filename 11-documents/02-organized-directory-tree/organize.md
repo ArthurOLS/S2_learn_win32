@@ -40,6 +40,7 @@ Then when you type 'cfile' plus a 'tab' key, the content is copied to the file a
 	// }
     // https://code.visualstudio.com/docs/editing/userdefinedsnippets 
 
+
 "new a .c file": {
     "prefix": "cfile",
     "body": [
