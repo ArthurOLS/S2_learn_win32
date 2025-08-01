@@ -9,10 +9,11 @@ SandboxUI project is used to test all the widges I might use.
 2. [Organize the directory tree | code snippets](11-documents/02-organized-directory-tree/organize.md)
 3. [Change 3 icons](./11-documents/01-change-icon-in-3-places/change-ico.md)
 4. [Add a label](./11-documents/03-add-a-label/add-label.md)
-5. Add click-type button
-6. Use button as a led
-7. Add button array (a group of buttons)
-8. Add click-and-lock type button
-9. Add continuous-press type button
-10. Add radio group type, to stand for a switch in real world
-11. Use clang-format
+5. [Change default font]
+6. Add click-type button
+7. Use button as a led
+8. Add button array (a group of buttons)
+9. Add click-and-lock type button
+10. Add continuous-press type button
+11. Add radio group type, to stand for a switch in real world
+12. Use clang-format
