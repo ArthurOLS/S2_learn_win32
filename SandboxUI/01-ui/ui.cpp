@@ -146,7 +146,7 @@ void ui1_init_widgets(HWND hwnd) { // Labels
 /*******************************************************************************
  * @brief  called by main.cpp WM_COMMAND event.
  * @param  id : the button id 
- * @param  xxxx
+ * @param  hwnd: the parent wnd
  * @return xxxx
  *******************************************************************************/
 void ui2_button_action_callback(HWND hwnd, int id) {
