@@ -44,6 +44,7 @@
 
 
 #define LABEL_STRING_SIZE           512
+
 #define UI_FONT_9PT                 9  //for text, menu, logbox
 #define UI_FONT_12PT                12 //for title bars, taskbars,
 
@@ -52,7 +53,7 @@
 ******************************* Exported functions *****************************
 *******************************************************************************/
 void ui1_init_widgets(HWND hwnd);
-
+void ui2_button_callback(int id);
 
 #endif /* __UI_H */
 /********************************* end of file ********************************/

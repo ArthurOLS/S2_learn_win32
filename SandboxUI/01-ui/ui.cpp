@@ -21,6 +21,7 @@
 #include "./../framework.h" //include file for standard system include files,
 #include <stdint.h> //to use int32_t type
 #include "ui.h"
+#include "button_id.h"
 
 /*******************************************************************************
 ******************************** Private typedef *******************************
@@ -67,6 +68,11 @@ UI_CONTROL_STRU _ui_control_stru;
 ************************** Private function prototypes *************************
 *******************************************************************************/
 
+void ui10_apply_font_to_control(HWND hwndTarget, int pt);
+void ui11_init_label(HWND hwnd);
+void ui12_init_click_button(HWND hwnd, int x, int y);
+void ui13_init_radio_group(HWND hwnd);
+
 /*******************************************************************************
 ******************************* Private functions ******************************
 *******************************************************************************/
@@ -85,11 +91,11 @@ UI_CONTROL_STRU _ui_control_stru;
 
 /*******************************************************************************
  * @brief  Brief_description_of_the_function
- * @param  hwndTarget, the window you want to apply the font
+ * @param  hwndTarget, the window you want to apply the font, any window control
  * @param  pt, the font size, usually 9 or 12 in win11
  * @return xxxx
  *******************************************************************************/
-void ui12_apply_font_to_control(HWND hwndTarget, int pt) {
+void ui10_apply_font_to_control(HWND hwndTarget, int pt) {
     HFONT hf = CreateFont(
         -MulDiv(pt, GetDeviceCaps(GetDC(NULL), LOGPIXELSY), 72), // height for 9pt
         0, 0, 0, FW_NORMAL, FALSE, FALSE, FALSE,
@@ -109,29 +115,99 @@ void ui12_apply_font_to_control(HWND hwndTarget, int pt) {
 
 /*******************************************************************************
  * @brief  called by SandboxUI.cpp/WM_CREATE event
- * @param  xxxx
+ * @param  hwnd, parent windows
  * @param  xxxx
  * @return xxxx
  *******************************************************************************/
 void ui1_init_widgets(HWND hwnd) { // Labels
+    ui11_init_label(hwnd);
+    ui12_init_click_button(hwnd, 20, 120);
 
-
-    int i = 0;
-
-    HWND hStaticLabel = CreateWindow(L"STATIC", L"  -- INSPECTION -- ", WS_CHILD | WS_VISIBLE,
-        20, 40+i*25, 300, 40, hwnd, NULL, NULL, NULL);
-
-    ui12_apply_font_to_control(hStaticLabel, UI_FONT_12PT);
-
-
-    i = 2;
-
-    HWND hStaticLabel2 = CreateWindow(L"STATIC", L"  -- INSPECTION -- ", WS_CHILD | WS_VISIBLE,
-    20, 40 + i * 40, 300, 40, hwnd, NULL, NULL, NULL);
-
-    ui12_apply_font_to_control(hStaticLabel2, UI_FONT_9PT);
 }
         
+
+
+/*******************************************************************************
+ * @brief  called by main.cpp WM_COMMAND event.
+ * @param  id : the button id 
+ * @param  xxxx
+ * @return xxxx
+ *******************************************************************************/
+void ui2_button_callback(int id) {
+    switch (id) {
+    case BUTTON_ID_UP:
+        OutputDebugStringA("UP pressed\n");
+        break;
+    case BUTTON_ID_DOWN:
+        OutputDebugStringA("DOWN pressed\n");
+        break;
+    case BUTTON_ID_ENABLE:
+        OutputDebugStringA("ENABLE pressed\n");
+        break;
+        break;
+    }
+}
+        
+
+
+/*******************************************************************************
+ * @brief  Brief_description_of_the_function
+ * @param  hwnd, parent windows
+ * @return xxxx
+ *******************************************************************************/
+void ui11_init_label(HWND hwnd) {
+    // create label, 12pt
+    HWND hStaticLabel = CreateWindow(L"STATIC", L"  -- INSPECTION -- ", WS_CHILD | WS_VISIBLE,
+        20, 40, 300, 40, hwnd, NULL, NULL, NULL);
+
+    ui10_apply_font_to_control(hStaticLabel, UI_FONT_12PT);
+
+    // create label, 9pt
+    HWND hStaticLabel2 = CreateWindow(L"STATIC", L"  -- INSPECTION -- ", WS_CHILD | WS_VISIBLE,
+        20, 80, 300, 40, hwnd, NULL, NULL, NULL);
+    ui10_apply_font_to_control(hStaticLabel2, UI_FONT_9PT);
+}
+        
+
+/*******************************************************************************
+ * @brief  init a click-type button 
+ * @param  hwnd, parent windows
+ *         x, y: the starting left top pixel
+ * @return xxxx
+ *******************************************************************************/
+void ui12_init_click_button(HWND hwnd, int x, int y) {
+
+    HWND b1 = CreateWindow(L"BUTTON", L"UP", WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON,
+        x, y, 80, 30, hwnd, (HMENU)BUTTON_ID_UP, NULL, NULL);
+    ui10_apply_font_to_control(b1, UI_FONT_9PT);
+
+
+    HWND b2 = CreateWindow(L"BUTTON", L"DOWN", WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON,
+        x, y + 30, 80, 30, hwnd, (HMENU)BUTTON_ID_DOWN, NULL, NULL);
+    ui10_apply_font_to_control(b2, UI_FONT_9PT);
+
+
+    HWND b3 = CreateWindow(L"BUTTON", L"ENABLE", WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON,
+        x, y+60, 80, 30, hwnd, (HMENU)BUTTON_ID_ENABLE, NULL, NULL);
+    ui10_apply_font_to_control(b3, UI_FONT_9PT);
+}
+       
+
+
+/*******************************************************************************
+ * @brief  Brief_description_of_the_function
+ * @param  hwnd, parent windows
+ * @return xxxx
+ *******************************************************************************/
+void ui13_init_radio_group(HWND hwnd) { // Radio group 1 (ON/OFF)
+    CreateWindow(L"BUTTON", L"ON", WS_CHILD | WS_VISIBLE | BS_AUTORADIOBUTTON | WS_GROUP,
+        130, 40, 50, 20, hwnd, (HMENU)10, NULL, NULL);
+
+    CreateWindow(L"BUTTON", L"OFF", WS_CHILD | WS_VISIBLE | BS_AUTORADIOBUTTON,
+        190, 40, 50, 20, hwnd, (HMENU)11, NULL, NULL);
+}
+        
+
 
 /********************************* end of file ********************************/
 

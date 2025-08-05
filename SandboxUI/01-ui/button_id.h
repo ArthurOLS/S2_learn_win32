@@ -35,6 +35,13 @@
 ******************************* Exported constants *****************************
 *******************************************************************************/
 typedef enum {
+
+    //click button id
+    BUTTON_ID_DOWN = 2000,
+    BUTTON_ID_UP,
+    BUTTON_ID_ENABLE,
+
+
     //[GROUP1]
     BUTTON_BASE_ID = 1000,
     H1UP = 1000, // its id = 1000, name="H1UP"
