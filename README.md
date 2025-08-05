@@ -11,7 +11,7 @@ SandboxUI project is used to test all the widges I might use.
 4. [Add a label](./11-documents/03-add-a-label/add-label.md)
 5. [Change default font](./11-documents/04-change-default-font/font.md)
 6. [Add click-type button](./11-documents/06-add-click-button/click-button.md)
-7. Use button as a led
+7. [Use button as a led](11-documents/07-use-button-as-led/button-led.md)
 8. Add button array (a group of buttons)
 9. Add click-and-lock type button
 10. Add continuous-press type button

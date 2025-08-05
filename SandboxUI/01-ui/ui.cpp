@@ -21,7 +21,6 @@
 #include "./../framework.h" //include file for standard system include files,
 #include <stdint.h> //to use int32_t type
 #include "ui.h"
-#include "button_id.h"
 
 /*******************************************************************************
 ******************************** Private typedef *******************************
@@ -43,6 +42,13 @@ typedef struct {
 
     HFONT font1; //global font for this app
 
+    HBRUSH hBrushGreen;
+    HBRUSH hBrushGray;
+    bool greenMode;
+    
+    bool is_enable;
+    bool is_up;
+    bool is_down;
 } UI_CONTROL_STRU;
 
 /*******************************************************************************
@@ -53,17 +59,25 @@ typedef struct {
 ********************************* Private macro ********************************
 *******************************************************************************/
 typedef struct {
-    const char* name;
-    int id;
-} BUTTON_ID_NAME_STRU;
+    const wchar_t* text;
+    int id;    
+    int is_clicked; //0=not, 1=clicked, used when this button is also used as a led
 
-#define BUTTON_ID_DEFINE(name)          { #name, name }
+} BUTTON_STRU;
+
+#define FILL_BUTTON_ID(name)          { #name, name, 0 }
 
 
 /*******************************************************************************
 ******************************* Private variables ******************************
 *******************************************************************************/
 UI_CONTROL_STRU _ui_control_stru;
+
+BUTTON_STRU button_group1[] = {
+    { L"UP🔺", BUTTON_ID_UP, 0 },
+    { L"DOWN🔻", BUTTON_ID_DOWN, 0 },
+};
+
 /*******************************************************************************
 ************************** Private function prototypes *************************
 *******************************************************************************/
@@ -72,6 +86,8 @@ void ui10_apply_font_to_control(HWND hwndTarget, int pt);
 void ui11_init_label(HWND hwnd);
 void ui12_init_click_button(HWND hwnd, int x, int y);
 void ui13_init_radio_group(HWND hwnd);
+void ui30_draw_custom_button_led(LPDRAWITEMSTRUCT lpDrawItem, const wchar_t* text, bool state);
+
 
 /*******************************************************************************
 ******************************* Private functions ******************************
@@ -133,22 +149,81 @@ void ui1_init_widgets(HWND hwnd) { // Labels
  * @param  xxxx
  * @return xxxx
  *******************************************************************************/
-void ui2_button_callback(int id) {
+void ui2_button_action_callback(HWND hwnd, int id) {
     switch (id) {
     case BUTTON_ID_UP:
         OutputDebugStringA("UP pressed\n");
+        _ui_control_stru.is_up = !(_ui_control_stru.is_up);
+        InvalidateRect(GetDlgItem(hwnd, id), NULL, TRUE); // Force redraw
+
         break;
     case BUTTON_ID_DOWN:
         OutputDebugStringA("DOWN pressed\n");
+
+        _ui_control_stru.is_down = !(_ui_control_stru.is_down);
+        InvalidateRect(GetDlgItem(hwnd, id), NULL, TRUE); // force repaint
         break;
     case BUTTON_ID_ENABLE:
         OutputDebugStringA("ENABLE pressed\n");
+
+        _ui_control_stru.is_enable = !(_ui_control_stru.is_enable);
+        InvalidateRect(GetDlgItem(hwnd, id), NULL, TRUE); // Force redraw
         break;
         break;
     }
 }
         
 
+/*******************************************************************************
+ * @brief  called by WM_DRAWITEM, originally triggered by InvalidateRect()
+ * @param  lpDrawItem: which button to redraw
+ * @param  xxxx
+ * @return xxxx
+ *******************************************************************************/
+void ui3_button_drawitem_callback(LPDRAWITEMSTRUCT lpDrawItem) {
+    int id = lpDrawItem->CtlID;
+    switch (id) {
+    case BUTTON_ID_UP:
+        ui30_draw_custom_button_led(lpDrawItem, L"UP", _ui_control_stru.is_up);
+
+        break;
+    case BUTTON_ID_DOWN:
+        ui30_draw_custom_button_led(lpDrawItem, L"DOWN", _ui_control_stru.is_down);
+
+        break;
+    case BUTTON_ID_ENABLE:
+        ui30_draw_custom_button_led(lpDrawItem, L"ENABLE🔼", _ui_control_stru.is_enable);
+
+        break;
+    default:break;
+    }
+}
+        
+
+/*******************************************************************************
+ * @brief  originally called by WM_DRAWITEM event in main.cpp
+ * @param  lpDrawItem: it contains button id, and other display information
+ * @param  state: 0=defalt, 1=on, 2.. other states
+ * @return xxxx
+ *******************************************************************************/
+void ui30_draw_custom_button_led(LPDRAWITEMSTRUCT lpDrawItem, const wchar_t* text, bool state) {
+    HDC hdc = lpDrawItem->hDC;
+    RECT rc = lpDrawItem->rcItem;
+
+    // Background
+    HBRUSH bgBrush = CreateSolidBrush(state ? RGB(0, 0, 0) : RGB(240, 240, 240));
+    FillRect(hdc, &rc, bgBrush);
+    DeleteObject(bgBrush);
+
+    // Text
+    SetBkMode(hdc, TRANSPARENT);
+    SetTextColor(hdc, state ? RGB(255, 0, 0) : RGB(0, 0, 0));
+    DrawText(hdc, text, -1, &rc, DT_CENTER | DT_VCENTER | DT_SINGLELINE);
+
+    // Optional: draw border
+    DrawEdge(hdc, &rc, EDGE_RAISED, BF_RECT);
+}
+        
 
 /*******************************************************************************
  * @brief  Brief_description_of_the_function
@@ -177,17 +252,17 @@ void ui11_init_label(HWND hwnd) {
  *******************************************************************************/
 void ui12_init_click_button(HWND hwnd, int x, int y) {
 
-    HWND b1 = CreateWindow(L"BUTTON", L"UP", WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON,
+    HWND b1 = CreateWindow(L"BUTTON", L"UP", WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON | BS_OWNERDRAW,
         x, y, 80, 30, hwnd, (HMENU)BUTTON_ID_UP, NULL, NULL);
     ui10_apply_font_to_control(b1, UI_FONT_9PT);
 
 
-    HWND b2 = CreateWindow(L"BUTTON", L"DOWN", WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON,
+    HWND b2 = CreateWindow(L"BUTTON", L"DOWN", WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON | BS_OWNERDRAW,
         x, y + 30, 80, 30, hwnd, (HMENU)BUTTON_ID_DOWN, NULL, NULL);
     ui10_apply_font_to_control(b2, UI_FONT_9PT);
 
 
-    HWND b3 = CreateWindow(L"BUTTON", L"ENABLE", WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON,
+    HWND b3 = CreateWindow(L"BUTTON", L"ENABLE", WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON | BS_OWNERDRAW,
         x, y+60, 80, 30, hwnd, (HMENU)BUTTON_ID_ENABLE, NULL, NULL);
     ui10_apply_font_to_control(b3, UI_FONT_9PT);
 }

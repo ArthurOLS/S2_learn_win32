@@ -104,7 +104,7 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
    hInst = hInstance; // Store instance handle in our global variable
 
    HWND hWnd = CreateWindowW(szWindowClass, szTitle, WS_OVERLAPPEDWINDOW,
-      CW_USEDEFAULT, 0, CW_USEDEFAULT, 0, nullptr, nullptr, hInstance, nullptr);
+       CW_USEDEFAULT, 0, WINDOWS_WIDTH, WINDOWS_HEIGHT, nullptr, nullptr, hInstance, nullptr);
 
    if (!hWnd)
    {
@@ -134,8 +134,8 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
     case WM_COMMAND:
         {
             int wmId = LOWORD(wParam);
-            // Parse the menu selections:
-            ui2_button_callback(wmId);
+            // Parse the menu selections
+            ui2_button_action_callback(hWnd, wmId);
 
             switch (wmId)
             {
@@ -151,6 +151,11 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 
         }
         break;
+    case WM_DRAWITEM: { //wParam �� the control��s ID (like BUTTON_ID_UP); lParam �� a pointer to a DRAWITEMSTRUCT struct
+
+        ui3_button_drawitem_callback((LPDRAWITEMSTRUCT)lParam);
+        return TRUE; // always return TRUE
+    }
     case WM_PAINT:
         {
             PAINTSTRUCT ps;
