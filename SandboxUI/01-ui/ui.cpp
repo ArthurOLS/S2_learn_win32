@@ -253,7 +253,7 @@ void ui30_draw_custom_button_led(LPDRAWITEMSTRUCT lpDrawItem, const wchar_t* tex
 void ui11_init_label(HWND hwnd) {
     // create label, 12pt
     HWND hStaticLabel = CreateWindow(L"STATIC", L"  -- INSPECTION -- ", WS_CHILD | WS_VISIBLE,
-        20, 40, 300, 40, hwnd, NULL, NULL, NULL);
+        20, 40, 300, 400, hwnd, NULL, NULL, NULL);
 
     ui10_apply_font_to_control(hStaticLabel, UI_FONT_12PT);
 

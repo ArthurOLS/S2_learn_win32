@@ -29,7 +29,7 @@
 *******************************************************************************/
 // main window
 #define WINDOWS_WIDTH               800
-#define WINDOWS_HEIGHT              480
+#define WINDOWS_HEIGHT              600
 #define WINDOWS_START_X             0
 #define WINDOWS_START_Y             0
 #define UI_PERIOD_MS                30   // refresh ui data and display every 50ms
