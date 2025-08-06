@@ -20,6 +20,11 @@
 
 #include "./../framework.h" //include file for standard system include files,
 #include <stdint.h> //to use int32_t type
+#include <windows.h>
+#include <commctrl.h> // For SetWindowSubclass, DefSubclassProc
+#pragma comment(lib, "comctl32.lib")//DefSubclassProc is not part of the core Windows API (windows.h), but part of the Common Controls Library; This library provides the actual implementation of functions declared in commctrl.h.
+
+
 #include "ui.h"
 
 /*******************************************************************************
@@ -49,6 +54,8 @@ typedef struct {
     bool is_enable;
     bool is_up;
     bool is_down;
+
+
 } UI_CONTROL_STRU;
 
 /*******************************************************************************
@@ -78,6 +85,12 @@ BUTTON_STRU button_group1[] = {
     { L"DOWN🔻", BUTTON_ID_DOWN, 0 },
 };
 
+
+HWND hButtonUp, hButtonDown, hButtonLight;
+bool up = false;
+bool down = false;
+bool light = false;
+
 /*******************************************************************************
 ************************** Private function prototypes *************************
 *******************************************************************************/
@@ -87,7 +100,12 @@ void ui11_init_label(HWND hwnd);
 void ui12_init_click_button(HWND hwnd, int x, int y);
 void ui13_init_radio_group(HWND hwnd);
 void ui30_draw_custom_button_led(LPDRAWITEMSTRUCT lpDrawItem, const wchar_t* text, bool state);
+LRESULT CALLBACK ui41_ButtonSubclassProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam, UINT_PTR uIdSubclass, DWORD_PTR dwRefData);
+void ui40_create_press_buttons(HWND hwnd);
 
+
+
+        
 
 /*******************************************************************************
 ******************************* Private functions ******************************
@@ -138,7 +156,7 @@ void ui10_apply_font_to_control(HWND hwndTarget, int pt) {
 void ui1_init_widgets(HWND hwnd) { // Labels
     ui11_init_label(hwnd);
     ui12_init_click_button(hwnd, 20, 120);
-
+    ui40_create_press_buttons(hwnd);
 }
         
 
@@ -283,6 +301,81 @@ void ui13_init_radio_group(HWND hwnd) { // Radio group 1 (ON/OFF)
 }
         
 
+/*******************************************************************************
+ * @brief  Brief_description_of_the_function
+ * @param  xxxx
+ * @param  xxxx
+ * @return xxxx
+ *******************************************************************************/
+void ui40_create_press_buttons(HWND hwnd) {
+    hButtonUp = CreateWindow(L"BUTTON", L"Press Up", WS_VISIBLE | WS_CHILD,
+        400, 20, 80, 30, hwnd, NULL, NULL, NULL);
+    ui10_apply_font_to_control(hButtonUp, UI_FONT_9PT);
+
+    hButtonDown = CreateWindow(L"BUTTON", L"Press Down", WS_VISIBLE | WS_CHILD,
+        400, 60, 80, 30, hwnd, NULL, NULL, NULL);
+    ui10_apply_font_to_control(hButtonDown, UI_FONT_9PT);
+
+    hButtonLight = CreateWindow(L"BUTTON", L"Press Light", WS_VISIBLE | WS_CHILD,
+        400, 100, 80, 30, hwnd, NULL, NULL, NULL);
+    ui10_apply_font_to_control(hButtonLight, UI_FONT_9PT);
+
+    // Subclass all buttons
+    SetWindowSubclass(hButtonUp, ui41_ButtonSubclassProc, 1, 0);
+    SetWindowSubclass(hButtonDown, ui41_ButtonSubclassProc, 2, 0);
+    SetWindowSubclass(hButtonLight, ui41_ButtonSubclassProc, 3, 0);
+}
+
+
+/*******************************************************************************
+ * @brief  Subclass procedure
+ * @param  xxxx
+ * @param  xxxx
+ * @return xxxx
+ *******************************************************************************/
+LRESULT CALLBACK ui41_ButtonSubclassProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam,
+    UINT_PTR uIdSubclass, DWORD_PTR dwRefData) {
+    switch (uMsg) {
+    case WM_LBUTTONDOWN:
+        if (hwnd == hButtonUp) {
+            up = true;
+            OutputDebugStringA("up=1.\n");
+        }
+           
+        else if (hwnd == hButtonDown) {
+            down = true;
+            OutputDebugStringA("down=1.\n");
+
+        }
+        else if (hwnd == hButtonLight) {
+            light = true;
+            OutputDebugStringA("light=1.\n");
+        }
+        break;
+
+    case WM_LBUTTONUP:
+        if (hwnd == hButtonUp) {
+            up = false;
+            OutputDebugStringA("up=0.\n");
+        }
+        else if (hwnd == hButtonDown) {
+            down = false;
+            OutputDebugStringA("down=0.\n");
+        }
+        else if (hwnd == hButtonLight) {
+            light = false;
+            OutputDebugStringA("light=0.\n");
+        }
+        break;
+
+    case WM_NCDESTROY:
+        // Clean up subclass when control is destroyed
+        RemoveWindowSubclass(hwnd, ui41_ButtonSubclassProc, uIdSubclass);
+        break;
+    }
+
+    return DefSubclassProc(hwnd, uMsg, wParam, lParam); // Forward to original
+}
 
 /********************************* end of file ********************************/
 

@@ -151,8 +151,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 
         }
         break;
-    case WM_DRAWITEM: { //wParam �� the control��s ID (like BUTTON_ID_UP); lParam �� a pointer to a DRAWITEMSTRUCT struct
-
+    case WM_DRAWITEM: { //wParam:the control's ID (like BUTTON_ID_UP); lParam:a pointer to a DRAWITEMSTRUCT struct
         ui3_button_drawitem_callback((LPDRAWITEMSTRUCT)lParam);
         return TRUE; // always return TRUE
     }
