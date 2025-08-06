@@ -14,9 +14,9 @@ SandboxUI project is used to test all the widges I might use.
 7. [Use button as a led](11-documents/07-use-button-as-led/button-led.md)
 8. [Add click-and-lock (a.k.a `switch`) type button](11-documents/08-click-lock(2-pos)-button/2-pos-button.md)
 10. [Add continuous-press type button](11-documents/09-continuous-press-type-button/continuous-press.md)
-11. Add radio group type (2-pos and 3-pos)
+11. [Add radio group type (3-pos)](11-documents/10-radio-group/radio-group.md)
 12. Add button array (a group of buttons)
-14. Use clang-format
+13. Use clang-format
 
 
 

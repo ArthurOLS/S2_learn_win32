@@ -135,6 +135,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
         {
             int wmId = LOWORD(wParam);
             // Parse the menu selections
+            ui51_radio_group_callback(wmId);
             ui2_button_action_callback(hWnd, wmId);
 
             switch (wmId)

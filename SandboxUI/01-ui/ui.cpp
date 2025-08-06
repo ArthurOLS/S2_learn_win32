@@ -103,6 +103,7 @@ void ui30_draw_custom_button_led(LPDRAWITEMSTRUCT lpDrawItem, const wchar_t* tex
 LRESULT CALLBACK ui41_ButtonSubclassProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam, UINT_PTR uIdSubclass, DWORD_PTR dwRefData);
 void ui40_create_press_buttons(HWND hwnd);
 
+void ui50_init_radio_group(HWND hwnd);
 
 
         
@@ -157,6 +158,7 @@ void ui1_init_widgets(HWND hwnd) { // Labels
     ui11_init_label(hwnd);
     ui12_init_click_button(hwnd, 20, 120);
     ui40_create_press_buttons(hwnd);
+    ui50_init_radio_group(hwnd);
 }
         
 
@@ -286,19 +288,61 @@ void ui12_init_click_button(HWND hwnd, int x, int y) {
 }
        
 
-
+HWND hRadio0, hRadio1, hRadio2;
+int ui_input_switch = 0;
 /*******************************************************************************
- * @brief  Brief_description_of_the_function
+ * @brief  create radio buttons
  * @param  hwnd, parent windows
  * @return xxxx
  *******************************************************************************/
-void ui13_init_radio_group(HWND hwnd) { // Radio group 1 (ON/OFF)
-    CreateWindow(L"BUTTON", L"ON", WS_CHILD | WS_VISIBLE | BS_AUTORADIOBUTTON | WS_GROUP,
-        130, 40, 50, 20, hwnd, (HMENU)10, NULL, NULL);
-
-    CreateWindow(L"BUTTON", L"OFF", WS_CHILD | WS_VISIBLE | BS_AUTORADIOBUTTON,
-        190, 40, 50, 20, hwnd, (HMENU)11, NULL, NULL);
+void ui50_init_radio_group(HWND hwnd) { // Radio group 1 (ON/OFF)
+    hRadio0 = CreateWindow(L"BUTTON", L"Position 0",
+        WS_CHILD | WS_VISIBLE | BS_AUTORADIOBUTTON | WS_GROUP,// Group style only on the **first** radio button
+        400, 200, 120, 20, hwnd, (HMENU)1000, NULL, NULL);
+    ui10_apply_font_to_control(hRadio0, UI_FONT_9PT);
+    hRadio1 = CreateWindow(L"BUTTON", L"Position 1",
+        WS_CHILD | WS_VISIBLE | BS_AUTORADIOBUTTON,
+        400, 220, 120, 20, hwnd, (HMENU)1001, NULL, NULL);
+    ui10_apply_font_to_control(hRadio1, UI_FONT_9PT);
+    hRadio2 = CreateWindow(L"BUTTON", L"Position 2",
+        WS_CHILD | WS_VISIBLE | BS_AUTORADIOBUTTON,
+        400, 240, 120, 20, hwnd, (HMENU)1002, NULL, NULL);
+    ui10_apply_font_to_control(hRadio2, UI_FONT_9PT);
+    // Set default checked radio button
+    //SendMessage(hRadio0, BM_SETCHECK, BST_CHECKED, 0); // default: position 0
 }
+
+
+/*******************************************************************************
+ * @brief  called by WndProc on WM_COMMAND event
+ * @param  id: from LOWORD(wParam)
+ * @param  xxxx
+ * @return xxxx
+ *******************************************************************************/
+void ui51_radio_group_callback(int id) {
+    switch (id) // LOWORD = control ID
+    {
+    case 1000: // Radio button 0
+        if (SendMessage(hRadio0, BM_GETCHECK, 0, 0) == BST_CHECKED) {
+            ui_input_switch = 0;
+            OutputDebugStringA("check 0.\n");
+        }
+        break;
+    case 1001: // Radio button 1
+        if (SendMessage(hRadio1, BM_GETCHECK, 0, 0) == BST_CHECKED) {
+            ui_input_switch = 1;
+            OutputDebugStringA("check 1.\n");
+        }
+        break;
+    case 1002: // Radio button 2
+        if (SendMessage(hRadio2, BM_GETCHECK, 0, 0) == BST_CHECKED) {
+            ui_input_switch = 2;
+            OutputDebugStringA("check 2.\n");
+        }
+        break;
+    }
+}
+        
         
 
 /*******************************************************************************

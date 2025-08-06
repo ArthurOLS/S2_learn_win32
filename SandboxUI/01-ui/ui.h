@@ -56,6 +56,10 @@
 void ui1_init_widgets(HWND hwnd);
 void ui2_button_action_callback(HWND hwnd, int id);
 void ui3_button_drawitem_callback(LPDRAWITEMSTRUCT lpDrawItem);
+
+void ui51_radio_group_callback(int id);
+
+
 #endif /* __UI_H */
 /********************************* end of file ********************************/
 
