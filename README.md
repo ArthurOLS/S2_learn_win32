@@ -16,8 +16,9 @@ SandboxUI project is used to test all the widges I might use.
 10. [Add continuous-press type button](11-documents/09-continuous-press-type-button/continuous-press.md)
 11. [Add radio group type (3-pos)](11-documents/10-radio-group/radio-group.md)
 12. [Set window size](11-documents/11-window-size/windows-size.md)
-13. Add button array (a group of buttons)
-14. Use clang-format
+13. [Set window top layout](./11-documents/13-top-layout/top-layout.md)
+14. Add button array (a group of buttons)
+15. Use clang-format
 
 
 
