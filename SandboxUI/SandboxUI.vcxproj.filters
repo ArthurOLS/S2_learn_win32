@@ -45,6 +45,12 @@
     <ClInclude Include="00-app\top_config.h">
       <Filter>00-app</Filter>
     </ClInclude>
+    <ClInclude Include="01-ui\ui_lowlevel.h">
+      <Filter>01-ui</Filter>
+    </ClInclude>
+    <ClInclude Include="01-ui\ui_logbox.h">
+      <Filter>01-ui</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="SandboxUI.cpp">
@@ -54,6 +60,12 @@
       <Filter>00-app</Filter>
     </ClCompile>
     <ClCompile Include="01-ui\ui.cpp">
+      <Filter>01-ui</Filter>
+    </ClCompile>
+    <ClCompile Include="01-ui\ui_lowlevel.cpp">
+      <Filter>01-ui</Filter>
+    </ClCompile>
+    <ClCompile Include="01-ui\ui_logbox.cpp">
       <Filter>01-ui</Filter>
     </ClCompile>
   </ItemGroup>

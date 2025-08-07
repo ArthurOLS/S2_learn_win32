@@ -26,11 +26,16 @@
 
 
 #include "ui.h"
+#include "ui_lowlevel.h"
+#include "ui_logbox.h"
 
 /*******************************************************************************
 ******************************** Private typedef *******************************
 *******************************************************************************/
 
+
+
+//inner layer, the contorl data ui uses itself
 typedef struct {
     int                 run_cnt; // how many times ui has refreshed
     int                 car_box_y;          // the y position of cab box bottom line.
@@ -95,10 +100,7 @@ bool light = false;
 ************************** Private function prototypes *************************
 *******************************************************************************/
 
-void ui10_apply_font_to_control(HWND hwndTarget, int pt);
-void ui11_init_label(HWND hwnd);
 void ui12_init_click_button(HWND hwnd, int x, int y);
-void ui13_init_radio_group(HWND hwnd);
 void ui30_draw_custom_button_led(LPDRAWITEMSTRUCT lpDrawItem, const wchar_t* text, bool state);
 LRESULT CALLBACK ui41_ButtonSubclassProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam, UINT_PTR uIdSubclass, DWORD_PTR dwRefData);
 void ui40_create_press_buttons(HWND hwnd);
@@ -121,31 +123,7 @@ void ui50_init_radio_group(HWND hwnd);
 ******************************* Public functions *******************************
 *******************************************************************************/
 
-
-
-
-/*******************************************************************************
- * @brief  Brief_description_of_the_function
- * @param  hwndTarget, the window you want to apply the font, any window control
- * @param  pt, the font size, usually 9 or 12 in win11
- * @return xxxx
- *******************************************************************************/
-void ui10_apply_font_to_control(HWND hwndTarget, int pt) {
-    HFONT hf = CreateFont(
-        -MulDiv(pt, GetDeviceCaps(GetDC(NULL), LOGPIXELSY), 72), // height for 9pt
-        0, 0, 0, FW_NORMAL, FALSE, FALSE, FALSE,
-        DEFAULT_CHARSET,
-        OUT_DEFAULT_PRECIS,
-        CLIP_DEFAULT_PRECIS,
-        CLEARTYPE_QUALITY,
-        DEFAULT_PITCH | FF_DONTCARE,
-        L"Segoe UI");
-
-     if (hf && hwndTarget) {
-        SendMessage(hwndTarget, WM_SETFONT, (WPARAM)hf, TRUE);
-    }
-}
-        
+  
         
 
 /*******************************************************************************
@@ -155,10 +133,30 @@ void ui10_apply_font_to_control(HWND hwndTarget, int pt) {
  * @return xxxx
  *******************************************************************************/
 void ui1_init_widgets(HWND hwnd) { // Labels
-    ui11_init_label(hwnd);
-    ui12_init_click_button(hwnd, 20, 120);
-    ui40_create_press_buttons(hwnd);
-    ui50_init_radio_group(hwnd);
+   
+    //create main window top layout
+    ui11_create_label(hwnd, L" Animation", UI_ANIMATION_X, UI_ANIMATION_Y, UI_ANIMATION_W, UI_ANIMATION_H);
+    ui11_create_label(hwnd, L" Simulator", UI_LABELBOX_X, UI_LABELBOX_Y, UI_LABELBOX_W, UI_LABELBOX_H);
+    ui11_create_label(hwnd, L" ElevatorCore", UI_LABELBOX2_X, UI_LABELBOX2_Y, UI_LABELBOX2_W, UI_LABELBOX2_H);
+    ui_logbox_create(hwnd, COLUMN2_X, UI_LOGBOX_Y, UI_LOGBOX_W, UI_LOGBOX_H);
+    //column4
+    ui11_create_label(hwnd, L" HOPs", UI_HOP_X, UI_HOP_Y, UI_HOP_W, UI_HOP_H);
+    ui11_create_label(hwnd, L" HOP2 (Fire Service)", UI_HOP2_X, UI_HOP2_Y, UI_HOP2_W, UI_HOP2_H);
+    ui11_create_label(hwnd, L" Machineroom", UI_MACHINEROOM_X, UI_MACHINEROOM_Y, UI_MACHINEROOM_W, UI_MACHINEROOM_H);
+
+    //column5
+    ui11_create_label(hwnd, L" COP1 (Passenger Panel)", UI_COP1_X, UI_COP1_Y, UI_COP1_W, UI_COP1_H);
+    ui11_create_label(hwnd, L" COP2 (Inspection)", UI_COP2_X, UI_COP2_Y, UI_COP2_W, UI_COP2_H);
+    ui11_create_label(hwnd, L" COP3 (Fire Service)", UI_COP3_X, UI_COP3_Y, UI_COP3_W, UI_COP3_H);
+    ui11_create_label(hwnd, L" TOC", UI_TOC_X, UI_TOC_Y, UI_TOC_W, UI_TOC_H);
+
+    ui11_create_label(hwnd, L" Non-manual Input Devices", UI_NONMANUAL_X, UI_NONMANUAL_Y, UI_NONMANUAL_W, UI_NONMANUAL_H);
+    ui11_create_label(hwnd, L" Debug", UI_DEGUG_X, UI_DEGUG_Y, UI_DEGUG_W, UI_DEGUG_H);
+    
+    //ui12_init_click_button(hwnd, 20, 120);
+    //ui40_create_press_buttons(hwnd);
+    //ui50_init_radio_group(hwnd);
+
 }
         
 
@@ -245,23 +243,6 @@ void ui30_draw_custom_button_led(LPDRAWITEMSTRUCT lpDrawItem, const wchar_t* tex
 }
         
 
-/*******************************************************************************
- * @brief  Brief_description_of_the_function
- * @param  hwnd, parent windows
- * @return xxxx
- *******************************************************************************/
-void ui11_init_label(HWND hwnd) {
-    // create label, 12pt
-    HWND hStaticLabel = CreateWindow(L"STATIC", L"  -- INSPECTION -- ", WS_CHILD | WS_VISIBLE,
-        20, 40, 300, 400, hwnd, NULL, NULL, NULL);
-
-    ui10_apply_font_to_control(hStaticLabel, UI_FONT_12PT);
-
-    // create label, 9pt
-    HWND hStaticLabel2 = CreateWindow(L"STATIC", L"  -- INSPECTION -- ", WS_CHILD | WS_VISIBLE,
-        20, 80, 300, 40, hwnd, NULL, NULL, NULL);
-    ui10_apply_font_to_control(hStaticLabel2, UI_FONT_9PT);
-}
         
 
 /*******************************************************************************
@@ -420,6 +401,20 @@ LRESULT CALLBACK ui41_ButtonSubclassProc(HWND hwnd, UINT uMsg, WPARAM wParam, LP
 
     return DefSubclassProc(hwnd, uMsg, wParam, lParam); // Forward to original
 }
+
+
+
+/*******************************************************************************
+ * @brief  get ui run tim in ms, it use the global ts_at_start variable
+ * @param  xxxx
+ * @return ms since app started
+ * @note   overflows after ~49 days
+ *******************************************************************************/
+int ui64_get_ui_run_ms() {
+    int ts = (int)GetTickCount64() - _ui_control_stru.ts_at_start;
+    return ts; // overflow after ~49 days
+}
+
 
 /********************************* end of file ********************************/
 

@@ -131,6 +131,8 @@
     <ClInclude Include="00-app\top_config.h" />
     <ClInclude Include="01-ui\button_id.h" />
     <ClInclude Include="01-ui\ui.h" />
+    <ClInclude Include="01-ui\ui_logbox.h" />
+    <ClInclude Include="01-ui\ui_lowlevel.h" />
     <ClInclude Include="framework.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="SandboxUI.h" />
@@ -139,6 +141,8 @@
   <ItemGroup>
     <ClCompile Include="00-app\app.cpp" />
     <ClCompile Include="01-ui\ui.cpp" />
+    <ClCompile Include="01-ui\ui_logbox.cpp" />
+    <ClCompile Include="01-ui\ui_lowlevel.cpp" />
     <ClCompile Include="SandboxUI.cpp" />
   </ItemGroup>
   <ItemGroup>
