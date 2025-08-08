@@ -44,10 +44,15 @@
 /*******************************************************************************
 ******************************* Exported functions *****************************
 *******************************************************************************/
-void ui_logbox_create(HWND hwnd, int x, int y, int w, int h);
+void ui_logbox_create(HWND hwnd, int x, int y, int w, int h, uint64_t set_start_ts);
 void ui41_logbox_printf(const char* fmt, ...);
 void ui42_logbox_save_content_to_file(void);
 void ui43_logbox_clear_content();
+uint64_t ui_get_logbox_ms64();
+
+#define ui_internal_printf(...)                                         \
+    ui41_logbox_printf("\r\n[%d UI]: ", (ui_get_logbox_ms64() / 1000)); \
+    ui41_logbox_printf(__VA_ARGS__);
 
 #endif /* __UI_LOGBOX_H */
 /********************************* end of file ********************************/

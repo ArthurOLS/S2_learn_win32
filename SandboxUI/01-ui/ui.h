@@ -296,9 +296,7 @@ void ui51_radio_group_callback(int id);
 int ui64_get_ui_run_ms();
 
 
-#define ui_internal_printf(...)                                         \
-    ui41_logbox_printf("\r\n[%d UI]: ", (ui64_get_ui_run_ms() / 1000)); \
-    ui41_logbox_printf(__VA_ARGS__);
+
 
 #endif /* __UI_H */
 /********************************* end of file ********************************/
