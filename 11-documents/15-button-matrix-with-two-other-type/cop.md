@@ -18,22 +18,11 @@
 
 ![2](image-3.png)
 
-3. assign callback to continuous-press type buttons, (two share the same call back)
+3. assign callback to continuous-press type buttons, (two share the same call back). 
+>It's possible that all the continuous-press type in the project share the same callback. 
 
 
 ![3](image-4.png)
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 

@@ -19,7 +19,7 @@ SandboxUI project is used to test all the widges I might use.
 13. [Set window top layout](./11-documents/13-top-layout/top-layout.md)
 14. [Add button matrix (a 2*5 of buttons)](./11-documents/14-button-matrix/button-matrix.md)
 15. [Logbox](./11-documents/14-logbox/logbox.md)
-16. [Add button matrix (with two continuous-press buttons)]()
+16. [Add button matrix (with two continuous-press buttons)](./11-documents/15-button-matrix-with-two-other-type/cop.md)
 17. Use clang-format
 
 
