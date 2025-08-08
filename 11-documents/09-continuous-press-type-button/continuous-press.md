@@ -26,7 +26,9 @@ You need to track the state of the press buttons, win31 does NOT do this for you
 
 ![4](image-4.png)
 
+or using the button id (prefered solution) to identify between buttons.
 
+![5](image-5.png)
 
 # end
 
