@@ -165,6 +165,34 @@
 #define UI_GROUND_LINE_LEFT             3                            //(COLUMN1_X+3)       //left at x=0
 #define UI_GROUND_LINE_RIGHT            (UI_GROUND_LINE_LEFT + 170) // right at x=200
 
+/******************************************************************************
+* BUTTON COLUMN (LEFT3 IN MASTER)
+******************************************************************************/
+//Buttons
+#define UI_BUTTONS_LEFT                 0//(COLUMN3_LEFT)
+#define UI_BUTTONS_TOP                  10      //group1
+#define UI_BUTTONS_TOP2                 400-40  //group2
+#define UI_BUTTON_WIDTH                 85
+#define UI_BUTTON_HEIGHT                23
+#define UI_BUTTON_GAP_ROW               5    //for group1
+#define UI_BUTTON_HEIGHT2               23   //for group2
+#define UI_BUTTON_GAP_ROW2              12   //for group2
+#define UI_BUTTON_GAP_COLUMN            5
+#define UI_BUTTON_PER_ROW               2    //3 buttons per row
+#define UI_BUTTON_GROUP1_NUM            (3* SIM_FLOOR_NUM +2) //'2' for 'open door' and 'close door' on COP
+#define UI_BUTTON_GROUP2_NUM            (3* 8)
+#define UI_BUTTON_INVALID_ID            (BUTTON_BASE_ID+ SIM_FLOOR_NUM*3-3) //the last Nth button as F10UP is invalid, eg. N=10
+
+/******************************************************************************
+* LOGBOX
+******************************************************************************/
+
+//Logbox
+#define UI_LOGBOX_LEFT                  0
+#define UI_LOGBOX_TOP                   250
+#define UI_LOGBOX_WIDTH                 490
+#define UI_LOGBOX_HEIGHT                440
+#define UI_LOGBOX_MAX_SAVE_BYTES        65536
 
 /******************************************************************************
  * Label 1 and 2 COLUMN 
@@ -177,7 +205,12 @@
 #define UI_LABEL_LEFT2                  (10 + UI_LABEL_WIDTH) //(UI_LABEL_LEFT+10+UI_LABEL_WIDTH) //10 for the gap
 #define LABEL_STRING_SIZE               512
 
-// clang-format oN
+
+
+
+
+
+// clang-format on
 /******************************************************************************
  * Logbox
  ******************************************************************************/

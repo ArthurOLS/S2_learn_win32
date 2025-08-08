@@ -25,6 +25,7 @@
 #pragma comment(lib, "comctl32.lib")//DefSubclassProc is not part of the core Windows API (windows.h), but part of the Common Controls Library; This library provides the actual implementation of functions declared in commctrl.h.
 
 
+#include "../00-app/top_config.h"
 #include "ui.h"
 #include "ui_lowlevel.h"
 #include "ui_logbox.h"
@@ -77,7 +78,7 @@ typedef struct {
 
 } BUTTON_STRU;
 
-#define FILL_BUTTON_ID(name)          { #name, name, 0 }
+//#define FILL_BUTTON_ID(name)          { #name, name, 0 }
 
 
 /*******************************************************************************
@@ -85,9 +86,35 @@ typedef struct {
 *******************************************************************************/
 UI_CONTROL_STRU _ui_control_stru;
 
-BUTTON_STRU button_group1[] = {
-    { L"UP🔺", BUTTON_ID_UP, 0 },
-    { L"DOWN🔻", BUTTON_ID_DOWN, 0 },
+BUTTON_STRU button_hop[] = {
+    { L"__SKIP",     0,          0 },//'__SKIP' means the button invisiable
+    { L"10🔻",       H10DN,      0 },
+
+    { L"9🔺",        H9UP,       0 },
+    { L"9🔻",        H9DN,       0 },
+
+    { L"8🔺",        H8UP,       0 },
+    { L"8🔻",        H8DN,       0 },
+
+    { L"7🔺",        H7UP,       0 },
+    { L"7🔻",        H7DN,       0 },
+
+    { L"6🔺",        H6UP,       0 },
+    { L"6🔻",        H6DN,       0 },
+
+    { L"5🔺",        H5UP,       0 },
+    { L"5🔻",        H5DN,       0 },
+
+    { L"4🔺",        H4UP,       0 },
+    { L"4🔻",        H4DN,       0 },
+
+    { L"3🔺",        H3UP,       0 },
+    { L"3🔻",        H3DN,       0 },
+
+    { L"2🔺",        H2UP,       0 },
+    { L"2🔻",        H2DN,       0 },
+
+    { L"1🔺",        H1UP,       0 },
 };
 
 
@@ -113,6 +140,36 @@ void ui50_init_radio_group(HWND hwnd);
 /*******************************************************************************
 ******************************* Private functions ******************************
 *******************************************************************************/
+
+
+/*******************************************************************************
+ * @brief  Brief_description_of_the_function
+ * @param  gx,gy: parent group position
+ * @param  bw,bh: button width and height
+ * How it works? if you have button_hop = {1,2,3,4,5 .... }
+ *         the buttons are displayed in the order of:
+ *         [1] [2] --> BUTTON_PER_ROW = 2
+ *         [3] [4]
+ *         [5] ... 
+ * @return xxxx
+ *******************************************************************************/
+void ui_create_button_hop(HWND hwnd, int gx, int gy, int bw, int bh) {
+    int num = (sizeof(button_hop)) / sizeof(BUTTON_STRU);
+
+    for (int i = 0; i < num; i++) {
+        if (i == 0) {
+            continue;
+        }
+        HWND b1 = CreateWindow(L"BUTTON", button_hop[i].text, WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON,
+            gx + (i % UI_BUTTON_PER_ROW) * (bw + UI_BUTTON_GAP_COLUMN),
+            gy + ((i / UI_BUTTON_PER_ROW)) * (bh + UI_BUTTON_GAP_ROW),
+            bw, bh, //button width and height
+            hwnd, (HMENU)(button_hop[i].id), NULL, NULL);
+        ui10_apply_font_to_control(b1, UI_FONT_9PT);
+    }
+}
+        
+
 
 
 /*******************************************************************************
@@ -156,6 +213,8 @@ void ui1_init_widgets(HWND hwnd) { // Labels
     //ui12_init_click_button(hwnd, 20, 120);
     //ui40_create_press_buttons(hwnd);
     //ui50_init_radio_group(hwnd);
+
+    ui_create_button_hop(hwnd, UI_HOP_X+7, UI_HOP_Y+20, UI_BUTTON_WIDTH, UI_BUTTON_HEIGHT);
 
 }
         
@@ -242,6 +301,11 @@ void ui30_draw_custom_button_led(LPDRAWITEMSTRUCT lpDrawItem, const wchar_t* tex
     DrawEdge(hdc, &rc, EDGE_RAISED, BF_RECT);
 }
         
+
+
+
+
+
 
         
 
