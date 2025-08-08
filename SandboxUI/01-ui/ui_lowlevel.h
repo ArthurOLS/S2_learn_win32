@@ -32,6 +32,26 @@
 ********************************* Exported types *******************************
 *******************************************************************************/
 
+typedef struct {
+    const wchar_t* label;
+    const wchar_t* r0_label;
+    const wchar_t* r1_label;
+    const wchar_t* r2_label;
+    int id0, id1, id2;
+                        //0=r0 is checked, 1=r1 is checked, 2=r2 is checked,
+    int state_default;  // which is checked when created
+
+} RADIO_3POS_STRU;
+
+typedef struct {
+    const wchar_t* label;
+    const wchar_t* r0_label;
+    const wchar_t* r1_label;
+    int id0, id1;
+    int state_default; // which is checked when created
+
+} RADIO_2POS_STRU;
+
 /*******************************************************************************
 ******************************* Exported constants *****************************
 *******************************************************************************/
@@ -48,6 +68,16 @@
 
 void ui10_apply_font_to_control(HWND hwndTarget, int pt);
 void ui11_create_label(HWND hwnd, const wchar_t* text, int x, int y, int w, int h);
+void ui11_create_label_no_border(HWND hwnd, const wchar_t* text, int x, int y, int w, int h);
+
+void ui50_create_3pos_switch(HWND hwnd, int x, int y, RADIO_3POS_STRU* pr);
+void ui50_create_2pos_switch(HWND hwnd, int x, int y, RADIO_2POS_STRU* pr);
+
+void ui30_draw_custom_button(LPDRAWITEMSTRUCT lpDrawItem, const wchar_t* text, bool state);
+void ui30_draw_custom_button_trigger_redraw(HWND hwnd, int id);
+
+
+void ui_lock_button_create(HWND hwnd, int x, int y, const wchar_t* text, int id);
 
 #endif /* __UI_LOWLEVEL_H */
 /********************************* end of file ********************************/

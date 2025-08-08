@@ -289,11 +289,11 @@ typedef struct {
 ******************************* Exported functions *****************************
 *******************************************************************************/
 void ui1_init_widgets(HWND hwnd);
-void ui2_button_action_callback(HWND hwnd, int id);
-void ui3_button_drawitem_callback(LPDRAWITEMSTRUCT lpDrawItem);
+void ui2_lock_button_action_callback(HWND hwnd, int id);
+void ui3_lock_button_draw_callback(LPDRAWITEMSTRUCT lpDrawItem);
 void ui51_radio_group_callback(int id);
 
-int ui64_get_ui_run_ms();
+//int ui64_get_ui_run_ms();
 
 
 

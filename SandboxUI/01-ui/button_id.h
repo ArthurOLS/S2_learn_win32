@@ -79,7 +79,7 @@ typedef enum {
     D1_CLOSE,
 
 
-    //[GROUPS BUTTONS]
+    //[DEBUG BUTTONS]
     COP_UP = 2000,
     COP_DN,
     COP_STOP,
@@ -112,6 +112,17 @@ typedef enum {
     HOLD_DOOR,
     /* Also remember to modify BUTTON_ID_DEFINE in ui.cpp */
     /* Also remember to adjust UI_BUTTON_GROUP2_NUM in UI.h */
+
+    //Radio switchs
+    ID_RADIO_STARTING = 4000,
+    ID_COP3_FIRE_PH2_OFF,
+    ID_COP3_FIRE_PH2_HOLD,
+    ID_COP3_FIRE_PH2_ON,
+    
+    ID_COP3_RUN_RUN,
+    ID_COP3_RUN_STOP,
+
+    ID_COP3_ENABLE,
 } ENUM_BUTTON_ID;
 
 

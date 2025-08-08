@@ -144,16 +144,7 @@ bool light = false;
 ************************** Private function prototypes *************************
 *******************************************************************************/
 
-void ui12_init_click_button(HWND hwnd, int x, int y);
-void ui30_draw_custom_button_led(LPDRAWITEMSTRUCT lpDrawItem, const wchar_t* text, bool state);
-LRESULT CALLBACK ui41_ButtonSubclassProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam, UINT_PTR uIdSubclass, DWORD_PTR dwRefData);
-//void ui40_create_press_buttons(HWND hwnd);
-
-void ui50_init_radio_group(HWND hwnd);
-
-
-        
-
+ 
 /*******************************************************************************
 ******************************* Private functions ******************************
 *******************************************************************************/
@@ -185,48 +176,7 @@ void ui_create_button_hop(HWND hwnd, int gx, int gy, int bw, int bh) {
         ui10_apply_font_to_control(b1, UI_FONT_9PT);
     }
 }
-        
-/*******************************************************************************
- * @brief  create COP1 buttons panel in a block(using a label)
- * @param  gx,gy: parent group position
- * @param  bw,bh: button width and height
- * How it works? if you have button_hop = {1,2,3,4,5 .... }
- *         the buttons are displayed in the order of:
- *         [1] [2] --> BUTTON_PER_ROW = 2
- *         [3] [4]
- *         [5] ...
- *         [NOTE] the last 2 buttons are press type, not click type, they also need
- *                their own callback function.
- * @return xxxx
- *******************************************************************************/
-void ui_create_button_cop1(HWND hwnd, int gx, int gy, int bw, int bh) {
-
-    int num = (sizeof(button_cop1)) / sizeof(BUTTON_STRU);
-
-    for (int i = 0; i < num; i++) {
-        HWND b1;
-        DWORD style;
-        if (button_cop1[i].id == D1_CLOSE || button_cop1[i].id == D1_OPEN) {
-            style = WS_VISIBLE | WS_CHILD | WS_BORDER;
-        }
-        else {
-            style = WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON;
-        }
-        b1 = CreateWindow(L"BUTTON", button_cop1[i].text, style,
-            gx + (i % UI_BUTTON_PER_ROW) * (bw + UI_BUTTON_GAP_COLUMN),
-            gy + ((i / UI_BUTTON_PER_ROW)) * (bh + UI_BUTTON_GAP_ROW),
-            bw, bh, // button width and height
-            hwnd, (HMENU)(button_cop1[i].id), NULL, NULL);
-        ui10_apply_font_to_control(b1, UI_FONT_9PT);
-
-        if (button_cop1[i].id == D1_CLOSE || button_cop1[i].id == D1_OPEN) {
-            style = WS_VISIBLE | WS_CHILD;
-            SetWindowSubclass(b1, ui41_ButtonSubclassProc, 1, 0);
-        }
-    }
-
-}
-
+     
 
 /*******************************************************************************
  * @brief  Subclass procedure
@@ -274,6 +224,140 @@ LRESULT CALLBACK ui41_ButtonSubclassProc(HWND hwnd, UINT uMsg, WPARAM wParam, LP
     return DefSubclassProc(hwnd, uMsg, wParam, lParam); // Forward to original
 }
 
+
+/*******************************************************************************
+ * @brief  create COP1 buttons panel in a block(using a label)
+ * @param  gx,gy: parent group position
+ * @param  bw,bh: button width and height
+ * How it works? if you have button_hop = {1,2,3,4,5 .... }
+ *         the buttons are displayed in the order of:
+ *         [1] [2] --> BUTTON_PER_ROW = 2
+ *         [3] [4]
+ *         [5] ...
+ *         [NOTE] the last 2 buttons are press type, not click type, they also need
+ *                their own callback function.
+ * @return xxxx
+ *******************************************************************************/
+void ui_create_button_cop1(HWND hwnd, int gx, int gy, int bw, int bh) {
+
+    int num = (sizeof(button_cop1)) / sizeof(BUTTON_STRU);
+
+    for (int i = 0; i < num; i++) {
+        HWND b1;
+        DWORD style;
+        if (button_cop1[i].id == D1_CLOSE || button_cop1[i].id == D1_OPEN) {
+            style = WS_VISIBLE | WS_CHILD | WS_BORDER;
+        }
+        else {
+            style = WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON;
+        }
+        b1 = CreateWindow(L"BUTTON", button_cop1[i].text, style,
+            gx + (i % UI_BUTTON_PER_ROW) * (bw + UI_BUTTON_GAP_COLUMN),
+            gy + ((i / UI_BUTTON_PER_ROW)) * (bh + UI_BUTTON_GAP_ROW),
+            bw, bh, // button width and height
+            hwnd, (HMENU)(button_cop1[i].id), NULL, NULL);
+        ui10_apply_font_to_control(b1, UI_FONT_9PT);
+
+        if (button_cop1[i].id == D1_CLOSE || button_cop1[i].id == D1_OPEN) {
+            style = WS_VISIBLE | WS_CHILD;
+            SetWindowSubclass(b1, ui41_ButtonSubclassProc, 1, 0);
+        }
+    }
+
+}
+
+
+
+/*******************************************************************************
+ * @brief  called by WndProc on WM_COMMAND event, Only need to be accessed by button id.
+ * @param  id: from LOWORD(wParam)
+ * @param  xxxx
+ * @return xxxx
+ *******************************************************************************/
+void ui51_radio_group_callback(int id) {
+    switch (id) // LOWORD = control ID
+    {
+    case ID_COP3_FIRE_PH2_OFF: 
+        ui_internal_printf("switch to PH2-OFF.");
+        break;
+    case ID_COP3_FIRE_PH2_HOLD: 
+        ui_internal_printf("switch to PH2-HOLD.");
+        break;
+    case ID_COP3_FIRE_PH2_ON: 
+        ui_internal_printf("switch to PH2-ON.");
+        break;
+    }
+}
+
+bool __cop3_enabled = 0;
+
+/*******************************************************************************
+ * @brief  called by main.cpp WM_COMMAND event.
+ * @param  id : the button id
+ * @param  hwnd: the parent wnd
+ * @return xxxx
+ *******************************************************************************/
+void ui2_lock_button_action_callback(HWND hwnd, int id) {
+    switch (id) {
+    case BUTTON_ID_UP:
+        OutputDebugStringA("UP pressed\n");
+        _ui_control_stru.is_up = !(_ui_control_stru.is_up);
+        ui30_draw_custom_button_trigger_redraw(hwnd, id); // Force redraw
+
+        break;
+    case BUTTON_ID_DOWN:
+        OutputDebugStringA("DOWN pressed\n");
+
+        _ui_control_stru.is_down = !(_ui_control_stru.is_down);
+        ui30_draw_custom_button_trigger_redraw(hwnd, id); // Force redraw
+        break;
+    case BUTTON_ID_ENABLE:
+        OutputDebugStringA("ENABLE pressed\n");
+        _ui_control_stru.is_enable = !(_ui_control_stru.is_enable);
+        ui30_draw_custom_button_trigger_redraw(hwnd, id); // Force redraw
+        break;
+
+    case ID_COP3_ENABLE:
+        __cop3_enabled = !__cop3_enabled;
+        ui_internal_printf("COP3 ENABLE=%d", __cop3_enabled);
+        ui30_draw_custom_button_trigger_redraw(hwnd, id); // Force redraw
+
+    default:
+        break;
+    }
+}
+
+
+/*******************************************************************************
+ * @brief  called by WM_DRAWITEM, originally triggered by InvalidateRect()
+ * @param  lpDrawItem: which button to redraw
+ * @param  xxxx
+ * @return xxxx
+ *******************************************************************************/
+void ui3_lock_button_draw_callback(LPDRAWITEMSTRUCT lpDrawItem) {
+    int id = lpDrawItem->CtlID;
+    switch (id) {
+    case BUTTON_ID_UP:
+        ui30_draw_custom_button(lpDrawItem, NULL, _ui_control_stru.is_up);
+
+        break;
+    case BUTTON_ID_DOWN:
+        ui30_draw_custom_button(lpDrawItem, NULL, _ui_control_stru.is_down);
+
+        break;
+    case BUTTON_ID_ENABLE:
+        ui30_draw_custom_button(lpDrawItem, NULL, _ui_control_stru.is_enable);
+        break;
+
+    case ID_COP3_ENABLE:
+        ui30_draw_custom_button(lpDrawItem, NULL, __cop3_enabled);
+        break;
+
+    default:
+        break;
+    }
+}
+
 /*******************************************************************************
 ******************************* Public Variables *******************************
 *******************************************************************************/
@@ -312,190 +396,29 @@ void ui1_init_widgets(HWND hwnd) { // Labels
     ui11_create_label(hwnd, L" Non-manual Input Devices", UI_NONMANUAL_X, UI_NONMANUAL_Y, UI_NONMANUAL_W, UI_NONMANUAL_H);
     ui11_create_label(hwnd, L" Debug", UI_DEGUG_X, UI_DEGUG_Y, UI_DEGUG_W, UI_DEGUG_H);
     
-    ui12_init_click_button(hwnd, 20, 120);
-    //ui40_create_press_buttons(hwnd);
-    //ui50_init_radio_group(hwnd);
 
     ui_create_button_hop(hwnd, UI_HOP_X+7, UI_HOP_Y+20, UI_BUTTON_WIDTH, UI_BUTTON_HEIGHT);
     ui_create_button_cop1(hwnd, UI_COP1_X + 7, UI_COP1_Y + 20, UI_BUTTON_WIDTH, UI_BUTTON_HEIGHT);
 
+
     ui_logbox_create(hwnd, UI_LOGBOX_X, UI_LOGBOX_Y, UI_LOGBOX_W, UI_LOGBOX_H, 0);
     ui_internal_printf("print what you want");
+
+
+
+    RADIO_3POS_STRU switch_fire2 = { L"FIRE PH2", L"OFF", L"HOLD", L"ON", ID_COP3_FIRE_PH2_OFF, ID_COP3_FIRE_PH2_HOLD, ID_COP3_FIRE_PH2_ON, 0 };
+    ui50_create_3pos_switch(hwnd, UI_COP3_X + 5, UI_COP3_Y + 20, &switch_fire2);
+    
+    RADIO_2POS_STRU switch_runstop = { L"RUN/STOP", L"RUN", L"STOP", ID_COP3_RUN_RUN, ID_COP3_RUN_STOP, 1};
+    ui50_create_2pos_switch(hwnd, UI_COP3_X + 5, UI_COP3_Y + 60, &switch_runstop);
+
+    ui_lock_button_create(hwnd, UI_COP3_X + 13, UI_COP3_Y + 100, L"ENABLE", ID_COP3_ENABLE);
 }
         
 
 
-/*******************************************************************************
- * @brief  called by main.cpp WM_COMMAND event.
- * @param  id : the button id 
- * @param  hwnd: the parent wnd
- * @return xxxx
- *******************************************************************************/
-void ui2_button_action_callback(HWND hwnd, int id) {
-    switch (id) {
-    case BUTTON_ID_UP:
-        OutputDebugStringA("UP pressed\n");
-        _ui_control_stru.is_up = !(_ui_control_stru.is_up);
-        InvalidateRect(GetDlgItem(hwnd, id), NULL, TRUE); // Force redraw
-
-        break;
-    case BUTTON_ID_DOWN:
-        OutputDebugStringA("DOWN pressed\n");
-
-        _ui_control_stru.is_down = !(_ui_control_stru.is_down);
-        InvalidateRect(GetDlgItem(hwnd, id), NULL, TRUE); // force repaint
-        break;
-    case BUTTON_ID_ENABLE:
-        OutputDebugStringA("ENABLE pressed\n");
-
-        _ui_control_stru.is_enable = !(_ui_control_stru.is_enable);
-        InvalidateRect(GetDlgItem(hwnd, id), NULL, TRUE); // Force redraw
-        break;
-        break;
-    }
-}
         
-
-/*******************************************************************************
- * @brief  called by WM_DRAWITEM, originally triggered by InvalidateRect()
- * @param  lpDrawItem: which button to redraw
- * @param  xxxx
- * @return xxxx
- *******************************************************************************/
-void ui3_button_drawitem_callback(LPDRAWITEMSTRUCT lpDrawItem) {
-    int id = lpDrawItem->CtlID;
-    switch (id) {
-    case BUTTON_ID_UP:
-        ui30_draw_custom_button_led(lpDrawItem, L"UP", _ui_control_stru.is_up);
-
-        break;
-    case BUTTON_ID_DOWN:
-        ui30_draw_custom_button_led(lpDrawItem, L"DOWN", _ui_control_stru.is_down);
-
-        break;
-    case BUTTON_ID_ENABLE:
-        ui30_draw_custom_button_led(lpDrawItem, L"ENABLE🔼", _ui_control_stru.is_enable);
-
-        break;
-    default:break;
-    }
-}
-        
-
-/*******************************************************************************
- * @brief  originally called by WM_DRAWITEM event in main.cpp
- * @param  lpDrawItem: it contains button id, and other display information
- * @param  state: 0=defalt, 1=on, 2.. other states
- * @return xxxx
- *******************************************************************************/
-void ui30_draw_custom_button_led(LPDRAWITEMSTRUCT lpDrawItem, const wchar_t* text, bool state) {
-    HDC hdc = lpDrawItem->hDC;
-    RECT rc = lpDrawItem->rcItem;
-
-    // Background
-    HBRUSH bgBrush = CreateSolidBrush(state ? RGB(0, 0, 0) : RGB(240, 240, 240));
-    FillRect(hdc, &rc, bgBrush);
-    DeleteObject(bgBrush);
-
-    // Text
-    SetBkMode(hdc, TRANSPARENT);
-    SetTextColor(hdc, state ? RGB(255, 0, 0) : RGB(0, 0, 0));
-    DrawText(hdc, text, -1, &rc, DT_CENTER | DT_VCENTER | DT_SINGLELINE);
-
-    // Optional: draw border
-    DrawEdge(hdc, &rc, EDGE_RAISED, BF_RECT);
-}
-        
-
-
-
-
-
-
-        
-
-/*******************************************************************************
- * @brief  init a click-type button 
- * @param  hwnd, parent windows
- *         x, y: the starting left top pixel
- * @return xxxx
- *******************************************************************************/
-void ui12_init_click_button(HWND hwnd, int x, int y) {
-
-    HWND b1 = CreateWindow(L"BUTTON", L"UP", WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON | BS_OWNERDRAW,
-        x, y, 80, 30, hwnd, (HMENU)BUTTON_ID_UP, NULL, NULL);
-    ui10_apply_font_to_control(b1, UI_FONT_9PT);
-
-
-    HWND b2 = CreateWindow(L"BUTTON", L"DOWN", WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON | BS_OWNERDRAW,
-        x, y + 30, 80, 30, hwnd, (HMENU)BUTTON_ID_DOWN, NULL, NULL);
-    ui10_apply_font_to_control(b2, UI_FONT_9PT);
-
-
-    HWND b3 = CreateWindow(L"BUTTON", L"ENABLE", WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON | BS_OWNERDRAW,
-        x, y+60, 80, 30, hwnd, (HMENU)BUTTON_ID_ENABLE, NULL, NULL);
-    ui10_apply_font_to_control(b3, UI_FONT_9PT);
-}
-       
-
-HWND hRadio0, hRadio1, hRadio2;
-int ui_input_switch = 0;
-/*******************************************************************************
- * @brief  create radio buttons
- * @param  hwnd, parent windows
- * @return xxxx
- *******************************************************************************/
-void ui50_init_radio_group(HWND hwnd) { // Radio group 1 (ON/OFF)
-    hRadio0 = CreateWindow(L"BUTTON", L"Position 0",
-        WS_CHILD | WS_VISIBLE | BS_AUTORADIOBUTTON | WS_GROUP,// Group style only on the **first** radio button
-        400, 200, 120, 20, hwnd, (HMENU)1000, NULL, NULL);
-    ui10_apply_font_to_control(hRadio0, UI_FONT_9PT);
-    hRadio1 = CreateWindow(L"BUTTON", L"Position 1",
-        WS_CHILD | WS_VISIBLE | BS_AUTORADIOBUTTON,
-        400, 220, 120, 20, hwnd, (HMENU)1001, NULL, NULL);
-    ui10_apply_font_to_control(hRadio1, UI_FONT_9PT);
-    hRadio2 = CreateWindow(L"BUTTON", L"Position 2",
-        WS_CHILD | WS_VISIBLE | BS_AUTORADIOBUTTON,
-        400, 240, 120, 20, hwnd, (HMENU)1002, NULL, NULL);
-    ui10_apply_font_to_control(hRadio2, UI_FONT_9PT);
-    // Set default checked radio button
-    //SendMessage(hRadio0, BM_SETCHECK, BST_CHECKED, 0); // default: position 0
-}
-
-
-/*******************************************************************************
- * @brief  called by WndProc on WM_COMMAND event
- * @param  id: from LOWORD(wParam)
- * @param  xxxx
- * @return xxxx
- *******************************************************************************/
-void ui51_radio_group_callback(int id) {
-    switch (id) // LOWORD = control ID
-    {
-    case 1000: // Radio button 0
-        if (SendMessage(hRadio0, BM_GETCHECK, 0, 0) == BST_CHECKED) {
-            ui_input_switch = 0;
-            OutputDebugStringA("check 0.\n");
-        }
-        break;
-    case 1001: // Radio button 1
-        if (SendMessage(hRadio1, BM_GETCHECK, 0, 0) == BST_CHECKED) {
-            ui_input_switch = 1;
-            OutputDebugStringA("check 1.\n");
-        }
-        break;
-    case 1002: // Radio button 2
-        if (SendMessage(hRadio2, BM_GETCHECK, 0, 0) == BST_CHECKED) {
-            ui_input_switch = 2;
-            OutputDebugStringA("check 2.\n");
-        }
-        break;
-    }
-}
-        
-        
-
-
+ 
 
 
 
@@ -505,10 +428,10 @@ void ui51_radio_group_callback(int id) {
  * @return ms since app started
  * @note   overflows after ~49 days
  *******************************************************************************/
-int ui64_get_ui_run_ms() {
-    int ts = (int)GetTickCount64() - _ui_control_stru.ts_at_start;
-    return ts; // overflow after ~49 days
-}
+//int ui64_get_ui_run_ms() {
+//    int ts = (int)GetTickCount64() - _ui_control_stru.ts_at_start;
+//    return ts; // overflow after ~49 days
+//}
 
 
 /********************************* end of file ********************************/

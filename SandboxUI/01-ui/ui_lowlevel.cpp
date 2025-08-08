@@ -19,7 +19,7 @@
 *******************************************************************************/
 
 #include <Windows.h>
-//#include "ui_lowlevel.h"
+#include "ui_lowlevel.h"
 
 /*******************************************************************************
 ******************************** Private typedef *******************************
@@ -96,6 +96,139 @@ void ui11_create_label(HWND hwnd, const wchar_t* text, int x, int y, int w, int 
 
     ui10_apply_font_to_control(hStaticLabel, UI_FONT_9PT);
 }
+
+/*******************************************************************************
+ * @brief  creat 9pt lable in a location, (x,y,w,h), solid border
+ * @param  hwnd, parent windows
+ * @return xxxx
+ *******************************************************************************/
+void ui11_create_label_no_border(HWND hwnd, const wchar_t* text, int x, int y, int w, int h) {
+    // create label, 12pt
+    HWND hStaticLabel = CreateWindow(L"STATIC", text, WS_CHILD | WS_VISIBLE,
+        x, y, w, h, hwnd, NULL, NULL, NULL);
+
+    ui10_apply_font_to_control(hStaticLabel, UI_FONT_9PT);
+}
+
+
+
+/*******************************************************************************
+ * @brief  create radio buttons
+ * @param  hwnd, parent windows
+ * @return xxxx
+ *******************************************************************************/
+void ui50_create_3pos_switch(HWND hwnd, int x, int y, RADIO_3POS_STRU* pr) {
+    HWND hRadio0, hRadio1, hRadio2;
+
+    ui11_create_label_no_border(hwnd, pr->label, x, y, 120, 20);
+    int GAP = 15;
+    hRadio0 = CreateWindow(L"BUTTON", pr->r0_label,
+        WS_CHILD | WS_VISIBLE | BS_AUTORADIOBUTTON | WS_GROUP, // Group style only on the **first** radio button
+        x, y + GAP, 50, 20, hwnd, (HMENU)(pr->id0), NULL, NULL);
+    ui10_apply_font_to_control(hRadio0, UI_FONT_9PT);
+
+    hRadio1 = CreateWindow(L"BUTTON", pr->r1_label,
+        WS_CHILD | WS_VISIBLE | BS_AUTORADIOBUTTON,
+        x + 60, y + GAP, 50, 20, hwnd, (HMENU)(pr->id1), NULL, NULL);
+    ui10_apply_font_to_control(hRadio1, UI_FONT_9PT);
+
+    hRadio2 = CreateWindow(L"BUTTON", pr->r2_label,
+        WS_CHILD | WS_VISIBLE | BS_AUTORADIOBUTTON,
+        x + 120, y + GAP, 50, 20, hwnd, (HMENU)(pr->id2), NULL, NULL);
+    ui10_apply_font_to_control(hRadio2, UI_FONT_9PT);
+
+    // Set default checked radio button
+    if (pr->state_default == 0)
+        SendMessage(hRadio0, BM_SETCHECK, BST_CHECKED, 0); // default: position 0
+    else if (pr->state_default == 1)
+        SendMessage(hRadio1, BM_SETCHECK, BST_CHECKED, 0); // default: position 1
+    else
+        SendMessage(hRadio2, BM_SETCHECK, BST_CHECKED, 0); // default: position 2
+}
+
+void ui50_create_2pos_switch(HWND hwnd, int x, int y, RADIO_2POS_STRU* pr) {
+    HWND hRadio0, hRadio1, hRadio2;
+
+    ui11_create_label_no_border(hwnd, pr->label, x, y, 120, 20);
+    int GAP = 15;
+    hRadio0 = CreateWindow(L"BUTTON", pr->r0_label,
+        WS_CHILD | WS_VISIBLE | BS_AUTORADIOBUTTON | WS_GROUP, // Group style only on the **first** radio button
+        x, y + GAP, 50, 20, hwnd, (HMENU)(pr->id0), NULL, NULL);
+    ui10_apply_font_to_control(hRadio0, UI_FONT_9PT);
+
+    hRadio1 = CreateWindow(L"BUTTON", pr->r1_label,
+        WS_CHILD | WS_VISIBLE | BS_AUTORADIOBUTTON,
+        x + 60, y + GAP, 50, 20, hwnd, (HMENU)(pr->id1), NULL, NULL);
+    ui10_apply_font_to_control(hRadio1, UI_FONT_9PT);
+
+
+    // Set default checked radio button
+    if (pr->state_default == 0)
+        SendMessage(hRadio0, BM_SETCHECK, BST_CHECKED, 0); // default: position 0
+    else 
+        SendMessage(hRadio1, BM_SETCHECK, BST_CHECKED, 0); // default: position 1
+}
+
+
+/*******************************************************************************
+ * @brief  originally called by WM_DRAWITEM event in main.cpp
+ * @param  lpDrawItem: it contains button id, and other display information
+ * @param  text: button text, if NULL, use its own
+ * @param  state: 0=defalt, 1=on, 2.. other states
+ * @return xxxx
+ *******************************************************************************/
+void ui30_draw_custom_button(LPDRAWITEMSTRUCT lpDrawItem, const wchar_t* text, bool state) {
+    HDC hdc = lpDrawItem->hDC;
+    RECT rc = lpDrawItem->rcItem;
+    HWND hButton = lpDrawItem->hwndItem;
+
+    // Background
+    HBRUSH bgBrush = CreateSolidBrush(state ? RGB(0, 0, 0) : RGB(240, 240, 240));
+    FillRect(hdc, &rc, bgBrush);
+    DeleteObject(bgBrush);
+
+    // Text
+    SetBkMode(hdc, TRANSPARENT);
+    SetTextColor(hdc, state ? RGB(255, 0, 0) : RGB(0, 0, 0));
+    if (text == NULL) {
+        wchar_t textBuffer[256];
+        GetWindowText(hButton, textBuffer, _countof(textBuffer)); // Get the button's current text
+        DrawText(hdc, textBuffer, -1, &rc, DT_CENTER | DT_VCENTER | DT_SINGLELINE);
+    }
+    else {
+        DrawText(hdc, text,       -1, &rc, DT_CENTER | DT_VCENTER | DT_SINGLELINE);
+    }
+
+    // Optional: draw border
+    DrawEdge(hdc, &rc, EDGE_RAISED, BF_RECT);
+}
+
+
+/*******************************************************************************
+ * @brief  Brief_description_of_the_function
+ * @param  xxxx
+ * @param  xxxx
+ * @return xxxx
+ *******************************************************************************/
+void ui30_draw_custom_button_trigger_redraw(HWND hwnd, int id) {
+    InvalidateRect(GetDlgItem(hwnd, id), NULL, TRUE); // Force redraw
+}
+
+
+
+/*******************************************************************************
+ * @brief  Brief_description_of_the_function
+ * @param  xxxx
+ * @param  xxxx
+ * @return xxxx
+ *******************************************************************************/
+void ui_lock_button_create(HWND hwnd, int x, int y, const wchar_t* text, int id) {
+    HWND b1 = CreateWindow(L"BUTTON", text, WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON | BS_OWNERDRAW,
+        x, y, 160, 23, hwnd, (HMENU)id, NULL, NULL);
+    ui10_apply_font_to_control(b1, UI_FONT_9PT);
+}
+        
+        
 
 /********************************* end of file ********************************/
 
