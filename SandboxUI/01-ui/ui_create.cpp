@@ -88,6 +88,33 @@ BUTTON_STRU button_cop1[] = {
 
 };
 
+BUTTON_STRU button_nonmanual[] = {
+ //   { L"__SKIP", 0, 0 }, //'__SKIP' means the button invisiable
+    { L"MOTOR ENABLED", ID_MOTOR_ENABLED, 0 },
+    { L"MB_PICKED", ID_MB_PICKED, 0 },
+    { L"EB_PICKED", ID_EB_PICKED, 0 },
+    { L"DOOR_GATE_SWITCH",ID_DOOR_GATE_SWITCH, 0 },
+    { L"DOOR_PHOTOEYE",ID_DOOR_PHOTOEYE, 0 },
+    { L"DOOR_ZONE1",ID_DOOR_ZONE1, 0 },
+    { L"DOOR_ZONE2",ID_DOOR_ZONE2, 0 },
+    { L"DOOR_OPEN_LIMIT",ID_DOOR_OPEN_LIMIT, 0 },
+    { L"CARTOP_ESCAPE",ID_CARTOP_ESCAPE, 0 },
+    { L"CARTOP_SAFETIES",ID_CARTOP_SAFETIES, 0 },
+    { L"PIT_SWITCH",ID_PIT_SWITCH, 0 },
+    { L"BUFFER_HIT",ID_BUFFER_HIT, 0 },
+    { L"FINAL_LIMIT_TOP",ID_FINAL_LIMIT_TOP, 0 },
+    { L"FINAL_LIMIT_BOTTOM",ID_FINAL_LIMIT_BOTTOM, 0 },
+    { L"SPEED_GOVERNOR",ID_SPEED_GOVERNOR, 0 },
+    { L"INTERLOCK_TOP",ID_INTERLOCK_TOP, 0 },
+    { L"INTERLOCK_MIDDLE",ID_INTERLOCK_MIDDLE, 0 },
+    { L"INTERLOCK_BOTTOM",ID_INTERLOCK_BOTTOM, 0 },
+    { L"SMOKE1_UPPER_FLOOR",ID_SMOKE1_UPPER_FLOOR, 0 },
+    { L"SMOKE2_LOBBY",ID_SMOKE2_LOBBY, 0 },
+    { L"SMOKE3_MACHINEROOM",ID_SMOKE3_MACHINEROOM, 0 },
+    { L"SMOKE4_HOISTWAY",ID_SMOKE4_HOISTWAY, 0 },
+    { L"SMOKE5_PIT",ID_SMOKE5_PIT, 0 },
+};
+
 /*******************************************************************************
 ********************************* Private macro ********************************
 *******************************************************************************/
@@ -277,6 +304,24 @@ void ui_create_toc(HWND hwnd, int x, int y) {
     ui_create_button_type_continuous(hwnd, x + 15, y + 100, L"UP", ID_TOC_UP);
     ui_create_button_type_lock(hwnd, x + 15, y + 130, L"ENABLE", ID_TOC_ENABLE);
     ui_create_button_type_continuous(hwnd, x + 15, y + 160, L"DOWN", ID_TOC_DOWN);
+}
+
+/*******************************************************************************
+ * @brief  create NON-MANUAL buttons panel in a block, 1XN array patterm
+ * @param  gx,gy: parent group position
+ * @return xxxx
+ *******************************************************************************/
+void ui_create_button_nonmanual(HWND hwnd, int gx, int gy) {
+    int num = (sizeof(button_nonmanual)) / sizeof(BUTTON_STRU);
+
+    for (int i = 0; i < num; i++) {
+        HWND b1 = CreateWindow(L"BUTTON", button_nonmanual[i].text, WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON,
+            gx + 15,
+            gy + i * (UI_BUTTON_HEIGHT+UI_BUTTON_GAP_ROW)+20,
+            UI_BUTTON_WIDTH_WIDTH, UI_BUTTON_HEIGHT, // button width and height
+            hwnd, (HMENU)(INT_PTR)(button_nonmanual[i].id), NULL, NULL);
+        ui10_apply_font_to_control(b1, UI_FONT_9PT);
+    }
 }
 
 /********************************* end of file ********************************/

@@ -22,6 +22,7 @@
 ************************************ Includes **********************************
 *******************************************************************************/
 //#include 
+// clang-format off
 
 /*******************************************************************************
 ********************************* Exported macro *******************************
@@ -170,6 +171,32 @@ typedef enum {
     ID_TOC_UP,
     ID_TOC_ENABLE,
     ID_TOC_DOWN,
+
+    //non-manual input device
+    ID_MOTOR_ENABLED,
+    ID_MB_PICKED,
+    ID_EB_PICKED,
+    ID_DOOR_GATE_SWITCH,
+    ID_DOOR_PHOTOEYE,
+    ID_DOOR_ZONE1,
+    ID_DOOR_ZONE2,
+    ID_DOOR_OPEN_LIMIT,
+    ID_CARTOP_ESCAPE,
+    ID_CARTOP_SAFETIES,
+    ID_PIT_SWITCH,
+    ID_BUFFER_HIT,
+    ID_FINAL_LIMIT_TOP,
+    ID_FINAL_LIMIT_BOTTOM,
+    ID_SPEED_GOVERNOR,
+    ID_INTERLOCK_TOP,
+    ID_INTERLOCK_MIDDLE,
+    ID_INTERLOCK_BOTTOM,
+    ID_SMOKE1_UPPER_FLOOR,
+    ID_SMOKE2_LOBBY,
+    ID_SMOKE3_MACHINEROOM,
+    ID_SMOKE4_HOISTWAY,
+    ID_SMOKE5_PIT,
+
 } ENUM_BUTTON_ID;
 
 
@@ -182,7 +209,7 @@ typedef enum {
 *******************************************************************************/
 
 
-
+// clang-format on
 #endif /* __BUTTON_ID_H */
 /********************************* end of file ********************************/
 
