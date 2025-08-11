@@ -106,13 +106,13 @@
 #define UI_COP2_X                       COLUMN5_X
 #define UI_COP2_Y                       (UI_COP1_Y+UI_COP1_H+UI_GAP)
 #define UI_COP2_W                       190
-#define UI_COP2_H                       240    
+#define UI_COP2_H                       235    
 
 //cop3
 #define UI_COP3_X                       COLUMN5_X
 #define UI_COP3_Y                       (UI_COP2_Y+UI_COP2_H+UI_GAP)
 #define UI_COP3_W                       190
-#define UI_COP3_H                       190
+#define UI_COP3_H                       195
 
 //toc
 #define UI_TOC_X                        COLUMN5_X

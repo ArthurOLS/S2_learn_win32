@@ -93,6 +93,7 @@ extern void ui_create_hop2(HWND hwnd, int x, int y);
 extern void ui_create_machineroom(HWND hwnd, int x, int y);
 extern void ui_create_toc(HWND hwnd, int x, int y);
 extern void ui_create_button_nonmanual(HWND hwnd, int gx, int gy);
+extern void ui_create_button_debug(HWND hwnd, int gx, int gy);
 
 
 /*******************************************************************************
@@ -358,6 +359,9 @@ void ui1_init_widgets(HWND hwnd) { // Labels
 
     //non manual
     ui_create_button_nonmanual(hwnd, UI_NONMANUAL_X, UI_NONMANUAL_Y);
+
+    //debug
+    ui_create_button_debug(hwnd, UI_DEGUG_X, UI_DEGUG_Y);
 }
         
 

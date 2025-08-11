@@ -83,6 +83,10 @@ typedef enum {
 
 
     //[DEBUG BUTTONS]
+    X_APP,  // Simulator Stop
+    X_CORE, // Simulator Start
+    X_SIM,    
+
     COP_UP = 2000,
     COP_DN,
     COP_STOP,
@@ -99,10 +103,6 @@ typedef enum {
     INSP,
     INDP,
 
-    X_APP,  // Simulator Stop
-    X_CORE, // Simulator Start
-    X_SIM,
-
     Go_n1m, // test traction to goto -1m abs
     Go_1m,  // test traction to goto 1m abs
     Go_5m,  // test traction to goto 2m abs
@@ -113,8 +113,7 @@ typedef enum {
     OPEN_DOOR,
     CLOSE_DOOR,
     HOLD_DOOR,
-    /* Also remember to modify BUTTON_ID_DEFINE in ui.cpp */
-    /* Also remember to adjust UI_BUTTON_GROUP2_NUM in UI.h */
+
 
     //Radio switchs
     ID_RADIO_STARTING = 4000,

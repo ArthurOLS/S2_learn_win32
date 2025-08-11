@@ -17,6 +17,7 @@
 /*******************************************************************************
 ************************************ Includes **********************************
 *******************************************************************************/
+// clang-format off
 
 #include <windows.h>
 
@@ -113,6 +114,39 @@ BUTTON_STRU button_nonmanual[] = {
     { L"SMOKE3_MACHINEROOM",ID_SMOKE3_MACHINEROOM, 0 },
     { L"SMOKE4_HOISTWAY",ID_SMOKE4_HOISTWAY, 0 },
     { L"SMOKE5_PIT",ID_SMOKE5_PIT, 0 },
+};
+
+BUTTON_STRU button_debug[] = {
+    { L"X_APP",X_APP, 0 },  // Simulator Stop
+    { L"X_CORE",X_CORE, 0 }, // Simulator Start
+    { L"X_SIM",X_SIM, 0 },
+
+    { L"COP_UP",COP_UP, 0 },
+    { L"COP_DN",COP_DN, 0 },
+    { L"COP_STOP",COP_STOP, 0 },
+
+    { L"MOTOR_UP",MOTOR_UP, 0 },
+    { L"MOTOR_DN",MOTOR_UP, 0 },
+    { L"MOTOR_STOP", MOTOR_ST, 0 },
+
+    { L"SPEED 0.2M/S",SPEED1,  0 },// 0.2 M/S
+    { L"SPEED 1.0M/S",SPEED2, 0 }, // 1.0 M/S
+    { L"SPEED 2.0M/S",SPEED3,  0 },// 2.0 M/S
+
+    { L"NORMAL",NORMAL, 0 },
+    { L"INSP",INSP, 0 },
+    { L"INDP",INDP, 0 },
+
+    { L"GOTO -1M",Go_n1m,  0 },// test traction to goto -1m abs
+    { L"GOTO 1M",Go_1m, 0 },  // test traction to goto 1m abs
+    { L"GOTO 5M",Go_5m,  0 }, // test traction to goto 2m abs
+
+    { L"RESET",RESET,  0 },// this will reset and automatically start logging.
+    { L"STOP_LOG",STOP_LOG, 0 },
+    { L"SAVE_PRINT",SAVE_PRINT, 0 }, // save the printf logbox to a file
+    { L"OPEN_DOOR",OPEN_DOOR, 0 },
+    { L"CLOSE_DOOR",CLOSE_DOOR, 0 },
+    { L"HOLD_DOOR",HOLD_DOOR, 0 },
 };
 
 /*******************************************************************************
@@ -320,6 +354,25 @@ void ui_create_button_nonmanual(HWND hwnd, int gx, int gy) {
             gy + i * (UI_BUTTON_HEIGHT+UI_BUTTON_GAP_ROW)+20,
             UI_BUTTON_WIDTH_WIDTH, UI_BUTTON_HEIGHT, // button width and height
             hwnd, (HMENU)(INT_PTR)(button_nonmanual[i].id), NULL, NULL);
+        ui10_apply_font_to_control(b1, UI_FONT_9PT);
+    }
+}
+
+
+/*******************************************************************************
+ * @brief  create DEBUG buttons panel in a block, 1XN array patterm
+ * @param  gx,gy: parent group position
+ * @return xxxx
+ *******************************************************************************/
+void ui_create_button_debug(HWND hwnd, int gx, int gy) {
+    int num = (sizeof(button_debug)) / sizeof(BUTTON_STRU);
+
+    for (int i = 0; i < num; i++) {
+        HWND b1 = CreateWindow(L"BUTTON", button_debug[i].text, WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON,
+            gx + 15,
+            gy + i * (UI_BUTTON_HEIGHT+UI_BUTTON_GAP_ROW)+20,
+            UI_BUTTON_WIDTH_WIDTH, UI_BUTTON_HEIGHT, // button width and height
+            hwnd, (HMENU)(INT_PTR)(button_debug[i].id), NULL, NULL);
         ui10_apply_font_to_control(b1, UI_FONT_9PT);
     }
 }
