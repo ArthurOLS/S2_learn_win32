@@ -90,8 +90,10 @@ extern void ui_create_button_cop1(HWND hwnd, int gx, int gy, int bw, int bh);
 extern void ui_create_cop2(HWND hwnd, int x, int y);
 extern void ui_create_cop3(HWND hwnd, int x, int y);
 extern void ui_create_hop2(HWND hwnd, int x, int y);
+extern void ui_create_machineroom(HWND hwnd, int x, int y);
 
-/*******************************************************************************
+
+    /*******************************************************************************
 ******************************* Private functions ******************************
 *******************************************************************************/
 
@@ -123,6 +125,12 @@ LRESULT CALLBACK ui_callback_type_continuous(HWND hwnd, UINT uMsg, WPARAM wParam
             ui_internal_printf("COP2-DOWN =1.");
             break;
 
+        case ID_MACHINEROOM_UP:
+            ui_internal_printf("M.R.-UP =1.");
+            break;
+        case ID_MACHINEROOM_DOWN:
+            ui_internal_printf("M.R.-DOWN =1.");
+            break;
 
         case ID_COP3_OPEN_DOOR:
             ui_internal_printf("COP3 OPEN DOOR =1.");
@@ -156,6 +164,13 @@ LRESULT CALLBACK ui_callback_type_continuous(HWND hwnd, UINT uMsg, WPARAM wParam
             break;
         case ID_COP2_DOWN:
             ui_internal_printf("COP2-DOWN =0.");
+            break;
+
+        case ID_MACHINEROOM_UP:
+            ui_internal_printf("M.R.-UP =0.");
+            break;
+        case ID_MACHINEROOM_DOWN:
+            ui_internal_printf("M.R.-DOWN =0.");
             break;
 
         default:break;
@@ -197,7 +212,7 @@ void ui_callback_type_radio(int id) {
     }
 }
 
-bool __cop3_enabled = 0;
+bool __button_machineroom_enable = 0;//0=initial off, 1=on
 bool __cop2_enabled = 0;
 
 /*******************************************************************************
@@ -208,25 +223,12 @@ bool __cop2_enabled = 0;
  *******************************************************************************/
 void ui_callback_type_lock_step1(HWND hwnd, int id) {
     switch (id) {
-    case BUTTON_ID_UP:
-        OutputDebugStringA("UP pressed\n");
-        _ui_control_stru.is_up = !(_ui_control_stru.is_up);
-        ui30_draw_custom_button_trigger_redraw(hwnd, id); // Force redraw
 
-        break;
-    case BUTTON_ID_DOWN:
-        OutputDebugStringA("DOWN pressed\n");
-
-        _ui_control_stru.is_down = !(_ui_control_stru.is_down);
+    case ID_MACHINEROOM_ENABLE:
+        __button_machineroom_enable = !__button_machineroom_enable;
+        ui_internal_printf("M.R. ENABLE=%d", __button_machineroom_enable);
         ui30_draw_custom_button_trigger_redraw(hwnd, id); // Force redraw
         break;
-    case BUTTON_ID_ENABLE:
-        OutputDebugStringA("ENABLE pressed\n");
-        _ui_control_stru.is_enable = !(_ui_control_stru.is_enable);
-        ui30_draw_custom_button_trigger_redraw(hwnd, id); // Force redraw
-        break;
-
-
 
     case ID_COP2_ENABLE:
         __cop2_enabled = !__cop2_enabled;
@@ -249,16 +251,9 @@ void ui_callback_type_lock_step1(HWND hwnd, int id) {
 void ui_callback_type_lock_step2(LPDRAWITEMSTRUCT lpDrawItem) {
     int id = lpDrawItem->CtlID;
     switch (id) {
-    case BUTTON_ID_UP:
-        ui30_draw_custom_button(lpDrawItem, NULL, _ui_control_stru.is_up);
 
-        break;
-    case BUTTON_ID_DOWN:
-        ui30_draw_custom_button(lpDrawItem, NULL, _ui_control_stru.is_down);
-
-        break;
-    case BUTTON_ID_ENABLE:
-        ui30_draw_custom_button(lpDrawItem, NULL, _ui_control_stru.is_enable);
+    case ID_MACHINEROOM_ENABLE:
+        ui30_draw_custom_button(lpDrawItem, NULL, __button_machineroom_enable);
         break;
 
 
@@ -320,6 +315,9 @@ void ui1_init_widgets(HWND hwnd) { // Labels
 
     //hop2
     ui_create_hop2(hwnd, UI_HOP2_X, UI_HOP2_Y);
+
+    //machineroom
+    ui_create_machineroom(hwnd, UI_MACHINEROOM_X, UI_MACHINEROOM_Y);
 
     //cop2
     ui_create_cop2(hwnd, UI_COP2_X, UI_COP2_Y);

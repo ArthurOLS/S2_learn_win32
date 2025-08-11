@@ -241,5 +241,26 @@ void ui_create_hop2(HWND hwnd, int x, int y) {
 }
     
 
+/*******************************************************************************
+ * @brief  create machineroom input block
+ * @param  x, y = the block box left/top position
+ * @return xxxx
+ *******************************************************************************/
+void ui_create_machineroom(HWND hwnd, int x, int y) {
+    RADIO_2POS_STRU switch_insp = { L"INSPECTION", L"ON", L"OFF", ID_MACHINEROOM_INSP_ON, ID_MACHINEROOM_INSP_OFF, 1 };
+    ui_create_radio_type_2pos(hwnd, x + 5, y + 20, &switch_insp);
+
+    RADIO_2POS_STRU switch_car_door = { L"CAR DOOR BYPASS", L"ON", L"OFF", ID_MACHINEROOM_CAR_DOOR_BYPASS_ON, ID_MACHINEROOM_CAR_DOOR_BYPASS_OFF, 1 };
+    ui_create_radio_type_2pos(hwnd, x + 5, y + 60, &switch_car_door);
+
+    RADIO_2POS_STRU switch_hall_door = { L"HALL DOOR BYPASS", L"ON", L"OFF", ID_MACHINEROOM_HALL_DOOR_BYPASS_ON, ID_MACHINEROOM_HALL_DOOR_BYPASS_OFF, 1 };
+    ui_create_radio_type_2pos(hwnd, x + 5, y + 100, &switch_hall_door);
+
+
+    ui_create_button_type_continuous(hwnd, x + 15, y + 140, L"UP", ID_MACHINEROOM_UP);
+    ui_create_button_type_lock(hwnd, x + 15, y + 170, L"ENABLE", ID_MACHINEROOM_ENABLE);
+    ui_create_button_type_continuous(hwnd, x + 15, y + 200, L"DOWN", ID_MACHINEROOM_DOWN);
+}
+
 /********************************* end of file ********************************/
 
