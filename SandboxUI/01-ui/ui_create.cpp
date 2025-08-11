@@ -70,6 +70,8 @@ BUTTON_STRU button_hop[] = {
 };
 
 BUTTON_STRU button_cop1[] = {
+    { L"12", CF12, 0 },
+    { L"11", CF11, 0 },    
     { L"10", CF10, 0 },
     { L"9", CF9, 0 },
     { L"8", CF8, 0 },
@@ -153,7 +155,7 @@ void ui_create_button_hop(HWND hwnd, int gx, int gy, int bw, int bh) {
  * @return xxxx
  *******************************************************************************/
 void ui_create_button_cop1(HWND hwnd, int gx, int gy, int bw, int bh) {
-    extern LRESULT CALLBACK ui41_continuous_press_callback(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam, UINT_PTR uIdSubclass, DWORD_PTR dwRefData); 
+    extern LRESULT CALLBACK ui_callback_type_continuous(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam, UINT_PTR uIdSubclass, DWORD_PTR dwRefData); 
     int num = (sizeof(button_cop1)) / sizeof(BUTTON_STRU);
 
     for (int i = 0; i < num; i++) {
@@ -174,7 +176,7 @@ void ui_create_button_cop1(HWND hwnd, int gx, int gy, int bw, int bh) {
 
         if (button_cop1[i].id == D1_CLOSE || button_cop1[i].id == D1_OPEN) {
             style = WS_VISIBLE | WS_CHILD;
-            SetWindowSubclass(b1, ui41_continuous_press_callback, 1, 0);
+            SetWindowSubclass(b1, ui_callback_type_continuous, 1, 0);
         }
     }
 }
@@ -182,8 +184,8 @@ void ui_create_button_cop1(HWND hwnd, int gx, int gy, int bw, int bh) {
 
 
 /*******************************************************************************
- * @brief  Brief_description_of_the_function
- * @param  xxxx
+ * @brief  create cop2 input block
+ * @param  x, y = the block box left/top position
  * @param  xxxx
  * @return xxxx
  *******************************************************************************/
@@ -199,11 +201,30 @@ void ui_create_cop2(HWND hwnd, int x, int y) {
 
     
     ui_create_button_type_continuous(hwnd, UI_COP2_X+13, UI_COP2_Y + 140, L"UP", ID_COP2_UP);
-    ui_create_button_type_lock(hwnd, UI_COP2_X + 13, UI_COP2_Y + 170, L"ENABLE", ID_COP3_ENABLE);
+    ui_create_button_type_lock(hwnd, UI_COP2_X + 13, UI_COP2_Y + 170, L"ENABLE", ID_COP2_ENABLE);
     ui_create_button_type_continuous(hwnd, UI_COP2_X+13, UI_COP2_Y + 200, L"DOWN", ID_COP2_DOWN);
 }
         
 
+/*******************************************************************************
+ * @brief  Brief_description_of_the_function
+ * @param  xxxx
+ * @param  xxxx
+ * @return xxxx
+ *******************************************************************************/
+void ui_create_cop3(HWND hwnd, int x, int y) {
+    RADIO_3POS_STRU switch_fire2 = { L"FIRE PH2", L"OFF", L"HOLD", L"ON", ID_COP3_FIRE_PH2_OFF, ID_COP3_FIRE_PH2_HOLD, ID_COP3_FIRE_PH2_ON, 0 };
+    ui_create_radio_type_3pos(hwnd, x + 5, y + 20, &switch_fire2);
+
+    RADIO_2POS_STRU switch_runstop = { L"RUN/STOP", L"ON", L"OFF", ID_COP3_RUN_RUN, ID_COP3_RUN_STOP, 1 };
+    ui_create_radio_type_2pos(hwnd, x + 5, y + 60, &switch_runstop);
+
+    ui_create_button_type_continuous(hwnd, x + 13, y + 100, L"OPEN DOOR ◀▶", ID_COP3_OPEN_DOOR);
+    ui_create_button_type_continuous(hwnd, x + 13, y + 130, L"CLOSE DOOR ▶◀", ID_COP3_CLOSE_DOOR);
+    ui_create_button_type_click(hwnd, x + 13, y + 160, L"CALL CANCEL", ID_COP3_CALL_CACEL);
+
+}
+        
 
 /********************************* end of file ********************************/
 

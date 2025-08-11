@@ -119,7 +119,7 @@ void ui11_create_label_no_border(HWND hwnd, const wchar_t* text, int x, int y, i
  * @param  hwnd, parent windows
  * @return xxxx
  *******************************************************************************/
-void ui50_create_3pos_switch(HWND hwnd, int x, int y, RADIO_3POS_STRU* pr) {
+void ui_create_radio_type_3pos(HWND hwnd, int x, int y, RADIO_3POS_STRU* pr) {
     HWND hRadio0, hRadio1, hRadio2;
 
     ui11_create_label_no_border(hwnd, pr->label, x, y, 120, 20);
@@ -225,24 +225,38 @@ void ui30_draw_custom_button_trigger_redraw(HWND hwnd, int id) {
  * @return xxxx
  *******************************************************************************/
 void ui_create_button_type_lock(HWND hwnd, int x, int y, const wchar_t* text, int id) {
-    HWND b1 = CreateWindow(L"BUTTON", text, WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON | WS_BORDER | BS_OWNERDRAW,
-        x, y, 160, 23, hwnd, (HMENU)(INT_PTR)id, NULL, NULL);
+    HWND b1 = CreateWindow(L"BUTTON", text, 
+        WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON | WS_BORDER | BS_OWNERDRAW,
+        x, y, UI_BUTTON_WIDTH_WIDTH, UI_BUTTON_HEIGHT, hwnd, (HMENU)(INT_PTR)id, NULL, NULL);
+    ui10_apply_font_to_control(b1, UI_FONT_9PT);
+}
+
+/*******************************************************************************
+ * @brief  Brief_description_of_the_function
+ * @param  xxxx
+ * @param  xxxx
+ * @return xxxx
+ *******************************************************************************/
+void ui_create_button_type_click(HWND hwnd, int x, int y, const wchar_t* text, int id) {
+    HWND b1 = CreateWindow(L"BUTTON", text, 
+        WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON ,
+        x, y, UI_BUTTON_WIDTH_WIDTH, UI_BUTTON_HEIGHT, hwnd, (HMENU)(INT_PTR)id, NULL, NULL);
     ui10_apply_font_to_control(b1, UI_FONT_9PT);
 }
         
 
 void ui_create_button_type_continuous(HWND hwnd, int x, int y, const wchar_t*name,int id) {
-    extern LRESULT CALLBACK ui41_continuous_press_callback(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam, UINT_PTR uIdSubclass, DWORD_PTR dwRefData);
+    extern LRESULT CALLBACK ui_callback_type_continuous(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam, UINT_PTR uIdSubclass, DWORD_PTR dwRefData);
 
     HWND b1;
     DWORD style = WS_VISIBLE | WS_CHILD | WS_BORDER;
 
     b1 = CreateWindow(L"BUTTON", name, style, x, y,
-        UI_BUTTON_WIDTH_WIDE, UI_BUTTON_HEIGHT, // button width and height
+        UI_BUTTON_WIDTH_WIDTH, UI_BUTTON_HEIGHT, // button width and height
         hwnd, (HMENU)(INT_PTR)(id), NULL, NULL);
 
     ui10_apply_font_to_control(b1, UI_FONT_9PT);
-    SetWindowSubclass(b1, ui41_continuous_press_callback, 1, 0);
+    SetWindowSubclass(b1, ui_callback_type_continuous, 1, 0);
 }
 
 /********************************* end of file ********************************/

@@ -134,7 +134,7 @@
 
 //universal button size
 #define UI_BUTTON_WIDTH_SMALL           85
-#define UI_BUTTON_WIDTH_WIDE            160
+#define UI_BUTTON_WIDTH_WIDTH            160
 #define UI_BUTTON_HEIGHT                23
 
 /******************************************************************************
@@ -302,9 +302,9 @@ typedef struct {
 ******************************* Exported functions *****************************
 *******************************************************************************/
 void ui1_init_widgets(HWND hwnd);
-void ui2_lock_button_action_callback(HWND hwnd, int id);
-void ui3_lock_button_draw_callback(LPDRAWITEMSTRUCT lpDrawItem);
-void ui51_radio_group_callback(int id);
+void ui_callback_type_lock_step1(HWND hwnd, int id);
+void ui_callback_type_lock_step2(LPDRAWITEMSTRUCT lpDrawItem);
+void ui_callback_type_radio(int id);
 
 //int ui64_get_ui_run_ms();
 

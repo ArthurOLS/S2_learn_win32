@@ -77,6 +77,8 @@ typedef enum {
     CALL_BUTTON_MAX,
     D1_OPEN,
     D1_CLOSE,
+    CF11,
+    CF12,
 
 
     //[DEBUG BUTTONS]
@@ -115,7 +117,7 @@ typedef enum {
 
     //Radio switchs
     ID_RADIO_STARTING = 4000,
-
+    //cop2
     ID_COP2_HOIST_ACCESS_ON,
     ID_COP2_HOIST_ACCESS_OFF,
     ID_COP2_IND_ON, //independent service
@@ -126,7 +128,7 @@ typedef enum {
     ID_COP2_ENABLE,
     ID_COP2_DOWN,
 
-
+    //cop3
     ID_COP3_FIRE_PH2_OFF,
     ID_COP3_FIRE_PH2_HOLD,
     ID_COP3_FIRE_PH2_ON,
@@ -134,7 +136,9 @@ typedef enum {
     ID_COP3_RUN_RUN,
     ID_COP3_RUN_STOP,
 
-    ID_COP3_ENABLE,
+    ID_COP3_OPEN_DOOR,
+    ID_COP3_CLOSE_DOOR,
+    ID_COP3_CALL_CACEL,
 } ENUM_BUTTON_ID;
 
 

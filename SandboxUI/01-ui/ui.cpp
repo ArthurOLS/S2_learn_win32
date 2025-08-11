@@ -82,19 +82,13 @@ typedef struct {
 UI_CONTROL_STRU _ui_control_stru;
 
 
-
-
-HWND hButtonUp, hButtonDown, hButtonLight;
-bool up = false;
-bool down = false;
-bool light = false;
-
 /*******************************************************************************
 ************************** Private function prototypes *************************
 *******************************************************************************/
 extern void ui_create_button_hop(HWND hwnd, int gx, int gy, int bw, int bh);
 extern void ui_create_button_cop1(HWND hwnd, int gx, int gy, int bw, int bh);
 extern void ui_create_cop2(HWND hwnd, int x, int y);
+extern void ui_create_cop3(HWND hwnd, int x, int y);
 
 
 /*******************************************************************************
@@ -110,41 +104,69 @@ extern void ui_create_cop2(HWND hwnd, int x, int y);
  * @param  xxxx
  * @return xxxx
  *******************************************************************************/
-LRESULT CALLBACK ui41_continuous_press_callback(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam, UINT_PTR uIdSubclass, DWORD_PTR dwRefData) {
+LRESULT CALLBACK ui_callback_type_continuous(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam, UINT_PTR uIdSubclass, DWORD_PTR dwRefData) {
     int bid = GetDlgCtrlID(hwnd);
     switch (uMsg) {
     case WM_LBUTTONDOWN:
         switch (bid) {
         case D1_OPEN:
-            ui_internal_printf("open=1.");
+            ui_internal_printf("COP open door =1.");
             break;
         case D1_CLOSE:
-            ui_internal_printf("close=1.");
+            ui_internal_printf("COP close door =1.");
+            break;
 
+        case ID_COP2_UP:
+            ui_internal_printf("COP2-UP =1.");
             break;
-        default:
+        case ID_COP2_DOWN:
+            ui_internal_printf("COP2-DOWN =1.");
             break;
+
+
+        case ID_COP3_OPEN_DOOR:
+            ui_internal_printf("COP3 OPEN DOOR =1.");
+            break;
+        case ID_COP3_CLOSE_DOOR:
+            ui_internal_printf("COP3 CLOSE DOOR =1.");
+            break;
+
+        default:break;
         }
         break;
 
     case WM_LBUTTONUP:
         switch (bid) {
         case D1_OPEN:
-            ui_internal_printf("open=0.");
+            ui_internal_printf("COP open door =0.");
             break;
         case D1_CLOSE:
-            ui_internal_printf("close=0.");
+            ui_internal_printf("COP close door =0.");
+            break;
 
+        case ID_COP3_OPEN_DOOR:
+            ui_internal_printf("COP3 OPEN DOOR =0.");
             break;
-        default:
+        case ID_COP3_CLOSE_DOOR:
+            ui_internal_printf("COP3 CLOSE DOOR =0.");
             break;
+
+        case ID_COP2_UP:
+            ui_internal_printf("COP2-UP =0.");
+            break;
+        case ID_COP2_DOWN:
+            ui_internal_printf("COP2-DOWN =0.");
+            break;
+
+        default:break;
         }
         break;
 
     case WM_NCDESTROY:
-        // Clean up subclass when control is destroyed
-        RemoveWindowSubclass(hwnd, ui41_continuous_press_callback, uIdSubclass);
+        
+        RemoveWindowSubclass(hwnd, ui_callback_type_continuous, uIdSubclass);// Clean up subclass when control is destroyed
         break;
+    default:break;
     }
 
     return DefSubclassProc(hwnd, uMsg, wParam, lParam); // Forward to original
@@ -160,7 +182,7 @@ LRESULT CALLBACK ui41_continuous_press_callback(HWND hwnd, UINT uMsg, WPARAM wPa
  * @param  xxxx
  * @return xxxx
  *******************************************************************************/
-void ui51_radio_group_callback(int id) {
+void ui_callback_type_radio(int id) {
     switch (id) // LOWORD = control ID
     {
     case ID_COP3_FIRE_PH2_OFF: 
@@ -176,6 +198,7 @@ void ui51_radio_group_callback(int id) {
 }
 
 bool __cop3_enabled = 0;
+bool __cop2_enabled = 0;
 
 /*******************************************************************************
  * @brief  called by main.cpp WM_COMMAND event.
@@ -183,7 +206,7 @@ bool __cop3_enabled = 0;
  * @param  hwnd: the parent wnd
  * @return xxxx
  *******************************************************************************/
-void ui2_lock_button_action_callback(HWND hwnd, int id) {
+void ui_callback_type_lock_step1(HWND hwnd, int id) {
     switch (id) {
     case BUTTON_ID_UP:
         OutputDebugStringA("UP pressed\n");
@@ -203,10 +226,13 @@ void ui2_lock_button_action_callback(HWND hwnd, int id) {
         ui30_draw_custom_button_trigger_redraw(hwnd, id); // Force redraw
         break;
 
-    case ID_COP3_ENABLE:
-        __cop3_enabled = !__cop3_enabled;
-        ui_internal_printf("COP3 ENABLE=%d", __cop3_enabled);
+
+
+    case ID_COP2_ENABLE:
+        __cop2_enabled = !__cop2_enabled;
+        ui_internal_printf("COP2 ENABLE=%d", __cop2_enabled);
         ui30_draw_custom_button_trigger_redraw(hwnd, id); // Force redraw
+        break;
 
     default:
         break;
@@ -220,7 +246,7 @@ void ui2_lock_button_action_callback(HWND hwnd, int id) {
  * @param  xxxx
  * @return xxxx
  *******************************************************************************/
-void ui3_lock_button_draw_callback(LPDRAWITEMSTRUCT lpDrawItem) {
+void ui_callback_type_lock_step2(LPDRAWITEMSTRUCT lpDrawItem) {
     int id = lpDrawItem->CtlID;
     switch (id) {
     case BUTTON_ID_UP:
@@ -235,8 +261,9 @@ void ui3_lock_button_draw_callback(LPDRAWITEMSTRUCT lpDrawItem) {
         ui30_draw_custom_button(lpDrawItem, NULL, _ui_control_stru.is_enable);
         break;
 
-    case ID_COP3_ENABLE:
-        ui30_draw_custom_button(lpDrawItem, NULL, __cop3_enabled);
+
+    case ID_COP2_ENABLE:
+        ui30_draw_custom_button(lpDrawItem, NULL, __cop2_enabled);
         break;
 
     default:
@@ -295,13 +322,7 @@ void ui1_init_widgets(HWND hwnd) { // Labels
     ui_create_cop2(hwnd, UI_COP2_X, UI_COP2_Y);
 
     //cop3
-    RADIO_3POS_STRU switch_fire2 = { L"FIRE PH2", L"OFF", L"HOLD", L"ON", ID_COP3_FIRE_PH2_OFF, ID_COP3_FIRE_PH2_HOLD, ID_COP3_FIRE_PH2_ON, 0 };
-    ui50_create_3pos_switch(hwnd, UI_COP3_X + 5, UI_COP3_Y + 20, &switch_fire2);
-    
-    RADIO_2POS_STRU switch_runstop = { L"RUN/STOP", L"RUN", L"STOP", ID_COP3_RUN_RUN, ID_COP3_RUN_STOP, 1};
-    ui_create_radio_type_2pos(hwnd, UI_COP3_X + 5, UI_COP3_Y + 60, &switch_runstop);
-
-    ui_create_button_type_lock(hwnd, UI_COP3_X + 13, UI_COP3_Y + 100, L"ENABLE", ID_COP3_ENABLE);
+    ui_create_cop3(hwnd, UI_COP3_X, UI_COP3_Y);
 }
         
 
