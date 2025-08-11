@@ -186,7 +186,6 @@ void ui_create_button_cop1(HWND hwnd, int gx, int gy, int bw, int bh) {
 /*******************************************************************************
  * @brief  create cop2 input block
  * @param  x, y = the block box left/top position
- * @param  xxxx
  * @return xxxx
  *******************************************************************************/
 void ui_create_cop2(HWND hwnd, int x, int y) {
@@ -207,9 +206,8 @@ void ui_create_cop2(HWND hwnd, int x, int y) {
         
 
 /*******************************************************************************
- * @brief  Brief_description_of_the_function
- * @param  xxxx
- * @param  xxxx
+ * @brief  create cop3 input block
+ * @param  x, y = the block box left/top position
  * @return xxxx
  *******************************************************************************/
 void ui_create_cop3(HWND hwnd, int x, int y) {
@@ -219,12 +217,29 @@ void ui_create_cop3(HWND hwnd, int x, int y) {
     RADIO_2POS_STRU switch_runstop = { L"RUN/STOP", L"ON", L"OFF", ID_COP3_RUN_RUN, ID_COP3_RUN_STOP, 1 };
     ui_create_radio_type_2pos(hwnd, x + 5, y + 60, &switch_runstop);
 
-    ui_create_button_type_continuous(hwnd, x + 13, y + 100, L"OPEN DOOR ◀▶", ID_COP3_OPEN_DOOR);
-    ui_create_button_type_continuous(hwnd, x + 13, y + 130, L"CLOSE DOOR ▶◀", ID_COP3_CLOSE_DOOR);
+    ui_create_button_type_continuous(hwnd, x + 13, y + 100, L"OPEN DOOR", ID_COP3_OPEN_DOOR);// ◀▶
+    ui_create_button_type_continuous(hwnd, x + 13, y + 130, L"CLOSE DOOR", ID_COP3_CLOSE_DOOR);// ▶◀
     ui_create_button_type_click(hwnd, x + 13, y + 160, L"CALL CANCEL", ID_COP3_CALL_CACEL);
 
 }
         
+
+/*******************************************************************************
+ * @brief  create hop2 input block
+ * @param  x, y = the block box left/top position
+ * @return xxxx
+ *******************************************************************************/
+void ui_create_hop2(HWND hwnd, int x, int y) {
+    RADIO_3POS_STRU switch_fire1 = { L"FIRE PH1", L"RESET", L"OFF", L"ON", ID_HOP2_FIRE_RECALL_OFF, ID_HOP2_FIRE_RECALL_OFF, ID_HOP2_FIRE_RECALL_ON, 1 };
+    ui_create_radio_type_3pos(hwnd, x + 5, y + 20, &switch_fire1);
+
+    RADIO_3POS_STRU switch_insp_top = { L"INSP. ACCESS TOP", L"UP", L"OFF", L"DOWN", ID_HOP2_INSP_TOP_UP, ID_HOP2_INSP_TOP_OFF, ID_HOP2_INSP_TOP_DOWN, 1 };
+    ui_create_radio_type_3pos(hwnd, x + 5, y + 60, &switch_insp_top);
+
+    RADIO_3POS_STRU switch_insp_bottom = { L"INSP. ACCESS BOTTOM", L"UP", L"OFF", L"DOWN", ID_HOP2_INSP_BOTTOM_UP, ID_HOP2_INSP_BOTTOM_OFF, ID_HOP2_INSP_BOTTOM_DOWN, 1 };
+    ui_create_radio_type_3pos(hwnd, x + 5, y + 100, &switch_insp_bottom);
+}
+    
 
 /********************************* end of file ********************************/
 

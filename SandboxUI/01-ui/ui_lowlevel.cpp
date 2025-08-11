@@ -126,17 +126,17 @@ void ui_create_radio_type_3pos(HWND hwnd, int x, int y, RADIO_3POS_STRU* pr) {
     int GAP = 15;
     hRadio0 = CreateWindow(L"BUTTON", pr->r0_label,
         WS_CHILD | WS_VISIBLE | BS_AUTORADIOBUTTON | WS_GROUP, // Group style only on the **first** radio button
-        x, y + GAP, 50, 20, hwnd, (HMENU)(INT_PTR)(pr->id0), NULL, NULL);
+        x, y + GAP, 60, 20, hwnd, (HMENU)(INT_PTR)(pr->id0), NULL, NULL);
     ui10_apply_font_to_control(hRadio0, UI_FONT_9PT);
 
     hRadio1 = CreateWindow(L"BUTTON", pr->r1_label,
         WS_CHILD | WS_VISIBLE | BS_AUTORADIOBUTTON,
-        x + 60, y + GAP, 50, 20, hwnd, (HMENU)(INT_PTR)(pr->id1), NULL, NULL);
+        x + 60, y + GAP, 60, 20, hwnd, (HMENU)(INT_PTR)(pr->id1), NULL, NULL);
     ui10_apply_font_to_control(hRadio1, UI_FONT_9PT);
 
     hRadio2 = CreateWindow(L"BUTTON", pr->r2_label,
         WS_CHILD | WS_VISIBLE | BS_AUTORADIOBUTTON,
-        x + 120, y + GAP, 50, 20, hwnd, (HMENU)(INT_PTR)(pr->id2), NULL, NULL);
+        x + 120, y + GAP, 60, 20, hwnd, (HMENU)(INT_PTR)(pr->id2), NULL, NULL);
     ui10_apply_font_to_control(hRadio2, UI_FONT_9PT);
 
     // Set default checked radio button

@@ -89,7 +89,7 @@ extern void ui_create_button_hop(HWND hwnd, int gx, int gy, int bw, int bh);
 extern void ui_create_button_cop1(HWND hwnd, int gx, int gy, int bw, int bh);
 extern void ui_create_cop2(HWND hwnd, int x, int y);
 extern void ui_create_cop3(HWND hwnd, int x, int y);
-
+extern void ui_create_hop2(HWND hwnd, int x, int y);
 
 /*******************************************************************************
 ******************************* Private functions ******************************
@@ -317,6 +317,9 @@ void ui1_init_widgets(HWND hwnd) { // Labels
     //logbox
     ui_create_logbox(hwnd, UI_LOGBOX_X, UI_LOGBOX_Y, UI_LOGBOX_W, UI_LOGBOX_H, 0);
     ui_internal_printf("print what you want");
+
+    //hop2
+    ui_create_hop2(hwnd, UI_HOP2_X, UI_HOP2_Y);
 
     //cop2
     ui_create_cop2(hwnd, UI_COP2_X, UI_COP2_Y);

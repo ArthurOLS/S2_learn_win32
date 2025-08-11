@@ -117,6 +117,20 @@ typedef enum {
 
     //Radio switchs
     ID_RADIO_STARTING = 4000,
+
+    //hop2
+    ID_HOP2_FIRE_RECALL_RESET,
+    ID_HOP2_FIRE_RECALL_OFF,
+    ID_HOP2_FIRE_RECALL_ON,
+    ID_HOP2_INSP_TOP_UP,
+    ID_HOP2_INSP_TOP_OFF,
+    ID_HOP2_INSP_TOP_DOWN,
+    ID_HOP2_INSP_BOTTOM_UP,
+    ID_HOP2_INSP_BOTTOM_OFF,
+    ID_HOP2_INSP_BOTTOM_DOWN,
+
+    //machineroom block
+
     //cop2
     ID_COP2_HOIST_ACCESS_ON,
     ID_COP2_HOIST_ACCESS_OFF,

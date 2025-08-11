@@ -179,7 +179,7 @@
 #define UI_BUTTONS_TOP2                 400-40  //group2
 #define UI_BUTTON_WIDTH                 85
 #define UI_BUTTON_HEIGHT                23
-#define UI_BUTTON_GAP_ROW               5    //for group1
+#define UI_BUTTON_GAP_ROW               8    //for group1
 #define UI_BUTTON_HEIGHT2               23   //for group2
 #define UI_BUTTON_GAP_ROW2              12   //for group2
 #define UI_BUTTON_GAP_COLUMN            5
