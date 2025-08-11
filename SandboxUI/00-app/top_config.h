@@ -55,13 +55,10 @@ typedef enum {
 } ELEVATOR_MODE_ENUM;
 
 // Title texts
-#define APP_MAIN_TITLE L"ElevatorSimulatorV2a"
 #define APP_SUB_TITLE_SIMPLEX L"-Simplex"
 #define APP_SUB_TITLE_MASTER L"-Master"
 #define APP_SUB_TITLE_SLAVE1 L"-Slave1"
-#define APP_SUB_TITLE_SLAVE2 L"-Slave2"
-#define APP_SUB_TITLE_SLAVE3 L"-Slave3"
-#define APP_SUB_TITLE_SLAVE4 L"-Slave4"  
+
 
 // Simulation parameters (mm, Sec)
 

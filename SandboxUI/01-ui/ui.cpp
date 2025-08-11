@@ -71,12 +71,7 @@ typedef struct {
 /*******************************************************************************
 ********************************* Private macro ********************************
 *******************************************************************************/
-typedef struct {
-    const wchar_t* text;
-    int id;    
-    int is_clicked; //0=not, 1=clicked, used when this button is also used as a led
 
-} BUTTON_STRU;
 
 //#define FILL_BUTTON_ID(name)          { #name, name, 0 }
 
@@ -86,53 +81,7 @@ typedef struct {
 *******************************************************************************/
 UI_CONTROL_STRU _ui_control_stru;
 
-BUTTON_STRU button_hop[] = {
-    { L"__SKIP",     0,          0 },//'__SKIP' means the button invisiable
-    { L"10🔻",       H10DN,      0 },
 
-    { L"9🔺",        H9UP,       0 },
-    { L"9🔻",        H9DN,       0 },
-
-    { L"8🔺",        H8UP,       0 },
-    { L"8🔻",        H8DN,       0 },
-
-    { L"7🔺",        H7UP,       0 },
-    { L"7🔻",        H7DN,       0 },
-
-    { L"6🔺",        H6UP,       0 },
-    { L"6🔻",        H6DN,       0 },
-
-    { L"5🔺",        H5UP,       0 },
-    { L"5🔻",        H5DN,       0 },
-
-    { L"4🔺",        H4UP,       0 },
-    { L"4🔻",        H4DN,       0 },
-
-    { L"3🔺",        H3UP,       0 },
-    { L"3🔻",        H3DN,       0 },
-
-    { L"2🔺",        H2UP,       0 },
-    { L"2🔻",        H2DN,       0 },
-
-    { L"1🔺",        H1UP,       0 },
-};
-
-BUTTON_STRU button_cop1[] = {
-    { L"10", CF10, 0 },
-    { L"9", CF9, 0 },
-    { L"8", CF8, 0 },
-    { L"7", CF7, 0 },
-    { L"6", CF6, 0 },
-    { L"5", CF5, 0 },
-    { L"4", CF4, 0 },
-    { L"3", CF3, 0 },
-    { L"2", CF2, 0 },
-    { L"1", CF1, 0 },
-
-    { L"OPEN DOOR",     D1_OPEN,    0 },
-    { L"CLOSE DOOR ",   D1_CLOSE,   0 },
-
-};
 
 
 HWND hButtonUp, hButtonDown, hButtonLight;
@@ -143,48 +92,25 @@ bool light = false;
 /*******************************************************************************
 ************************** Private function prototypes *************************
 *******************************************************************************/
+extern void ui_create_button_hop(HWND hwnd, int gx, int gy, int bw, int bh);
+extern void ui_create_button_cop1(HWND hwnd, int gx, int gy, int bw, int bh);
+extern void ui_create_cop2(HWND hwnd, int x, int y);
 
- 
+
 /*******************************************************************************
 ******************************* Private functions ******************************
 *******************************************************************************/
 
 
-/*******************************************************************************
- * @brief  create HOPs buttons panel in a block(using a label)
- * @param  gx,gy: parent group position
- * @param  bw,bh: button width and height
- * How it works? if you have button_hop = {1,2,3,4,5 .... }
- *         the buttons are displayed in the order of:
- *         [1] [2] --> BUTTON_PER_ROW = 2
- *         [3] [4]
- *         [5] ... 
- * @return xxxx
- *******************************************************************************/
-void ui_create_button_hop(HWND hwnd, int gx, int gy, int bw, int bh) {
-    int num = (sizeof(button_hop)) / sizeof(BUTTON_STRU);
-
-    for (int i = 0; i < num; i++) {
-        if (i == 0) {
-            continue;
-        }
-        HWND b1 = CreateWindow(L"BUTTON", button_hop[i].text, WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON,
-            gx + (i % UI_BUTTON_PER_ROW) * (bw + UI_BUTTON_GAP_COLUMN),
-            gy + ((i / UI_BUTTON_PER_ROW)) * (bh + UI_BUTTON_GAP_ROW),
-            bw, bh, //button width and height
-            hwnd, (HMENU)(button_hop[i].id), NULL, NULL);
-        ui10_apply_font_to_control(b1, UI_FONT_9PT);
-    }
-}
      
 
 /*******************************************************************************
- * @brief  Subclass procedure
+ * @brief  callback for continuous-press buttons
  * @param  xxxx
  * @param  xxxx
  * @return xxxx
  *******************************************************************************/
-LRESULT CALLBACK ui41_ButtonSubclassProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam, UINT_PTR uIdSubclass, DWORD_PTR dwRefData) {
+LRESULT CALLBACK ui41_continuous_press_callback(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam, UINT_PTR uIdSubclass, DWORD_PTR dwRefData) {
     int bid = GetDlgCtrlID(hwnd);
     switch (uMsg) {
     case WM_LBUTTONDOWN:
@@ -217,7 +143,7 @@ LRESULT CALLBACK ui41_ButtonSubclassProc(HWND hwnd, UINT uMsg, WPARAM wParam, LP
 
     case WM_NCDESTROY:
         // Clean up subclass when control is destroyed
-        RemoveWindowSubclass(hwnd, ui41_ButtonSubclassProc, uIdSubclass);
+        RemoveWindowSubclass(hwnd, ui41_continuous_press_callback, uIdSubclass);
         break;
     }
 
@@ -225,46 +151,6 @@ LRESULT CALLBACK ui41_ButtonSubclassProc(HWND hwnd, UINT uMsg, WPARAM wParam, LP
 }
 
 
-/*******************************************************************************
- * @brief  create COP1 buttons panel in a block(using a label)
- * @param  gx,gy: parent group position
- * @param  bw,bh: button width and height
- * How it works? if you have button_hop = {1,2,3,4,5 .... }
- *         the buttons are displayed in the order of:
- *         [1] [2] --> BUTTON_PER_ROW = 2
- *         [3] [4]
- *         [5] ...
- *         [NOTE] the last 2 buttons are press type, not click type, they also need
- *                their own callback function.
- * @return xxxx
- *******************************************************************************/
-void ui_create_button_cop1(HWND hwnd, int gx, int gy, int bw, int bh) {
-
-    int num = (sizeof(button_cop1)) / sizeof(BUTTON_STRU);
-
-    for (int i = 0; i < num; i++) {
-        HWND b1;
-        DWORD style;
-        if (button_cop1[i].id == D1_CLOSE || button_cop1[i].id == D1_OPEN) {
-            style = WS_VISIBLE | WS_CHILD | WS_BORDER;
-        }
-        else {
-            style = WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON;
-        }
-        b1 = CreateWindow(L"BUTTON", button_cop1[i].text, style,
-            gx + (i % UI_BUTTON_PER_ROW) * (bw + UI_BUTTON_GAP_COLUMN),
-            gy + ((i / UI_BUTTON_PER_ROW)) * (bh + UI_BUTTON_GAP_ROW),
-            bw, bh, // button width and height
-            hwnd, (HMENU)(button_cop1[i].id), NULL, NULL);
-        ui10_apply_font_to_control(b1, UI_FONT_9PT);
-
-        if (button_cop1[i].id == D1_CLOSE || button_cop1[i].id == D1_OPEN) {
-            style = WS_VISIBLE | WS_CHILD;
-            SetWindowSubclass(b1, ui41_ButtonSubclassProc, 1, 0);
-        }
-    }
-
-}
 
 
 
@@ -377,11 +263,11 @@ void ui3_lock_button_draw_callback(LPDRAWITEMSTRUCT lpDrawItem) {
  *******************************************************************************/
 void ui1_init_widgets(HWND hwnd) { // Labels
    
-    //create main window top layout
+////create main window top layout
     ui11_create_label(hwnd, L" Animation", UI_ANIMATION_X, UI_ANIMATION_Y, UI_ANIMATION_W, UI_ANIMATION_H);
     ui11_create_label(hwnd, L" Simulator", UI_LABELBOX_X, UI_LABELBOX_Y, UI_LABELBOX_W, UI_LABELBOX_H);
     ui11_create_label(hwnd, L" ElevatorCore", UI_LABELBOX2_X, UI_LABELBOX2_Y, UI_LABELBOX2_W, UI_LABELBOX2_H);
-    ui_logbox_create(hwnd, COLUMN2_X, UI_LOGBOX_Y, UI_LOGBOX_W, UI_LOGBOX_H, 0);
+    ui_create_logbox(hwnd, COLUMN2_X, UI_LOGBOX_Y, UI_LOGBOX_W, UI_LOGBOX_H, 0);
     //column4
     ui11_create_label(hwnd, L" HOPs", UI_HOP_X, UI_HOP_Y, UI_HOP_W, UI_HOP_H);
     ui11_create_label(hwnd, L" HOP2 (Fire Service)", UI_HOP2_X, UI_HOP2_Y, UI_HOP2_W, UI_HOP2_H);
@@ -396,23 +282,26 @@ void ui1_init_widgets(HWND hwnd) { // Labels
     ui11_create_label(hwnd, L" Non-manual Input Devices", UI_NONMANUAL_X, UI_NONMANUAL_Y, UI_NONMANUAL_W, UI_NONMANUAL_H);
     ui11_create_label(hwnd, L" Debug", UI_DEGUG_X, UI_DEGUG_Y, UI_DEGUG_W, UI_DEGUG_H);
     
-
+////create each block
+    //hop
     ui_create_button_hop(hwnd, UI_HOP_X+7, UI_HOP_Y+20, UI_BUTTON_WIDTH, UI_BUTTON_HEIGHT);
+    //cop1
     ui_create_button_cop1(hwnd, UI_COP1_X + 7, UI_COP1_Y + 20, UI_BUTTON_WIDTH, UI_BUTTON_HEIGHT);
-
-
-    ui_logbox_create(hwnd, UI_LOGBOX_X, UI_LOGBOX_Y, UI_LOGBOX_W, UI_LOGBOX_H, 0);
+    //logbox
+    ui_create_logbox(hwnd, UI_LOGBOX_X, UI_LOGBOX_Y, UI_LOGBOX_W, UI_LOGBOX_H, 0);
     ui_internal_printf("print what you want");
 
+    //cop2
+    ui_create_cop2(hwnd, UI_COP2_X, UI_COP2_Y);
 
-
+    //cop3
     RADIO_3POS_STRU switch_fire2 = { L"FIRE PH2", L"OFF", L"HOLD", L"ON", ID_COP3_FIRE_PH2_OFF, ID_COP3_FIRE_PH2_HOLD, ID_COP3_FIRE_PH2_ON, 0 };
     ui50_create_3pos_switch(hwnd, UI_COP3_X + 5, UI_COP3_Y + 20, &switch_fire2);
     
     RADIO_2POS_STRU switch_runstop = { L"RUN/STOP", L"RUN", L"STOP", ID_COP3_RUN_RUN, ID_COP3_RUN_STOP, 1};
-    ui50_create_2pos_switch(hwnd, UI_COP3_X + 5, UI_COP3_Y + 60, &switch_runstop);
+    ui_create_radio_type_2pos(hwnd, UI_COP3_X + 5, UI_COP3_Y + 60, &switch_runstop);
 
-    ui_lock_button_create(hwnd, UI_COP3_X + 13, UI_COP3_Y + 100, L"ENABLE", ID_COP3_ENABLE);
+    ui_create_button_type_lock(hwnd, UI_COP3_X + 13, UI_COP3_Y + 100, L"ENABLE", ID_COP3_ENABLE);
 }
         
 

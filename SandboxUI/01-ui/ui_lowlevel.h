@@ -71,13 +71,15 @@ void ui11_create_label(HWND hwnd, const wchar_t* text, int x, int y, int w, int 
 void ui11_create_label_no_border(HWND hwnd, const wchar_t* text, int x, int y, int w, int h);
 
 void ui50_create_3pos_switch(HWND hwnd, int x, int y, RADIO_3POS_STRU* pr);
-void ui50_create_2pos_switch(HWND hwnd, int x, int y, RADIO_2POS_STRU* pr);
+void ui_create_radio_type_2pos(HWND hwnd, int x, int y, RADIO_2POS_STRU* pr);
+void ui_create_button_type_continuous(HWND hwnd, int x, int y, const wchar_t* name, int id);
+
 
 void ui30_draw_custom_button(LPDRAWITEMSTRUCT lpDrawItem, const wchar_t* text, bool state);
 void ui30_draw_custom_button_trigger_redraw(HWND hwnd, int id);
 
 
-void ui_lock_button_create(HWND hwnd, int x, int y, const wchar_t* text, int id);
+void ui_create_button_type_lock(HWND hwnd, int x, int y, const wchar_t* text, int id);
 
 #endif /* __UI_LOWLEVEL_H */
 /********************************* end of file ********************************/

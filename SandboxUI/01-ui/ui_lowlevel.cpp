@@ -20,6 +20,8 @@
 
 #include <Windows.h>
 #include "ui_lowlevel.h"
+#include <commctrl.h> // For SetWindowSubclass, DefSubclassProc
+#include "ui.h"
 
 /*******************************************************************************
 ******************************** Private typedef *******************************
@@ -124,17 +126,17 @@ void ui50_create_3pos_switch(HWND hwnd, int x, int y, RADIO_3POS_STRU* pr) {
     int GAP = 15;
     hRadio0 = CreateWindow(L"BUTTON", pr->r0_label,
         WS_CHILD | WS_VISIBLE | BS_AUTORADIOBUTTON | WS_GROUP, // Group style only on the **first** radio button
-        x, y + GAP, 50, 20, hwnd, (HMENU)(pr->id0), NULL, NULL);
+        x, y + GAP, 50, 20, hwnd, (HMENU)(INT_PTR)(pr->id0), NULL, NULL);
     ui10_apply_font_to_control(hRadio0, UI_FONT_9PT);
 
     hRadio1 = CreateWindow(L"BUTTON", pr->r1_label,
         WS_CHILD | WS_VISIBLE | BS_AUTORADIOBUTTON,
-        x + 60, y + GAP, 50, 20, hwnd, (HMENU)(pr->id1), NULL, NULL);
+        x + 60, y + GAP, 50, 20, hwnd, (HMENU)(INT_PTR)(pr->id1), NULL, NULL);
     ui10_apply_font_to_control(hRadio1, UI_FONT_9PT);
 
     hRadio2 = CreateWindow(L"BUTTON", pr->r2_label,
         WS_CHILD | WS_VISIBLE | BS_AUTORADIOBUTTON,
-        x + 120, y + GAP, 50, 20, hwnd, (HMENU)(pr->id2), NULL, NULL);
+        x + 120, y + GAP, 50, 20, hwnd, (HMENU)(INT_PTR)(pr->id2), NULL, NULL);
     ui10_apply_font_to_control(hRadio2, UI_FONT_9PT);
 
     // Set default checked radio button
@@ -146,19 +148,19 @@ void ui50_create_3pos_switch(HWND hwnd, int x, int y, RADIO_3POS_STRU* pr) {
         SendMessage(hRadio2, BM_SETCHECK, BST_CHECKED, 0); // default: position 2
 }
 
-void ui50_create_2pos_switch(HWND hwnd, int x, int y, RADIO_2POS_STRU* pr) {
-    HWND hRadio0, hRadio1, hRadio2;
+void ui_create_radio_type_2pos(HWND hwnd, int x, int y, RADIO_2POS_STRU* pr) {
+    HWND hRadio0, hRadio1;
 
     ui11_create_label_no_border(hwnd, pr->label, x, y, 120, 20);
     int GAP = 15;
     hRadio0 = CreateWindow(L"BUTTON", pr->r0_label,
         WS_CHILD | WS_VISIBLE | BS_AUTORADIOBUTTON | WS_GROUP, // Group style only on the **first** radio button
-        x, y + GAP, 50, 20, hwnd, (HMENU)(pr->id0), NULL, NULL);
+        x, y + GAP, 50, 20, hwnd, (HMENU)(INT_PTR)(pr->id0), NULL, NULL);
     ui10_apply_font_to_control(hRadio0, UI_FONT_9PT);
 
     hRadio1 = CreateWindow(L"BUTTON", pr->r1_label,
         WS_CHILD | WS_VISIBLE | BS_AUTORADIOBUTTON,
-        x + 60, y + GAP, 50, 20, hwnd, (HMENU)(pr->id1), NULL, NULL);
+        x + 60, y + GAP, 50, 20, hwnd, (HMENU)(INT_PTR)(pr->id1), NULL, NULL);
     ui10_apply_font_to_control(hRadio1, UI_FONT_9PT);
 
 
@@ -222,13 +224,26 @@ void ui30_draw_custom_button_trigger_redraw(HWND hwnd, int id) {
  * @param  xxxx
  * @return xxxx
  *******************************************************************************/
-void ui_lock_button_create(HWND hwnd, int x, int y, const wchar_t* text, int id) {
-    HWND b1 = CreateWindow(L"BUTTON", text, WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON | BS_OWNERDRAW,
-        x, y, 160, 23, hwnd, (HMENU)id, NULL, NULL);
+void ui_create_button_type_lock(HWND hwnd, int x, int y, const wchar_t* text, int id) {
+    HWND b1 = CreateWindow(L"BUTTON", text, WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON | WS_BORDER | BS_OWNERDRAW,
+        x, y, 160, 23, hwnd, (HMENU)(INT_PTR)id, NULL, NULL);
     ui10_apply_font_to_control(b1, UI_FONT_9PT);
 }
         
-        
+
+void ui_create_button_type_continuous(HWND hwnd, int x, int y, const wchar_t*name,int id) {
+    extern LRESULT CALLBACK ui41_continuous_press_callback(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam, UINT_PTR uIdSubclass, DWORD_PTR dwRefData);
+
+    HWND b1;
+    DWORD style = WS_VISIBLE | WS_CHILD | WS_BORDER;
+
+    b1 = CreateWindow(L"BUTTON", name, style, x, y,
+        UI_BUTTON_WIDTH_WIDE, UI_BUTTON_HEIGHT, // button width and height
+        hwnd, (HMENU)(INT_PTR)(id), NULL, NULL);
+
+    ui10_apply_font_to_control(b1, UI_FONT_9PT);
+    SetWindowSubclass(b1, ui41_continuous_press_callback, 1, 0);
+}
 
 /********************************* end of file ********************************/
 

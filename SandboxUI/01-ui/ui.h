@@ -132,6 +132,11 @@
 #define UI_DEGUG_W                      190
 #define UI_DEGUG_H                      (COLUMN_BOTTOM_Y - COLUMN_TOP_Y)
 
+//universal button size
+#define UI_BUTTON_WIDTH_SMALL           85
+#define UI_BUTTON_WIDTH_WIDE            160
+#define UI_BUTTON_HEIGHT                23
+
 /******************************************************************************
  * CAR COLUMN (LEFT1 IN MASTER)
  ******************************************************************************/
@@ -276,6 +281,14 @@ typedef struct {
     int i;
 } FROM_UI_STRUCT;
 
+
+// user ui widget model data
+typedef struct {
+    const wchar_t* text;
+    int id;
+    int is_clicked; // 0=not, 1=clicked, used when this button is also used as a led
+
+} BUTTON_STRU;
 
 /*******************************************************************************
 ******************************* Exported constants *****************************

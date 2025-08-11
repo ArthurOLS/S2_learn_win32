@@ -79,7 +79,7 @@ void ui40_append_text_to_logbox_tail(const char* text) {
  * @param  xxxx
  * @return xxxx
  *******************************************************************************/
-void ui_logbox_create(HWND hwnd, int x, int y, int w, int h, uint64_t set_start_ts) {
+void ui_create_logbox(HWND hwnd, int x, int y, int w, int h, uint64_t set_start_ts) {
     //[4] Log box ( read-only, scrollable, multiline text box.)
     __hlogbox = CreateWindow(
         L"EDIT",

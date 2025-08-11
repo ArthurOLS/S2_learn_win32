@@ -68,6 +68,9 @@
     <ClCompile Include="01-ui\ui_logbox.cpp">
       <Filter>01-ui</Filter>
     </ClCompile>
+    <ClCompile Include="01-ui\ui_create.cpp">
+      <Filter>01-ui</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="SandboxUI.rc">
