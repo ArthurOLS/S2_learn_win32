@@ -91,9 +91,11 @@ extern void ui_create_cop2(HWND hwnd, int x, int y);
 extern void ui_create_cop3(HWND hwnd, int x, int y);
 extern void ui_create_hop2(HWND hwnd, int x, int y);
 extern void ui_create_machineroom(HWND hwnd, int x, int y);
+extern void ui_create_toc(HWND hwnd, int x, int y);
 
 
-    /*******************************************************************************
+
+/*******************************************************************************
 ******************************* Private functions ******************************
 *******************************************************************************/
 
@@ -123,6 +125,13 @@ LRESULT CALLBACK ui_callback_type_continuous(HWND hwnd, UINT uMsg, WPARAM wParam
             break;
         case ID_COP2_DOWN:
             ui_internal_printf("COP2-DOWN =1.");
+            break;
+
+        case ID_TOC_UP:
+            ui_internal_printf("TOC-UP =1.");
+            break;
+        case ID_TOC_DOWN:
+            ui_internal_printf("TOC-DOWN =1.");
             break;
 
         case ID_MACHINEROOM_UP:
@@ -164,6 +173,14 @@ LRESULT CALLBACK ui_callback_type_continuous(HWND hwnd, UINT uMsg, WPARAM wParam
             break;
         case ID_COP2_DOWN:
             ui_internal_printf("COP2-DOWN =0.");
+            break;
+
+
+        case ID_TOC_UP:
+            ui_internal_printf("TOC-UP =0.");
+            break;
+        case ID_TOC_DOWN:
+            ui_internal_printf("TOC-DOWN =0.");
             break;
 
         case ID_MACHINEROOM_UP:
@@ -214,6 +231,7 @@ void ui_callback_type_radio(int id) {
 
 bool __button_machineroom_enable = 0;//0=initial off, 1=on
 bool __cop2_enabled = 0;
+bool __button_toc_enable = 0;
 
 /*******************************************************************************
  * @brief  called by main.cpp WM_COMMAND event.
@@ -233,6 +251,12 @@ void ui_callback_type_lock_step1(HWND hwnd, int id) {
     case ID_COP2_ENABLE:
         __cop2_enabled = !__cop2_enabled;
         ui_internal_printf("COP2 ENABLE=%d", __cop2_enabled);
+        ui30_draw_custom_button_trigger_redraw(hwnd, id); // Force redraw
+        break;
+
+    case ID_TOC_ENABLE:
+        __button_toc_enable = !__button_toc_enable;
+        ui_internal_printf("TOC ENABLE=%d", __button_toc_enable);
         ui30_draw_custom_button_trigger_redraw(hwnd, id); // Force redraw
         break;
 
@@ -259,6 +283,10 @@ void ui_callback_type_lock_step2(LPDRAWITEMSTRUCT lpDrawItem) {
 
     case ID_COP2_ENABLE:
         ui30_draw_custom_button(lpDrawItem, NULL, __cop2_enabled);
+        break;
+
+    case ID_TOC_ENABLE:
+        ui30_draw_custom_button(lpDrawItem, NULL, __button_toc_enable);
         break;
 
     default:
@@ -324,6 +352,9 @@ void ui1_init_widgets(HWND hwnd) { // Labels
 
     //cop3
     ui_create_cop3(hwnd, UI_COP3_X, UI_COP3_Y);
+
+    //top
+    ui_create_toc(hwnd, UI_TOC_X, UI_TOC_Y);
 }
         
 

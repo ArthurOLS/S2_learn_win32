@@ -162,6 +162,14 @@ typedef enum {
     ID_COP3_OPEN_DOOR,
     ID_COP3_CLOSE_DOOR,
     ID_COP3_CALL_CACEL,
+    //toc
+    ID_TOC_INSP_ON,
+    ID_TOC_INSP_OFF,
+    ID_TOC_RUN_RUN,
+    ID_TOC_RUN_STOP,
+    ID_TOC_UP,
+    ID_TOC_ENABLE,
+    ID_TOC_DOWN,
 } ENUM_BUTTON_ID;
 
 

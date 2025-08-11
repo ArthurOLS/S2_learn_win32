@@ -195,7 +195,7 @@ void ui_create_cop2(HWND hwnd, int x, int y) {
     RADIO_2POS_STRU switch_ind = { L"IND. SERVICE", L"ON", L"OFF", ID_COP2_IND_ON, ID_COP2_IND_OFF, 1 };
     ui_create_radio_type_2pos(hwnd, x + 5, y + 60, &switch_ind);
 
-    RADIO_2POS_STRU switch_runstop = { L"RUN/STOP", L"ON", L"OFF", ID_COP2_RUN_RUN, ID_COP2_RUN_STOP, 1 };
+    RADIO_2POS_STRU switch_runstop = { L"RUN/STOP", L"STOP", L"RUN", ID_COP2_RUN_STOP, ID_COP2_RUN_RUN, 1 };
     ui_create_radio_type_2pos(hwnd, x + 5, y + 100, &switch_runstop);
 
     
@@ -214,7 +214,7 @@ void ui_create_cop3(HWND hwnd, int x, int y) {
     RADIO_3POS_STRU switch_fire2 = { L"FIRE PH2", L"OFF", L"HOLD", L"ON", ID_COP3_FIRE_PH2_OFF, ID_COP3_FIRE_PH2_HOLD, ID_COP3_FIRE_PH2_ON, 0 };
     ui_create_radio_type_3pos(hwnd, x + 5, y + 20, &switch_fire2);
 
-    RADIO_2POS_STRU switch_runstop = { L"RUN/STOP", L"ON", L"OFF", ID_COP3_RUN_RUN, ID_COP3_RUN_STOP, 1 };
+    RADIO_2POS_STRU switch_runstop = { L"RUN/STOP", L"STOP", L"RUN", ID_COP3_RUN_STOP, ID_COP3_RUN_RUN, 1 };
     ui_create_radio_type_2pos(hwnd, x + 5, y + 60, &switch_runstop);
 
     ui_create_button_type_continuous(hwnd, x + 13, y + 100, L"OPEN DOOR", ID_COP3_OPEN_DOOR);// ◀▶
@@ -260,6 +260,23 @@ void ui_create_machineroom(HWND hwnd, int x, int y) {
     ui_create_button_type_continuous(hwnd, x + 15, y + 140, L"UP", ID_MACHINEROOM_UP);
     ui_create_button_type_lock(hwnd, x + 15, y + 170, L"ENABLE", ID_MACHINEROOM_ENABLE);
     ui_create_button_type_continuous(hwnd, x + 15, y + 200, L"DOWN", ID_MACHINEROOM_DOWN);
+}
+
+/*******************************************************************************
+ * @brief  create TOC input block
+ * @param  x, y = the block box left/top position
+ * @return xxxx
+ *******************************************************************************/
+void ui_create_toc(HWND hwnd, int x, int y) {
+    RADIO_2POS_STRU switch_insp = { L"INSPECTION", L"ON", L"OFF", ID_TOC_INSP_ON, ID_TOC_INSP_OFF, 1 };
+    ui_create_radio_type_2pos(hwnd, x + 5, y + 20, &switch_insp);
+
+    RADIO_2POS_STRU switch_run = { L"RUN/STOP", L"STOP", L"RUN", ID_TOC_RUN_STOP, ID_TOC_RUN_RUN, 1 };
+    ui_create_radio_type_2pos(hwnd, x + 5, y + 60, &switch_run);
+
+    ui_create_button_type_continuous(hwnd, x + 15, y + 100, L"UP", ID_TOC_UP);
+    ui_create_button_type_lock(hwnd, x + 15, y + 130, L"ENABLE", ID_TOC_ENABLE);
+    ui_create_button_type_continuous(hwnd, x + 15, y + 160, L"DOWN", ID_TOC_DOWN);
 }
 
 /********************************* end of file ********************************/
