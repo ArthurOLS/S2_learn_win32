@@ -23,6 +23,7 @@
 *******************************************************************************/
 #include <Windows.h>
 #include "button_id.h"
+#include "../00-app/top_config.h"
 // clang-format off
 
 /*******************************************************************************
@@ -53,11 +54,17 @@
 
 #define UI_GAP                          10  //for columns and rows
 
+//output device 
+#define UI_OUTPUT_X                     COLUMN1_X
+#define UI_OUTPUT_Y                     COLUMN_TOP_Y    
+#define UI_OUTPUT_W                     200
+#define UI_OUTPUT_H                     100//(COLUMN_BOTTOM_Y - COLUMN_TOP_Y)
+
 //animation
 #define UI_ANIMATION_X                  COLUMN1_X
-#define UI_ANIMATION_Y                  COLUMN_TOP_Y    
+#define UI_ANIMATION_Y                  (UI_OUTPUT_Y + UI_OUTPUT_H+ UI_GAP)    
 #define UI_ANIMATION_W                  200
-#define UI_ANIMATION_H                  (COLUMN_BOTTOM_Y - COLUMN_TOP_Y)
+#define UI_ANIMATION_H                  (COLUMN_BOTTOM_Y - UI_ANIMATION_Y)
 
 //label box
 #define UI_LABELBOX_X                   COLUMN2_X
@@ -134,14 +141,14 @@
 
 //universal button size
 #define UI_BUTTON_WIDTH_SMALL           85
-#define UI_BUTTON_WIDTH_WIDTH            160
+#define UI_BUTTON_WIDTH_WIDTH           160
 #define UI_BUTTON_HEIGHT                23
 
 /******************************************************************************
  * CAR COLUMN (LEFT1 IN MASTER)
  ******************************************************************************/
 #define UI_PIXEL_RATIO                  50 // pixel = length(in mm) * RATIO. I adopt: 1px=50mm, 60px=3000mm for a floor height
-#define UI_GROUND_Y                     550   // set where the ground (physical 0mm horizontal line)
+#define UI_GROUND_Y                     (UI_ANIMATION_Y+(SIM_SHAFT_LENGTH/UI_PIXEL_RATIO)+50)//(UI_ANIMATION_Y + UI_ANIMATION_H - 40)   // set where the ground (physical 0mm horizontal line)
 // Shaft        
 #define FLOOR_HEIGHT                    60
 #define SHAFT_LEFT                      50 //(COLUMN1_X+50)
@@ -167,8 +174,8 @@
 #define DOOR_OPENING_WIDTH              31 // opens to 40 pixel, affects door_opening_width
 
 // Ground line (horizon)
-#define UI_GROUND_LINE_LEFT             3                            //(COLUMN1_X+3)       //left at x=0
-#define UI_GROUND_LINE_RIGHT            (UI_GROUND_LINE_LEFT + 170) // right at x=200
+#define UI_GROUND_LINE_LEFT             0 
+#define UI_GROUND_LINE_RIGHT            (UI_GROUND_LINE_LEFT + 150) // full width of the block
 
 /******************************************************************************
 * BUTTON COLUMN (LEFT3 IN MASTER)
@@ -305,6 +312,8 @@ void ui1_init_widgets(HWND hwnd);
 void ui_callback_type_lock_step1(HWND hwnd, int id);
 void ui_callback_type_lock_step2(LPDRAWITEMSTRUCT lpDrawItem);
 void ui_callback_type_radio(int id);
+
+void ui03_draw_all(HDC hdc);
 
 //int ui64_get_ui_run_ms();
 

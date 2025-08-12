@@ -43,8 +43,6 @@
 
 
 
-#define VERSION_CODE "2.0.2"
-
 // Elevator mode for the title bar
 typedef enum {
     ELEVATOR_MODE_SIMPLEX = -1,
@@ -59,17 +57,43 @@ typedef enum {
 #define APP_SUB_TITLE_MASTER L"-Master"
 #define APP_SUB_TITLE_SLAVE1 L"-Slave1"
 
-
 // Simulation parameters (mm, Sec)
 
-#define APP_FLOOR_NUM 8                // 2~8, if you want to have more than 9 floors, you need to modify ENUM_BUTTON_ID as well as g_button_id_stru_list[] in ui.cpp
-#define APP_FLOOR_HEIGHT 3000          // mm
-#define APP_PERIOD_MS 20               // ms, this is also the timer for Core.
-#define CORE_PERIOD_MS (APP_PERIOD_MS) // heartbeat time for CORE
-#define APP_CAR_NUM 2                  // max two car1 for group control
+#define APP_FLOOR_NUM                   12 // 2~8, if you want to have more than 9 floors, you need to modify ENUM_BUTTON_ID as well as g_button_id_stru_list[] in ui.cpp
+#define APP_FLOOR_HEIGHT                3000// mm
+#define APP_PERIOD_MS                   20  // ms, this is also the timer for Core.
+#define CORE_PERIOD_MS                  (APP_PERIOD_MS) // heartbeat time for CORE
+#define APP_CAR_NUM                     2   // max two car1 for group control
 // Timer used in this program
 #define IDT_TIMER_UI 1        // for UI module
 #define IDT_TIMER_SIMULATOR 2 // for simulator module
+/******************************************************************************
+* Simulator Settings
+******************************************************************************/
+
+#define SIM_FLOOR_NUM				APP_FLOOR_NUM       //2~8
+#define SIM_FLOOR_HEIGHT			APP_FLOOR_HEIGHT    //do not change
+#define SIM_START_POSITION          (APP_FLOOR_HEIGHT*1)
+#define SIM_FLOOR_MAX               12
+
+//Car motion setting
+#define MAX_SPEED_MM_PER_S          2000    // Max speed, in mm/s
+#define SIM_PERIOD_MS               APP_PERIOD_MS     // Duration per simulation step
+#define SIM_HZ                      (1000/SIM_PERIOD_MS)
+#define SIM_CAR_ACCELERATION        2000    // Acceleration of the car, in mm/s^2
+#define SIM_CAR_ACC_EACH_STEP       (SIM_CAR_ACCELERATION/SIM_HZ)      // Speed increase/decrease per step
+
+//Top and bottom final limits
+#define SIM_SHAFT_LENGTH            (SIM_FLOOR_HEIGHT*(SIM_FLOOR_NUM-1) + 2000) //floor heigt plus 2*extra
+#define SIM_SHAFT_TOP_FINAL         (SIM_FLOOR_HEIGHT*(SIM_FLOOR_NUM-1) + 1000)  //Ground is 0mm
+#define SIM_SHAFT_FINAL_BOTTOM      -1000 //Ground is 0mm   
+
+
+#if SIM_FLOOR_NUM > SIM_FLOOR_MAX || SIM_FLOOR_NUM < 2
+    #error "SIM_FLOOR_NUM should be in 2...8"
+#endif
+
+
 
 /******************************************************************************
  * Core controller parameters

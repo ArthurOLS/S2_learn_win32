@@ -21,7 +21,6 @@
 
 #include <windows.h>
 
-
 #include "../00-app/top_config.h"
 #include "ui.h"
 #include "ui_lowlevel.h"
@@ -376,6 +375,10 @@ void ui_create_button_debug(HWND hwnd, int gx, int gy) {
         ui10_apply_font_to_control(b1, UI_FONT_9PT);
     }
 }
+
+
+
+        
 
 /********************************* end of file ********************************/
 

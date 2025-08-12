@@ -315,7 +315,7 @@ void ui_callback_type_lock_step2(LPDRAWITEMSTRUCT lpDrawItem) {
 void ui1_init_widgets(HWND hwnd) { // Labels
    
 ////create main window top layout
-    ui11_create_label(hwnd, L" Animation", UI_ANIMATION_X, UI_ANIMATION_Y, UI_ANIMATION_W, UI_ANIMATION_H);
+    ui11_create_label(hwnd, L" Output Devices", UI_OUTPUT_X, UI_OUTPUT_Y, UI_OUTPUT_W, UI_OUTPUT_H);
     ui11_create_label(hwnd, L" Simulator", UI_LABELBOX_X, UI_LABELBOX_Y, UI_LABELBOX_W, UI_LABELBOX_H);
     ui11_create_label(hwnd, L" ElevatorCore", UI_LABELBOX2_X, UI_LABELBOX2_Y, UI_LABELBOX2_W, UI_LABELBOX2_H);
     ui_create_logbox(hwnd, COLUMN2_X, UI_LOGBOX_Y, UI_LOGBOX_W, UI_LOGBOX_H, 0);
@@ -340,7 +340,11 @@ void ui1_init_widgets(HWND hwnd) { // Labels
     ui_create_button_cop1(hwnd, UI_COP1_X + 7, UI_COP1_Y + 20, UI_BUTTON_WIDTH, UI_BUTTON_HEIGHT);
     //logbox
     ui_create_logbox(hwnd, UI_LOGBOX_X, UI_LOGBOX_Y, UI_LOGBOX_W, UI_LOGBOX_H, 0);
-    ui_internal_printf("print what you want");
+    RECT rc;
+    GetClientRect(hwnd, &rc);
+    int width = rc.right - rc.left;
+    int height = rc.bottom - rc.top;
+    ui_internal_printf("client area window size w=%d,h=%d.", width, height);
 
     //hop2
     ui_create_hop2(hwnd, UI_HOP2_X, UI_HOP2_Y);
@@ -362,13 +366,52 @@ void ui1_init_widgets(HWND hwnd) { // Labels
 
     //debug
     ui_create_button_debug(hwnd, UI_DEGUG_X, UI_DEGUG_Y);
+
+        //[3] UI timer
+    SetTimer(hwnd, IDT_TIMER_UI, UI_PERIOD_MS, NULL);                       // 50ms(20Hz timer)
+    _ui_control_stru.ts_at_start = static_cast<uint32_t>(GetTickCount64()); // ui82_c_get_u_run_ms();
+
 }
         
 
 
-        
+int car_y_px = UI_GROUND_Y;
+bool car_is_idle = true;
  
+/*******************************************************************************
+ * @brief  called in WM_PAINT event by WndProc()
+ * @param  hdc, where to draw 
+ * @return xxxx
+ *******************************************************************************/
+void ui03_draw_all(HDC hdc) {
+    extern void ui32_draw_cab_box(HDC hdc, int x, int y, bool is_idle);
+    extern void ui36_draw_door(HDC hdc, int x, int car_y, int opening);
+    extern void ui34_draw_final_limits(HDC hdc, int x);
+    extern void ui_draw_floors(HDC hdc, int x, int y);
 
+    _ui_control_stru.run_cnt++;
+
+
+    ui_draw_floors(hdc, UI_ANIMATION_X, UI_GROUND_Y);
+    ui34_draw_final_limits(hdc, UI_ANIMATION_X);
+
+
+    // ui31_draw_labels(hdc);
+    ui32_draw_cab_box(hdc, UI_ANIMATION_X, car_y_px, car_is_idle);
+    ui36_draw_door(hdc, UI_ANIMATION_X, car_y_px, 16);
+
+}
+
+// update all pixel data for all the ui_draw_xxx() functions.
+// called by IDT_TIMER_UI event in WndProc().
+//void ui02_update_ui_model_data_in_timer(APP_DISPLAY_STRU* d) {
+//
+//    // update cab position pixel
+//    int positionMM = d->car1_height;
+//    _ui_control_stru.car_box_y = UI_GROUND_Y - positionMM / UI_PIXEL_RATIO;
+//    // update door position
+//    _ui_control_stru.door_opening_width = d->door1_position * DOOR_OPENING_WIDTH / SIM_DOOR_POSITION_SCALE;
+//}
 
 
 /*******************************************************************************

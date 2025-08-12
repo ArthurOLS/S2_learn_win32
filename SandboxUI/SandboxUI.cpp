@@ -7,7 +7,8 @@
 ************************************ Includes **********************************
 *******************************************************************************/
 #include "01-ui/ui.h"
-
+#include "00-app/top_config.h"
+#include "01-ui/ui_logbox.h"
 
 
 #define MAX_LOADSTRING 100
@@ -129,6 +130,25 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
 //
 LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
+    //{
+        int LEFT1 = UI_ANIMATION_X;
+        int car_bottom_y = UI_GROUND_Y;
+        const RECT redrawRegion = { LEFT1 + CAR_LEFT - 10,
+            car_bottom_y - CAR_HEIGHT - 5,
+            LEFT1 + CAR_LEFT + CAR_WIDTH + 5,
+            car_bottom_y + 5 };
+        // { UI_BOX_LEFT, UI_BOX_TOP, UI_BOX_RIGHT, UI_BOX_BOTTOM };
+
+        // label redraw region
+        int LEFT2 = UI_ANIMATION_X;
+        const RECT labelRedrawRegion = {
+            LEFT2,
+            UI_LABEL_TOP,
+            LEFT2 + 2 * UI_LABEL_WIDTH + 10,
+            UI_LABEL_TOP + UI_LABEL_HEIGHT
+        };
+    //}
+
     switch (message)
     {
     case WM_COMMAND:
@@ -158,9 +178,36 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
     }
     case WM_PAINT:
         {
+        extern void ui39_draw_invalidate_rect_area_debug(HDC hdc, CONST RECT * lpRect);
             PAINTSTRUCT ps;
             HDC hdc = BeginPaint(hWnd, &ps);
             // TODO: Add any drawing code that uses hdc here...
+            //ui03_draw_all(hdc);
+            if(1){ // double 
+                // get entire client area - full window
+                RECT rc;
+                GetClientRect(hWnd, &rc);
+                int width = rc.right - rc.left;
+                int height = rc.bottom - rc.top;
+                ui_internal_printf("painting w=%d,h=%d.", width, height);
+
+                // create a compatible memory device context
+                HDC memDC = CreateCompatibleDC(hdc);                            // buffer
+                HBITMAP memBitmap = CreateCompatibleBitmap(hdc, width, height); // bit map
+                HBITMAP oldBitmap = (HBITMAP)SelectObject(memDC, memBitmap);    // use this bitmap
+                FillRect(memDC, &rc, (HBRUSH)(COLOR_WINDOW + 1));               // fill background in memory device context
+
+                // draw everything into the memory device context
+                ui03_draw_all(memDC);
+                // draw debug rectangles into memory device context
+                ui39_draw_invalidate_rect_area_debug(memDC, &redrawRegion); // DEBUG TOOL
+                // ui40_draw_invalidate_rect_area_debug(memDC, &labelRedrawRegion); // DEBUG TOOL
+
+                BitBlt(hdc, 0, 0, width, height, memDC, 0, 0, SRCCOPY); // blit the memory device context to the screen
+                SelectObject(memDC, oldBitmap);                         // restore old bit map
+                DeleteObject(memBitmap);                                // delete memBitmap
+                DeleteDC(memDC);                                        // delete memory device context
+            }
             EndPaint(hWnd, &ps);
         }
         break;
@@ -171,6 +218,25 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
     case WM_DESTROY:
         PostQuitMessage(0);
         break;
+
+    case WM_TIMER: // All timers go here.
+        switch (wParam) {
+        case IDT_TIMER_UI:
+            //InvalidateRect(hWnd, NULL, FALSE);
+            //ui20_update_all_pixel_data(&g_app_disp_stru);
+            //ui_internal_printf("Invalidate %d, %d, %d, %d.", redrawRegion.left, redrawRegion.top, redrawRegion.right, redrawRegion.bottom);
+            InvalidateRect(hWnd, &redrawRegion, TRUE);       // True=erase background,
+            //InvalidateRect(hWnd, &labelRedrawRegion, FALSE); // only invalidate the custom label box area
+            break;
+        case IDT_TIMER_SIMULATOR:
+            //app_run();
+            break;
+        }
+        break;
+
+    case WM_ERASEBKGND:
+        return 1; // skip the background erase
+
     default:
         return DefWindowProc(hWnd, message, wParam, lParam);
     }
