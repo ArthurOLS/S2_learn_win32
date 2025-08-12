@@ -58,7 +58,7 @@
 #define UI_OUTPUT_X                     COLUMN1_X
 #define UI_OUTPUT_Y                     COLUMN_TOP_Y    
 #define UI_OUTPUT_W                     200
-#define UI_OUTPUT_H                     100//(COLUMN_BOTTOM_Y - COLUMN_TOP_Y)
+#define UI_OUTPUT_H                     115//(COLUMN_BOTTOM_Y - COLUMN_TOP_Y)
 
 //animation
 #define UI_ANIMATION_X                  COLUMN1_X
@@ -148,7 +148,7 @@
  * CAR COLUMN (LEFT1 IN MASTER)
  ******************************************************************************/
 #define UI_PIXEL_RATIO                  50 // pixel = length(in mm) * RATIO. I adopt: 1px=50mm, 60px=3000mm for a floor height
-#define UI_GROUND_Y                     (UI_ANIMATION_Y+(SIM_SHAFT_LENGTH/UI_PIXEL_RATIO)+50)//(UI_ANIMATION_Y + UI_ANIMATION_H - 40)   // set where the ground (physical 0mm horizontal line)
+#define UI_GROUND_Y                     (UI_ANIMATION_Y+(SIM_SHAFT_LENGTH/UI_PIXEL_RATIO)+20)//(UI_ANIMATION_Y + UI_ANIMATION_H - 40)   // set where the ground (physical 0mm horizontal line)
 // Shaft        
 #define FLOOR_HEIGHT                    60
 #define SHAFT_LEFT                      50 //(COLUMN1_X+50)
@@ -165,9 +165,13 @@
 #define CAR_LEFT                        120 //(COLUMN1_X+120)
 #define CAR_WIDTH                       50
 #define CAR_HEIGHT                      50
-#define UI_CAR_FILL_COLOR               0x00d7ff       // 0=No fill, other=color code in 0xBBGGRR, 0xffa080=pale blue, 0x00d7ff=gold
-#define UI_CAR_FILL_COLOR_GREEN         0x00a000 // GREEN
-#define UI_DOOR_FILL_COLOR              0x0000af      // in 0xBBGGRR
+#define UI_CAR_FILL_COLOR               0x00d7ff// 0=No fill, other=color code in 0xBBGGRR, 0xffa080=pale blue, 0x00d7ff=gold
+#define UI_COLOR_GREEN                  0x00A000// 0xBBGGRR
+#define UI_COLOR_RED                    0x0000FF// 0xBBGGRR
+#define UI_COLOR_BLUE                   0xFFBF00// 0xBBGGRR
+#define UI_COLOR_ORANGE                 0x00A5FF// 0xBBGGRR 
+
+#define UI_DOOR_FILL_COLOR              0x0000af// in 0xBBGGRR
 // Door
 #define DOOR_WIDTH                      32
 #define DOOR_HEIGHT                     40
@@ -311,6 +315,7 @@ typedef struct {
 void ui1_init_widgets(HWND hwnd);
 void ui_callback_type_lock_step1(HWND hwnd, int id);
 void ui_callback_type_lock_step2(LPDRAWITEMSTRUCT lpDrawItem);
+void ui_callback_type_led(LPDRAWITEMSTRUCT lpDrawItem);
 void ui_callback_type_radio(int id);
 
 void ui03_draw_all(HDC hdc);

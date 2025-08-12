@@ -85,6 +85,7 @@ UI_CONTROL_STRU _ui_control_stru;
 /*******************************************************************************
 ************************** Private function prototypes *************************
 *******************************************************************************/
+extern void ui_create_led_output(HWND hwnd, int gx, int gy, int bw, int bh);
 extern void ui_create_button_hop(HWND hwnd, int gx, int gy, int bw, int bh);
 extern void ui_create_button_cop1(HWND hwnd, int gx, int gy, int bw, int bh);
 extern void ui_create_cop2(HWND hwnd, int x, int y);
@@ -278,16 +279,55 @@ void ui_callback_type_lock_step2(LPDRAWITEMSTRUCT lpDrawItem) {
     switch (id) {
 
     case ID_MACHINEROOM_ENABLE:
-        ui30_draw_custom_button(lpDrawItem, NULL, __button_machineroom_enable);
+        ui30_draw_button_led_black(lpDrawItem, NULL, __button_machineroom_enable);
         break;
 
 
     case ID_COP2_ENABLE:
-        ui30_draw_custom_button(lpDrawItem, NULL, __cop2_enabled);
+        ui30_draw_button_led_black(lpDrawItem, NULL, __cop2_enabled);
         break;
 
     case ID_TOC_ENABLE:
-        ui30_draw_custom_button(lpDrawItem, NULL, __button_toc_enable);
+        ui30_draw_button_led_black(lpDrawItem, NULL, __button_toc_enable);
+        break;
+
+    default:
+        break;
+    }
+}
+
+/*******************************************************************************
+ * @brief  called by WM_DRAWITEM, originally triggered by InvalidateRect()
+ * @param  lpDrawItem: which button to redraw
+ * @param  xxxx
+ * @return xxxx
+ *******************************************************************************/
+void ui_callback_type_led(LPDRAWITEMSTRUCT lpDrawItem) {
+    int id = lpDrawItem->CtlID;
+    switch (id) {
+
+    case ID_MOTOR_EN:
+        ui30_draw_button_led_color(lpDrawItem, NULL, true, UI_COLOR_ORANGE);
+        break;
+
+    case ID_BUZZER:
+        ui30_draw_button_led_color(lpDrawItem, NULL, false, UI_COLOR_GREEN);
+        break;
+
+    case ID_EB_PICK:
+        ui30_draw_button_led_color(lpDrawItem, NULL, true, UI_COLOR_GREEN);
+        break;
+
+    case ID_LATERN_UP:
+        ui30_draw_button_led_color(lpDrawItem, NULL, false, UI_COLOR_GREEN);
+        break;
+
+    case ID_LATERN_DN:
+        ui30_draw_button_led_color(lpDrawItem, NULL, true, UI_COLOR_RED);
+        break;
+
+    case ID_CHIME:
+        ui30_draw_button_led_color(lpDrawItem, NULL, true, UI_COLOR_BLUE);
         break;
 
     default:
@@ -334,6 +374,8 @@ void ui1_init_widgets(HWND hwnd) { // Labels
     ui11_create_label(hwnd, L" Debug", UI_DEGUG_X, UI_DEGUG_Y, UI_DEGUG_W, UI_DEGUG_H);
     
 ////create each block
+    //leds
+    ui_create_led_output(hwnd, UI_OUTPUT_X + 7, UI_OUTPUT_Y + 20, UI_BUTTON_WIDTH, UI_BUTTON_HEIGHT);
     //hop
     ui_create_button_hop(hwnd, UI_HOP_X+7, UI_HOP_Y+20, UI_BUTTON_WIDTH, UI_BUTTON_HEIGHT);
     //cop1

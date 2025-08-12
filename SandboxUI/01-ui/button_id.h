@@ -38,9 +38,12 @@
 typedef enum {
 
     //click button id
-    BUTTON_ID_DOWN = 2000,
-    BUTTON_ID_UP,
-    BUTTON_ID_ENABLE,
+    ID_MOTOR_EN = 500,
+    ID_BUZZER,
+    ID_EB_PICK,
+    ID_LATERN_UP,
+    ID_LATERN_DN,
+    ID_CHIME,
 
 
     //[GROUP1]

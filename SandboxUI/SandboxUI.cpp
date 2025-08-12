@@ -130,24 +130,23 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
 //
 LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
-    //{
-        int LEFT1 = UI_ANIMATION_X;
-        int car_bottom_y = UI_GROUND_Y;
-        const RECT redrawRegion = { LEFT1 + CAR_LEFT - 10,
-            car_bottom_y - CAR_HEIGHT - 5,
-            LEFT1 + CAR_LEFT + CAR_WIDTH + 5,
-            car_bottom_y + 5 };
-        // { UI_BOX_LEFT, UI_BOX_TOP, UI_BOX_RIGHT, UI_BOX_BOTTOM };
+    int x = UI_ANIMATION_X;
+    int car_bottom_y = UI_GROUND_Y;
+    const RECT rec_car_region = { 
+        x + CAR_LEFT - 10,
+        car_bottom_y - CAR_HEIGHT - 5,
+        x + CAR_LEFT + CAR_WIDTH + 5,
+        car_bottom_y + 5 };
 
-        // label redraw region
-        int LEFT2 = UI_ANIMATION_X;
-        const RECT labelRedrawRegion = {
-            LEFT2,
-            UI_LABEL_TOP,
-            LEFT2 + 2 * UI_LABEL_WIDTH + 10,
-            UI_LABEL_TOP + UI_LABEL_HEIGHT
-        };
-    //}
+
+    // label redraw region
+    const RECT rec_labels_region = {
+        UI_LABELBOX_X-2,
+        UI_LABELBOX_Y-2,
+        UI_LABELBOX_X + UI_LABELBOX_W + UI_GAP + UI_LABELBOX2_W+2, 
+        UI_LABELBOX_Y + UI_LABELBOX_H + 2
+    };
+
 
     switch (message)
     {
@@ -174,6 +173,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
         break;
     case WM_DRAWITEM: { //wParam:the control's ID (like BUTTON_ID_UP); lParam:a pointer to a DRAWITEMSTRUCT struct
         ui_callback_type_lock_step2((LPDRAWITEMSTRUCT)lParam);
+        ui_callback_type_led((LPDRAWITEMSTRUCT)lParam);
         return TRUE; // always return TRUE
     }
     case WM_PAINT:
@@ -189,7 +189,6 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
                 GetClientRect(hWnd, &rc);
                 int width = rc.right - rc.left;
                 int height = rc.bottom - rc.top;
-                ui_internal_printf("painting w=%d,h=%d.", width, height);
 
                 // create a compatible memory device context
                 HDC memDC = CreateCompatibleDC(hdc);                            // buffer
@@ -200,8 +199,8 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
                 // draw everything into the memory device context
                 ui03_draw_all(memDC);
                 // draw debug rectangles into memory device context
-                ui39_draw_invalidate_rect_area_debug(memDC, &redrawRegion); // DEBUG TOOL
-                // ui40_draw_invalidate_rect_area_debug(memDC, &labelRedrawRegion); // DEBUG TOOL
+                ui39_draw_invalidate_rect_area_debug(memDC, &rec_car_region); // DEBUG TOOL
+                ui39_draw_invalidate_rect_area_debug(memDC, &rec_labels_region); // DEBUG TOOL
 
                 BitBlt(hdc, 0, 0, width, height, memDC, 0, 0, SRCCOPY); // blit the memory device context to the screen
                 SelectObject(memDC, oldBitmap);                         // restore old bit map
@@ -222,11 +221,9 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
     case WM_TIMER: // All timers go here.
         switch (wParam) {
         case IDT_TIMER_UI:
-            //InvalidateRect(hWnd, NULL, FALSE);
-            //ui20_update_all_pixel_data(&g_app_disp_stru);
-            //ui_internal_printf("Invalidate %d, %d, %d, %d.", redrawRegion.left, redrawRegion.top, redrawRegion.right, redrawRegion.bottom);
-            InvalidateRect(hWnd, &redrawRegion, TRUE);       // True=erase background,
-            //InvalidateRect(hWnd, &labelRedrawRegion, FALSE); // only invalidate the custom label box area
+            //ui_internal_printf("Invalidate %d, %d, %d, %d.", rec_car_region.left, rec_car_region.top, rec_car_region.right, rec_car_region.bottom);
+            InvalidateRect(hWnd, &rec_car_region, TRUE);       // True=erase background,
+            //InvalidateRect(hWnd, &rec_labels_region, FALSE); // only invalidate the custom label box area
             break;
         case IDT_TIMER_SIMULATOR:
             //app_run();

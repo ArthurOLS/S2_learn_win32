@@ -179,7 +179,7 @@ void ui_create_radio_type_2pos(HWND hwnd, int x, int y, RADIO_2POS_STRU* pr) {
  * @param  state: 0=defalt, 1=on, 2.. other states
  * @return xxxx
  *******************************************************************************/
-void ui30_draw_custom_button(LPDRAWITEMSTRUCT lpDrawItem, const wchar_t* text, bool state) {
+void ui30_draw_button_led_black(LPDRAWITEMSTRUCT lpDrawItem, const wchar_t* text, bool state) {
     HDC hdc = lpDrawItem->hDC;
     RECT rc = lpDrawItem->rcItem;
     HWND hButton = lpDrawItem->hwndItem;
@@ -199,6 +199,40 @@ void ui30_draw_custom_button(LPDRAWITEMSTRUCT lpDrawItem, const wchar_t* text, b
     }
     else {
         DrawText(hdc, text,       -1, &rc, DT_CENTER | DT_VCENTER | DT_SINGLELINE);
+    }
+
+    // Optional: draw border
+    DrawEdge(hdc, &rc, EDGE_RAISED, BF_RECT);
+}
+
+/*******************************************************************************
+ * @brief  originally called by WM_DRAWITEM event in main.cpp
+ * @param  lpDrawItem: it contains button id, and other display information
+ * @param  text: button text, if NULL, use its own
+ * @param  state: 0=defalt, 1=on, 2.. other states
+ * @param  int color: color when active (state !=0)  e.g. UI_COLOR_GREEN 
+ * @return xxxx
+ *******************************************************************************/
+void ui30_draw_button_led_color(LPDRAWITEMSTRUCT lpDrawItem, const wchar_t* text, bool state, int color) {
+    HDC hdc = lpDrawItem->hDC;
+    RECT rc = lpDrawItem->rcItem;
+    HWND hButton = lpDrawItem->hwndItem;
+
+    // Background
+    HBRUSH bgBrush = CreateSolidBrush(state ? color : RGB(240, 240, 240));
+    FillRect(hdc, &rc, bgBrush);
+    DeleteObject(bgBrush);
+
+    // Text
+    SetBkMode(hdc, TRANSPARENT);
+    SetTextColor(hdc, RGB(0, 0, 0));
+    if (text == NULL) {
+        wchar_t textBuffer[256];
+        GetWindowText(hButton, textBuffer, _countof(textBuffer)); // Get the button's current text
+        DrawText(hdc, textBuffer, -1, &rc, DT_CENTER | DT_VCENTER | DT_SINGLELINE);
+    }
+    else {
+        DrawText(hdc, text, -1, &rc, DT_CENTER | DT_VCENTER | DT_SINGLELINE);
     }
 
     // Optional: draw border

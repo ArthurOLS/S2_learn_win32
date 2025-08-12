@@ -38,6 +38,15 @@
 ******************************** Private define ********************************
 *******************************************************************************/
 
+BUTTON_STRU button_output[] = {
+    { L"MOTOR EN",  ID_MOTOR_EN, 0 },
+    { L"BUZZER",    ID_BUZZER, 0 },    
+    { L"E.B. PICK", ID_EB_PICK, 0 },
+    { L"LATERN UP", ID_LATERN_UP, 0 },
+    { L"CHIME",     ID_CHIME, 0 },
+    { L"LATERN DN", ID_LATERN_DN, 0 },
+};
+
 BUTTON_STRU button_hop[] = {
     { L"__SKIP", 0, 0 }, //'__SKIP' means the button invisiable
     { L"10🔻", H10DN, 0 },
@@ -173,6 +182,30 @@ BUTTON_STRU button_debug[] = {
 ******************************* Public functions *******************************
 *******************************************************************************/
 
+
+/*******************************************************************************
+* @brief  create OUTPUT led (buttons in fact)
+ * @param  gx,gy: parent group position
+ * @param  bw,bh: button width and height
+ * How it works? if you have button_hop = {1,2,3,4,5 .... }
+ *         the buttons are displayed in the order of:
+ *         [1] [2] --> BUTTON_PER_ROW = 2
+ *         [3] [4]
+ *         [5] ...
+*******************************************************************************/
+void ui_create_led_output(HWND hwnd, int gx, int gy, int bw, int bh) {
+        int num = (sizeof(button_output)) / sizeof(BUTTON_STRU);
+
+    for (int i = 0; i < num; i++) {
+        HWND b1 = CreateWindow(L"BUTTON", button_output[i].text, WS_CHILD | WS_VISIBLE | BS_OWNERDRAW,
+            gx + (i % UI_BUTTON_PER_ROW) * (bw + UI_BUTTON_GAP_COLUMN),
+            gy + ((i / UI_BUTTON_PER_ROW)) * (bh + UI_BUTTON_GAP_ROW),
+            bw, bh, // button width and height
+            hwnd, (HMENU)(INT_PTR)(button_output[i].id), NULL, NULL);
+        ui10_apply_font_to_control(b1, UI_FONT_9PT);
+    }
+}
+        
 
 /*******************************************************************************
  * @brief  create HOPs buttons panel in a block(using a label)

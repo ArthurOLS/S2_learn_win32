@@ -75,7 +75,8 @@ void ui_create_radio_type_2pos(HWND hwnd, int x, int y, RADIO_2POS_STRU* pr);
 void ui_create_button_type_continuous(HWND hwnd, int x, int y, const wchar_t* name, int id);
 
 
-void ui30_draw_custom_button(LPDRAWITEMSTRUCT lpDrawItem, const wchar_t* text, bool state);
+void ui30_draw_button_led_black(LPDRAWITEMSTRUCT lpDrawItem, const wchar_t* text, bool state);
+void ui30_draw_button_led_color(LPDRAWITEMSTRUCT lpDrawItem, const wchar_t* text, bool state, int color);
 void ui30_draw_custom_button_trigger_redraw(HWND hwnd, int id);
 
 

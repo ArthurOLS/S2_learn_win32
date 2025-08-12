@@ -69,7 +69,7 @@
 void ui32_draw_cab_box(HDC hdc, int x, int y, bool is_idle) {
     RECT r = { x+CAR_LEFT, (y)-CAR_HEIGHT, x+CAR_LEFT + CAR_WIDTH, y+1 }; //l,t,r,b
 #if UI_CAR_FILL_COLOR
-    HBRUSH hFillBrush = CreateSolidBrush(is_idle ? UI_CAR_FILL_COLOR_GREEN : UI_CAR_FILL_COLOR);
+    HBRUSH hFillBrush = CreateSolidBrush(is_idle ? UI_COLOR_GREEN : UI_CAR_FILL_COLOR);
 
     FillRect(hdc, &r, hFillBrush);
     DeleteObject(hFillBrush); // Clean up
