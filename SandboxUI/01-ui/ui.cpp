@@ -34,7 +34,7 @@
 ******************************** Private typedef *******************************
 *******************************************************************************/
 
-
+#define LABEL_STRING_SIZE               512 //lable printf buzzer size
 
 //inner layer, the contorl data ui uses itself
 typedef struct {
@@ -85,17 +85,6 @@ UI_CONTROL_STRU _ui_control_stru;
 /*******************************************************************************
 ************************** Private function prototypes *************************
 *******************************************************************************/
-extern void ui_create_led_output(HWND hwnd, int gx, int gy, int bw, int bh);
-extern void ui_create_button_hop(HWND hwnd, int gx, int gy, int bw, int bh);
-extern void ui_create_button_cop1(HWND hwnd, int gx, int gy, int bw, int bh);
-extern void ui_create_cop2(HWND hwnd, int x, int y);
-extern void ui_create_cop3(HWND hwnd, int x, int y);
-extern void ui_create_hop2(HWND hwnd, int x, int y);
-extern void ui_create_machineroom(HWND hwnd, int x, int y);
-extern void ui_create_toc(HWND hwnd, int x, int y);
-extern void ui_create_button_nonmanual(HWND hwnd, int gx, int gy);
-extern void ui_create_button_debug(HWND hwnd, int gx, int gy);
-
 
 /*******************************************************************************
 ******************************* Private functions ******************************
@@ -207,26 +196,41 @@ LRESULT CALLBACK ui_callback_type_continuous(HWND hwnd, UINT uMsg, WPARAM wParam
 }
 
 
-
-
-
 /*******************************************************************************
- * @brief  called by WndProc on WM_COMMAND event, Only need to be accessed by button id.
- * @param  id: from LOWORD(wParam)
+ * @brief  called by WM_DRAWITEM, originally triggered by InvalidateRect()
+ * @param  lpDrawItem: which button to redraw
  * @param  xxxx
  * @return xxxx
  *******************************************************************************/
-void ui_callback_type_radio(int id) {
-    switch (id) // LOWORD = control ID
-    {
-    case ID_COP3_FIRE_PH2_OFF: 
-        ui_internal_printf("switch to PH2-OFF.");
+void ui_callback_type_led(LPDRAWITEMSTRUCT lpDrawItem) {
+    int id = lpDrawItem->CtlID;
+    switch (id) {
+
+    case ID_MOTOR_EN:
+        ui30_draw_button_led_color(lpDrawItem, NULL, true, UI_COLOR_ORANGE);
         break;
-    case ID_COP3_FIRE_PH2_HOLD: 
-        ui_internal_printf("switch to PH2-HOLD.");
+
+    case ID_BUZZER:
+        ui30_draw_button_led_color(lpDrawItem, NULL, false, UI_COLOR_GREEN);
         break;
-    case ID_COP3_FIRE_PH2_ON: 
-        ui_internal_printf("switch to PH2-ON.");
+
+    case ID_EB_PICK:
+        ui30_draw_button_led_color(lpDrawItem, NULL, true, UI_COLOR_GREEN);
+        break;
+
+    case ID_LATERN_UP:
+        ui30_draw_button_led_color(lpDrawItem, NULL, false, UI_COLOR_GREEN);
+        break;
+
+    case ID_LATERN_DN:
+        ui30_draw_button_led_color(lpDrawItem, NULL, true, UI_COLOR_RED);
+        break;
+
+    case ID_CHIME:
+        ui30_draw_button_led_color(lpDrawItem, NULL, true, UI_COLOR_BLUE);
+        break;
+
+    default:
         break;
     }
 }
@@ -296,44 +300,28 @@ void ui_callback_type_lock_step2(LPDRAWITEMSTRUCT lpDrawItem) {
     }
 }
 
+
 /*******************************************************************************
- * @brief  called by WM_DRAWITEM, originally triggered by InvalidateRect()
- * @param  lpDrawItem: which button to redraw
+ * @brief  called by WndProc on WM_COMMAND event, Only need to be accessed by button id.
+ * @param  id: from LOWORD(wParam)
  * @param  xxxx
  * @return xxxx
  *******************************************************************************/
-void ui_callback_type_led(LPDRAWITEMSTRUCT lpDrawItem) {
-    int id = lpDrawItem->CtlID;
-    switch (id) {
-
-    case ID_MOTOR_EN:
-        ui30_draw_button_led_color(lpDrawItem, NULL, true, UI_COLOR_ORANGE);
+void ui_callback_type_radio(int id) {
+    switch (id) // LOWORD = control ID
+    {
+    case ID_COP3_FIRE_PH2_OFF:
+        ui_internal_printf("switch to PH2-OFF.");
         break;
-
-    case ID_BUZZER:
-        ui30_draw_button_led_color(lpDrawItem, NULL, false, UI_COLOR_GREEN);
+    case ID_COP3_FIRE_PH2_HOLD:
+        ui_internal_printf("switch to PH2-HOLD.");
         break;
-
-    case ID_EB_PICK:
-        ui30_draw_button_led_color(lpDrawItem, NULL, true, UI_COLOR_GREEN);
-        break;
-
-    case ID_LATERN_UP:
-        ui30_draw_button_led_color(lpDrawItem, NULL, false, UI_COLOR_GREEN);
-        break;
-
-    case ID_LATERN_DN:
-        ui30_draw_button_led_color(lpDrawItem, NULL, true, UI_COLOR_RED);
-        break;
-
-    case ID_CHIME:
-        ui30_draw_button_led_color(lpDrawItem, NULL, true, UI_COLOR_BLUE);
-        break;
-
-    default:
+    case ID_COP3_FIRE_PH2_ON:
+        ui_internal_printf("switch to PH2-ON.");
         break;
     }
 }
+
 
 /*******************************************************************************
 ******************************* Public Variables *******************************
@@ -353,8 +341,18 @@ void ui_callback_type_led(LPDRAWITEMSTRUCT lpDrawItem) {
  * @return xxxx
  *******************************************************************************/
 void ui1_init_widgets(HWND hwnd) { // Labels
-   
-////create main window top layout
+    extern void ui_create_led_output(HWND hwnd, int gx, int gy, int bw, int bh);
+    extern void ui_create_button_hop(HWND hwnd, int gx, int gy, int bw, int bh);
+    extern void ui_create_button_cop1(HWND hwnd, int gx, int gy, int bw, int bh);
+    extern void ui_create_cop2(HWND hwnd, int x, int y);
+    extern void ui_create_cop3(HWND hwnd, int x, int y);
+    extern void ui_create_hop2(HWND hwnd, int x, int y);
+    extern void ui_create_machineroom(HWND hwnd, int x, int y);
+    extern void ui_create_toc(HWND hwnd, int x, int y);
+    extern void ui_create_button_nonmanual(HWND hwnd, int gx, int gy);
+    extern void ui_create_button_debug(HWND hwnd, int gx, int gy);
+
+    //[1] create main window top layout
     ui11_create_label(hwnd, L" Output Devices", UI_OUTPUT_X, UI_OUTPUT_Y, UI_OUTPUT_W, UI_OUTPUT_H);
     ui11_create_label(hwnd, L" Simulator", UI_LABELBOX_X, UI_LABELBOX_Y, UI_LABELBOX_W, UI_LABELBOX_H);
     ui11_create_label(hwnd, L" ElevatorCore", UI_LABELBOX2_X, UI_LABELBOX2_Y, UI_LABELBOX2_W, UI_LABELBOX2_H);
@@ -373,13 +371,13 @@ void ui1_init_widgets(HWND hwnd) { // Labels
     ui11_create_label(hwnd, L" Non-manual Input Devices", UI_NONMANUAL_X, UI_NONMANUAL_Y, UI_NONMANUAL_W, UI_NONMANUAL_H);
     ui11_create_label(hwnd, L" Debug", UI_DEGUG_X, UI_DEGUG_Y, UI_DEGUG_W, UI_DEGUG_H);
     
-////create each block
+    //[2]create each block
     //leds
-    ui_create_led_output(hwnd, UI_OUTPUT_X + 7, UI_OUTPUT_Y + 20, UI_BUTTON_WIDTH, UI_BUTTON_HEIGHT);
+    ui_create_led_output(hwnd, UI_OUTPUT_X + 7, UI_OUTPUT_Y + 20, UI_BUTTON_W, UI_BUTTON_H);
     //hop
-    ui_create_button_hop(hwnd, UI_HOP_X+7, UI_HOP_Y+20, UI_BUTTON_WIDTH, UI_BUTTON_HEIGHT);
+    ui_create_button_hop(hwnd, UI_HOP_X+7, UI_HOP_Y+20, UI_BUTTON_W, UI_BUTTON_H);
     //cop1
-    ui_create_button_cop1(hwnd, UI_COP1_X + 7, UI_COP1_Y + 20, UI_BUTTON_WIDTH, UI_BUTTON_HEIGHT);
+    ui_create_button_cop1(hwnd, UI_COP1_X + 7, UI_COP1_Y + 20, UI_BUTTON_W, UI_BUTTON_H);
     //logbox
     ui_create_logbox(hwnd, UI_LOGBOX_X, UI_LOGBOX_Y, UI_LOGBOX_W, UI_LOGBOX_H, 0);
     RECT rc;
@@ -409,7 +407,7 @@ void ui1_init_widgets(HWND hwnd) { // Labels
     //debug
     ui_create_button_debug(hwnd, UI_DEGUG_X, UI_DEGUG_Y);
 
-        //[3] UI timer
+    //[3] UI timer
     SetTimer(hwnd, IDT_TIMER_UI, UI_PERIOD_MS, NULL);                       // 50ms(20Hz timer)
     _ui_control_stru.ts_at_start = static_cast<uint32_t>(GetTickCount64()); // ui82_c_get_u_run_ms();
 
@@ -433,16 +431,33 @@ void ui03_draw_all(HDC hdc) {
 
     _ui_control_stru.run_cnt++;
 
-
     ui_draw_floors(hdc, UI_ANIMATION_X, UI_GROUND_Y);
     ui34_draw_final_limits(hdc, UI_ANIMATION_X);
-
 
     // ui31_draw_labels(hdc);
     ui32_draw_cab_box(hdc, UI_ANIMATION_X, car_y_px, car_is_idle);
     ui36_draw_door(hdc, UI_ANIMATION_X, car_y_px, 16);
 
 }
+
+
+/*******************************************************************************
+ * @brief  Brief_description_of_the_function
+ * @param  xxxx
+ * @param  xxxx
+ * @return xxxx
+ *******************************************************************************/
+void get_data(int) {
+    const RECT rec_labels_region = {
+        UI_LABELBOX_X - 2,
+        UI_LABELBOX_Y - 2,
+        UI_LABELBOX_X + UI_LABELBOX_W + UI_GAP + UI_LABELBOX2_W + 2,
+        UI_LABELBOX_Y + UI_LABELBOX_H + 2
+    };
+
+
+}
+        
 
 // update all pixel data for all the ui_draw_xxx() functions.
 // called by IDT_TIMER_UI event in WndProc().

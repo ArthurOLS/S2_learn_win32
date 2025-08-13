@@ -194,12 +194,12 @@ BUTTON_STRU button_debug[] = {
  *         [5] ...
 *******************************************************************************/
 void ui_create_led_output(HWND hwnd, int gx, int gy, int bw, int bh) {
-        int num = (sizeof(button_output)) / sizeof(BUTTON_STRU);
-
+    int num = (sizeof(button_output)) / sizeof(BUTTON_STRU);
+    int buttons_per_row = 2;
     for (int i = 0; i < num; i++) {
         HWND b1 = CreateWindow(L"BUTTON", button_output[i].text, WS_CHILD | WS_VISIBLE | BS_OWNERDRAW,
-            gx + (i % UI_BUTTON_PER_ROW) * (bw + UI_BUTTON_GAP_COLUMN),
-            gy + ((i / UI_BUTTON_PER_ROW)) * (bh + UI_BUTTON_GAP_ROW),
+            gx + (i % buttons_per_row) * (bw + UI_BUTTON_GAP_COLUMN),
+            gy + ((i / buttons_per_row)) * (bh + UI_BUTTON_GAP_ROW),
             bw, bh, // button width and height
             hwnd, (HMENU)(INT_PTR)(button_output[i].id), NULL, NULL);
         ui10_apply_font_to_control(b1, UI_FONT_9PT);
@@ -220,14 +220,15 @@ void ui_create_led_output(HWND hwnd, int gx, int gy, int bw, int bh) {
  *******************************************************************************/
 void ui_create_button_hop(HWND hwnd, int gx, int gy, int bw, int bh) {
     int num = (sizeof(button_hop)) / sizeof(BUTTON_STRU);
-
+    int buttons_per_row = 2;
+    
     for (int i = 0; i < num; i++) {
-        if (i == 0) {
+        if (i == 0) { //skip first one
             continue;
         }
         HWND b1 = CreateWindow(L"BUTTON", button_hop[i].text, WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON,
-            gx + (i % UI_BUTTON_PER_ROW) * (bw + UI_BUTTON_GAP_COLUMN),
-            gy + ((i / UI_BUTTON_PER_ROW)) * (bh + UI_BUTTON_GAP_ROW),
+            gx + (i % buttons_per_row) * (bw + UI_BUTTON_GAP_COLUMN),
+            gy + ((i / buttons_per_row)) * (bh + UI_BUTTON_GAP_ROW),
             bw, bh, // button width and height
             hwnd, (HMENU)(INT_PTR)(button_hop[i].id), NULL, NULL);
         ui10_apply_font_to_control(b1, UI_FONT_9PT);
@@ -250,6 +251,7 @@ void ui_create_button_hop(HWND hwnd, int gx, int gy, int bw, int bh) {
 void ui_create_button_cop1(HWND hwnd, int gx, int gy, int bw, int bh) {
     extern LRESULT CALLBACK ui_callback_type_continuous(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam, UINT_PTR uIdSubclass, DWORD_PTR dwRefData); 
     int num = (sizeof(button_cop1)) / sizeof(BUTTON_STRU);
+    int buttons_per_row = 2;
 
     for (int i = 0; i < num; i++) {
         HWND b1;
@@ -261,8 +263,8 @@ void ui_create_button_cop1(HWND hwnd, int gx, int gy, int bw, int bh) {
             style = WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON;
         }
         b1 = CreateWindow(L"BUTTON", button_cop1[i].text, style,
-            gx + (i % UI_BUTTON_PER_ROW) * (bw + UI_BUTTON_GAP_COLUMN),
-            gy + ((i / UI_BUTTON_PER_ROW)) * (bh + UI_BUTTON_GAP_ROW),
+            gx + (i % buttons_per_row) * (bw + UI_BUTTON_GAP_COLUMN),
+            gy + ((i / buttons_per_row)) * (bh + UI_BUTTON_GAP_ROW),
             bw, bh, // button width and height
             hwnd, (HMENU)(INT_PTR)(button_cop1[i].id), NULL, NULL);
         ui10_apply_font_to_control(b1, UI_FONT_9PT);
@@ -383,8 +385,8 @@ void ui_create_button_nonmanual(HWND hwnd, int gx, int gy) {
     for (int i = 0; i < num; i++) {
         HWND b1 = CreateWindow(L"BUTTON", button_nonmanual[i].text, WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON,
             gx + 15,
-            gy + i * (UI_BUTTON_HEIGHT+UI_BUTTON_GAP_ROW)+20,
-            UI_BUTTON_WIDTH_WIDTH, UI_BUTTON_HEIGHT, // button width and height
+            gy + i * (UI_BUTTON_H+UI_BUTTON_GAP_ROW)+20,
+            UI_BUTTON_W_WIDE, UI_BUTTON_H, // button width and height
             hwnd, (HMENU)(INT_PTR)(button_nonmanual[i].id), NULL, NULL);
         ui10_apply_font_to_control(b1, UI_FONT_9PT);
     }
@@ -402,8 +404,8 @@ void ui_create_button_debug(HWND hwnd, int gx, int gy) {
     for (int i = 0; i < num; i++) {
         HWND b1 = CreateWindow(L"BUTTON", button_debug[i].text, WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON,
             gx + 15,
-            gy + i * (UI_BUTTON_HEIGHT+UI_BUTTON_GAP_ROW)+20,
-            UI_BUTTON_WIDTH_WIDTH, UI_BUTTON_HEIGHT, // button width and height
+            gy + i * (UI_BUTTON_H+UI_BUTTON_GAP_ROW)+20,
+            UI_BUTTON_W_WIDE, UI_BUTTON_H, // button width and height
             hwnd, (HMENU)(INT_PTR)(button_debug[i].id), NULL, NULL);
         ui10_apply_font_to_control(b1, UI_FONT_9PT);
     }

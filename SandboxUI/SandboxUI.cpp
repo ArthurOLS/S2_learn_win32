@@ -130,13 +130,13 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
 //
 LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
-    int x = UI_ANIMATION_X;
     int car_bottom_y = UI_GROUND_Y;
-    const RECT rec_car_region = { 
-        x + CAR_LEFT - 10,
-        car_bottom_y - CAR_HEIGHT - 5,
-        x + CAR_LEFT + CAR_WIDTH + 5,
-        car_bottom_y + 5 };
+    const RECT rec_car_region = {
+        UI_ANIMATION_X + UI_CAR_X - 10,
+        car_bottom_y - UI_CAR_H - 5,
+        UI_ANIMATION_X + UI_CAR_X + UI_CAR_W + 5,
+        car_bottom_y + 5
+    };
 
 
     // label redraw region

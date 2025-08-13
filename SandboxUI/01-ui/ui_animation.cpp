@@ -33,6 +33,7 @@
 ******************************** Private define ********************************
 *******************************************************************************/
 
+
 /*******************************************************************************
 ********************************* Private macro ********************************
 *******************************************************************************/
@@ -67,7 +68,7 @@
  * @return xxxx
  *******************************************************************************/
 void ui32_draw_cab_box(HDC hdc, int x, int y, bool is_idle) {
-    RECT r = { x+CAR_LEFT, (y)-CAR_HEIGHT, x+CAR_LEFT + CAR_WIDTH, y+1 }; //l,t,r,b
+    RECT r = { x+UI_CAR_X, (y)-UI_CAR_H, x+UI_CAR_X + UI_CAR_W, y+1 }; //l,t,r,b
 #if UI_CAR_FILL_COLOR
     HBRUSH hFillBrush = CreateSolidBrush(is_idle ? UI_COLOR_GREEN : UI_CAR_FILL_COLOR);
 
@@ -82,7 +83,7 @@ void ui32_draw_cab_box(HDC hdc, int x, int y, bool is_idle) {
     Rectangle(hdc, r.left, r.top, r.right, r.bottom);
     //[2] draw a horizon line on bottom of the box...
     MoveToEx(hdc, r.left-1, y, NULL);    // Start at bottom-right
-    LineTo(hdc, x+UI_LIMIT_LEFT, y);   //connect to the 'final limits line'
+    LineTo(hdc, x+UI_LIMIT_X, y);   //connect to the 'final limits line'
     
     SelectObject(hdc, hOldPen);// Restore old objects and clean up
     SelectObject(hdc, hOldBrush);
@@ -98,13 +99,13 @@ void ui32_draw_cab_box(HDC hdc, int x, int y, bool is_idle) {
  *******************************************************************************/
 void ui36_draw_door(HDC hdc, int x, int car_y, int opening) {
     
-    int car_left = x + CAR_LEFT;
+    int car_left = x + UI_CAR_X;
     //door frame rectangle
-    LONG left_gap = (CAR_WIDTH - DOOR_WIDTH) / 2; //the left_gap width between car left and door left
+    LONG left_gap = (UI_CAR_W - UI_DOOR_W) / 2; //the left_gap width between car left and door left
     RECT r = { 
         car_left + left_gap,
-        car_y - DOOR_HEIGHT,
-        car_left + left_gap + DOOR_WIDTH,
+        car_y - UI_DOOR_H,
+        car_left + left_gap + UI_DOOR_W,
         car_y + 1 
     }; //l,t,r,b
 
@@ -119,7 +120,7 @@ void ui36_draw_door(HDC hdc, int x, int car_y, int opening) {
         LONG door_open = opening;
         RECT ro = { 
             r.left + 1, 
-            car_y-DOOR_HEIGHT + 1, 
+            car_y-UI_DOOR_H + 1, 
             r.left + 1 + door_open, 
             car_y 
         }; // l,t,r,b
@@ -141,9 +142,9 @@ void ui36_draw_door(HDC hdc, int x, int car_y, int opening) {
  *******************************************************************************/
 void ui34_draw_final_limits(HDC hdc, int x)
 {
-    int centerX  = x+UI_LIMIT_LEFT;
-    int centerY1 = UI_LIMIT_TOP;
-    int centerY2 = UI_LIMIT_BOTTOM;
+    int centerX  = x+UI_LIMIT_X;
+    int centerY1 = UI_LIMIT_Y_TOP;
+    int centerY2 = UI_LIMIT_Y_BOTTOM;
     
     HBRUSH redBrush = CreateSolidBrush(RGB(255, 0, 0));// Create a solid red brush
     HBRUSH oldBrush = (HBRUSH)SelectObject(hdc, redBrush);
@@ -183,22 +184,22 @@ void ui_draw_floors(HDC hdc, int x, int y) {
     HBRUSH hOldBrush = (HBRUSH)SelectObject(hdc, hBrush);
 
     //[1]Draw ground line
-    MoveToEx(hdc, x+UI_GROUND_LINE_LEFT, y, NULL);
-    LineTo(hdc, x+UI_GROUND_LINE_RIGHT, y);
+    MoveToEx(hdc, x+UI_GROUND_LINE_X_LEFT, y, NULL);
+    LineTo(hdc, x+UI_GROUND_LINE_X_RIGHT, y);
     //[2] Draw each floor box
     for (int i = 0; i < APP_FLOOR_NUM; ++i) {
         RECT floorRect;
-        floorRect.left      = x + SHAFT_LEFT;
-        floorRect.right     = x + SHAFT_LEFT + SHAFT_WIDTH;
-        floorRect.bottom    = y - i*FLOOR_HEIGHT+1;
-        floorRect.top       = floorRect.bottom- FLOOR_HEIGHT-1;
+        floorRect.left      = x + UI_SHAFT_X;
+        floorRect.right     = x + UI_SHAFT_X + UI_SHAFT_W;
+        floorRect.bottom    = y - i*UI_FLOOR_H+1;
+        floorRect.top       = floorRect.bottom- UI_FLOOR_H-1;
         Rectangle(hdc, floorRect.left, floorRect.top, floorRect.right, floorRect.bottom);
         
         //[2.2] Draw floor labels
         char label[8];
         int labelY = floorRect.bottom - 40;
         sprintf_s(label, "F%d", i + 1); // i=0..n, add '1' to display 1..m
-        TextOutA(hdc, x + FLOOR_LABEL_LEFT, labelY, label, (int)strlen(label));
+        TextOutA(hdc, x + UI_FLOOR_LABEL_X, labelY, label, (int)strlen(label));
     }
 
     SelectObject(hdc, hOldPen);// Restore old objects

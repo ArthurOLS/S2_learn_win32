@@ -37,7 +37,7 @@
 *******************************************************************************/
 typedef enum {
 
-    //click button id
+    //block: output devices
     ID_MOTOR_EN = 500,
     ID_BUZZER,
     ID_EB_PICK,
@@ -119,7 +119,7 @@ typedef enum {
 
 
     //Radio switchs
-    ID_RADIO_STARTING = 4000,
+
 
     //hop2
     ID_HOP2_FIRE_RECALL_RESET,

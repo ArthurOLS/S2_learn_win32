@@ -261,7 +261,7 @@ void ui30_draw_custom_button_trigger_redraw(HWND hwnd, int id) {
 void ui_create_button_type_lock(HWND hwnd, int x, int y, const wchar_t* text, int id) {
     HWND b1 = CreateWindow(L"BUTTON", text, 
         WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON | WS_BORDER | BS_OWNERDRAW,
-        x, y, UI_BUTTON_WIDTH_WIDTH, UI_BUTTON_HEIGHT, hwnd, (HMENU)(INT_PTR)id, NULL, NULL);
+        x, y, UI_BUTTON_W_WIDE, UI_BUTTON_H, hwnd, (HMENU)(INT_PTR)id, NULL, NULL);
     ui10_apply_font_to_control(b1, UI_FONT_9PT);
 }
 
@@ -274,7 +274,7 @@ void ui_create_button_type_lock(HWND hwnd, int x, int y, const wchar_t* text, in
 void ui_create_button_type_click(HWND hwnd, int x, int y, const wchar_t* text, int id) {
     HWND b1 = CreateWindow(L"BUTTON", text, 
         WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON ,
-        x, y, UI_BUTTON_WIDTH_WIDTH, UI_BUTTON_HEIGHT, hwnd, (HMENU)(INT_PTR)id, NULL, NULL);
+        x, y, UI_BUTTON_W_WIDE, UI_BUTTON_H, hwnd, (HMENU)(INT_PTR)id, NULL, NULL);
     ui10_apply_font_to_control(b1, UI_FONT_9PT);
 }
         
@@ -286,7 +286,7 @@ void ui_create_button_type_continuous(HWND hwnd, int x, int y, const wchar_t*nam
     DWORD style = WS_VISIBLE | WS_CHILD | WS_BORDER;
 
     b1 = CreateWindow(L"BUTTON", name, style, x, y,
-        UI_BUTTON_WIDTH_WIDTH, UI_BUTTON_HEIGHT, // button width and height
+        UI_BUTTON_W_WIDE, UI_BUTTON_H, // button width and height
         hwnd, (HMENU)(INT_PTR)(id), NULL, NULL);
 
     ui10_apply_font_to_control(b1, UI_FONT_9PT);

@@ -34,7 +34,7 @@
 #define WINDOWS_START_Y                 0
 
 #define WINDOWS_WIDTH                   1525
-#define WINDOWS_HEIGHT                  1000-35
+#define WINDOWS_HEIGHT                  (1000-35)
 
 #define UI_PERIOD_MS                    30   // refresh ui data and display every 50ms
 
@@ -139,105 +139,48 @@
 #define UI_DEGUG_W                      190
 #define UI_DEGUG_H                      (COLUMN_BOTTOM_Y - COLUMN_TOP_Y)
 
-//universal button size
-#define UI_BUTTON_WIDTH_SMALL           85
-#define UI_BUTTON_WIDTH_WIDTH           160
-#define UI_BUTTON_HEIGHT                23
+/******************************************************************************
+* For all Buttons
+******************************************************************************/
+#define UI_BUTTON_W                     85
+#define UI_BUTTON_W_WIDE                160
+#define UI_BUTTON_H                     23
+#define UI_BUTTON_GAP_ROW               8 
+#define UI_BUTTON_GAP_COLUMN            5//universal button size
 
 /******************************************************************************
- * CAR COLUMN (LEFT1 IN MASTER)
+ * BLOCK ANIMATION
  ******************************************************************************/
 #define UI_PIXEL_RATIO                  50 // pixel = length(in mm) * RATIO. I adopt: 1px=50mm, 60px=3000mm for a floor height
 #define UI_GROUND_Y                     (UI_ANIMATION_Y+(SIM_SHAFT_LENGTH/UI_PIXEL_RATIO)+20)//(UI_ANIMATION_Y + UI_ANIMATION_H - 40)   // set where the ground (physical 0mm horizontal line)
-// Shaft        
-#define FLOOR_HEIGHT                    60
-#define SHAFT_LEFT                      50 //(COLUMN1_X+50)
-#define SHAFT_TOP                       20
-#define SHAFT_WIDTH                     50
-#define FLOOR_LABEL_LEFT                20        //(COLUMN1_X+20)
-#define USE_COLORFUL_SHAFT_BOXES        0 // 0=use black boarders, 1=use color blocks
-// Final limits
-#define UI_LIMIT_LEFT                   110 //(COLUMN1_X+110)
-#define UI_LIMIT_BOTTOM                 (UI_GROUND_Y - SIM_SHAFT_FINAL_BOTTOM / UI_PIXEL_RATIO)
-#define UI_LIMIT_TOP                    (UI_GROUND_Y - SIM_SHAFT_TOP_FINAL / UI_PIXEL_RATIO)
-#define UI_LIMIT_CIRCLE_RADIUS          5 // pixel
-// Car
-#define CAR_LEFT                        120 //(COLUMN1_X+120)
-#define CAR_WIDTH                       50
-#define CAR_HEIGHT                      50
-#define UI_CAR_FILL_COLOR               0x00d7ff// 0=No fill, other=color code in 0xBBGGRR, 0xffa080=pale blue, 0x00d7ff=gold
 #define UI_COLOR_GREEN                  0x00A000// 0xBBGGRR
 #define UI_COLOR_RED                    0x0000FF// 0xBBGGRR
 #define UI_COLOR_BLUE                   0xFFBF00// 0xBBGGRR
 #define UI_COLOR_ORANGE                 0x00A5FF// 0xBBGGRR 
 
-#define UI_DOOR_FILL_COLOR              0x0000af// in 0xBBGGRR
-// Door
-#define DOOR_WIDTH                      32
-#define DOOR_HEIGHT                     40
-#define DOOR_OPENING_WIDTH              31 // opens to 40 pixel, affects door_opening_width
-
+///used in ui_animation.cpp
+// Shaft boxes
+#define UI_SHAFT_X                      50
+#define UI_SHAFT_W                      50
+#define UI_FLOOR_H                      60
+#define UI_FLOOR_LABEL_X                20 
+// Final limits
+#define UI_LIMIT_X                      110
+#define UI_LIMIT_Y_BOTTOM               (UI_GROUND_Y - SIM_SHAFT_FINAL_BOTTOM / UI_PIXEL_RATIO)
+#define UI_LIMIT_Y_TOP                  (UI_GROUND_Y - SIM_SHAFT_TOP_FINAL / UI_PIXEL_RATIO)
+#define UI_LIMIT_CIRCLE_RADIUS          5 // pixel
+// Car box
+#define UI_CAR_X                        120
+#define UI_CAR_W                        50
+#define UI_CAR_H                        50
+#define UI_CAR_FILL_COLOR               0x00d7ff // 0=No fill, other=color code in 0xBBGGRR, 0xffa080=pale blue, 0x00d7ff=gold
+// Door boxes
+#define UI_DOOR_W                       32
+#define UI_DOOR_H                       40
+#define UI_DOOR_FILL_COLOR              0x0000af // in 0xBBGGRR
 // Ground line (horizon)
-#define UI_GROUND_LINE_LEFT             0 
-#define UI_GROUND_LINE_RIGHT            (UI_GROUND_LINE_LEFT + 150) // full width of the block
-
-/******************************************************************************
-* BUTTON COLUMN (LEFT3 IN MASTER)
-******************************************************************************/
-//Buttons
-#define UI_BUTTONS_LEFT                 0//(COLUMN3_LEFT)
-#define UI_BUTTONS_TOP                  10      //group1
-#define UI_BUTTONS_TOP2                 400-40  //group2
-#define UI_BUTTON_WIDTH                 85
-#define UI_BUTTON_HEIGHT                23
-#define UI_BUTTON_GAP_ROW               8    //for group1
-#define UI_BUTTON_HEIGHT2               23   //for group2
-#define UI_BUTTON_GAP_ROW2              12   //for group2
-#define UI_BUTTON_GAP_COLUMN            5
-#define UI_BUTTON_PER_ROW               2    //3 buttons per row
-#define UI_BUTTON_GROUP1_NUM            (3* SIM_FLOOR_NUM +2) //'2' for 'open door' and 'close door' on COP
-#define UI_BUTTON_GROUP2_NUM            (3* 8)
-#define UI_BUTTON_INVALID_ID            (BUTTON_BASE_ID+ SIM_FLOOR_NUM*3-3) //the last Nth button as F10UP is invalid, eg. N=10
-
-/******************************************************************************
-* LOGBOX
-******************************************************************************/
-
-//Logbox
-#define UI_LOGBOX_LEFT                  0
-#define UI_LOGBOX_TOP                   250
-#define UI_LOGBOX_WIDTH                 490
-#define UI_LOGBOX_HEIGHT                440
-#define UI_LOGBOX_MAX_SAVE_BYTES        65536
-
-/******************************************************************************
- * Label 1 and 2 COLUMN 
- ******************************************************************************/
-#define UI_LABEL_LEFT                   COLUMN2_X // COLUMN2_X
-#define UI_LABEL_WIDTH                  240
-#define UI_LABEL_HEIGHT                 230
-#define UI_LABEL_TOP                    10
-
-#define UI_LABEL_LEFT2                  (10 + UI_LABEL_WIDTH) //(UI_LABEL_LEFT+10+UI_LABEL_WIDTH) //10 for the gap
-#define LABEL_STRING_SIZE               512
-
-
-
-
-
-
-// clang-format on
-/******************************************************************************
- * Logbox
- ******************************************************************************/
-
-
-/*******************************************************************************
-********************************* UI local setting *****************************
-*******************************************************************************/
-
-
-
+#define UI_GROUND_LINE_X_LEFT           0
+#define UI_GROUND_LINE_X_RIGHT          (UI_GROUND_LINE_X_LEFT + 150) // full width of the block
 
 
 /*******************************************************************************
@@ -248,7 +191,26 @@
 ********************************* Exported types *******************************
 *******************************************************************************/
 
-// outer layer, other module data sent to ui
+//[0] user ui widget model data
+typedef struct {
+    const wchar_t* text;
+    int id;//defined in button_id.h
+    int value; //not used for now 2025-08-13
+} BUTTON_STRU;
+
+//for app use
+typedef struct {
+    const wchar_t* name;
+    int id;//defined in button_id.h
+    int value; //0=not active, 1=active
+    int value_last_cycle; //storee the value of last cycle, processed by button_thread();
+    int event_flag_this_cycle; //1=event that value turns from 0 to 1 event, processed by tutton_thread();
+    int event_cnt; //cnt for 'event_flag_this_cycle', processed by button_thread();
+
+} DIO_STRUCT;
+
+
+//[1] outer layer, other module data sends to ui
 typedef struct {
     int car1_cmd;
     int car1_speed_sp; // mm/s
@@ -269,14 +231,14 @@ typedef struct {
     int lv4_state;
     int lv5_state; // for door control state
 
-    int is_core_enable;      // is this module enabled in app_run()
-    int is_car_sim_enabled;  // is this module enabled in app_run()
-    int is_simulator_enable; // for the whole app_run()
+    int is_core_enable;      
+    int is_car_sim_enabled;  
+    int is_simulator_enable; 
 
     int current_landing;     // 0=not at a landing, 1..N the landing number
     float current_landing_f; // float type current landing, display like '3.85'
 
-    // for master to display slave data
+    //[Group Control] for master to display slave data
     int slave1_is_idle;
     int slave1_current_landing;
     int slave1_door_state;
@@ -287,19 +249,15 @@ typedef struct {
 } TO_UI_STRUCT;
 
 
-// outer layer, data other module get data from ui
+//[2] outer layer, data other module gets data from ui
 typedef struct {
     int i;
+
+    BUTTON_STRU cop[APP_FLOOR_NUM+2]; //N floors + open door and close door two buttons
+
 } FROM_UI_STRUCT;
 
 
-// user ui widget model data
-typedef struct {
-    const wchar_t* text;
-    int id;
-    int is_clicked; // 0=not, 1=clicked, used when this button is also used as a led
-
-} BUTTON_STRU;
 
 /*******************************************************************************
 ******************************* Exported constants *****************************
@@ -324,6 +282,7 @@ void ui03_draw_all(HDC hdc);
 
 
 
+// clang-format on
 
 #endif /* __UI_H */
 /********************************* end of file ********************************/
