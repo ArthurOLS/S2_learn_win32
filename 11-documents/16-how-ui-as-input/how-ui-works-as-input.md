@@ -32,5 +32,22 @@ A macro function is used to record pin status to dio_stru array.
 
 ![5](image-5.png)
 
+## In most case, we're using a thread to generate the events.
+
+![41](image-6.png)
+
+If we have only one type of IO, we can adopt the method above. However, in most case, to sync with io task, the IOs are read and copied periodically. Let me explain here more.
+
+
+1. We modify the read_pin() function so that in the interrupts, hardware writes realtime level status to the pin array.
+![42](image-7.png)
+
+2. We set a timer to call and process ui inputs.
+
+![2](image-8.png)
+
+3. This time, we need to use the last_value member, because the pin is written by interrupts asynchronously.
+   
+![43](image-9.png) 
 
 # END

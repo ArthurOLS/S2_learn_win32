@@ -220,10 +220,14 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 
     case WM_TIMER: // All timers go here.
         switch (wParam) {
-        case IDT_TIMER_UI:
-            //ui_internal_printf("Invalidate %d, %d, %d, %d.", rec_car_region.left, rec_car_region.top, rec_car_region.right, rec_car_region.bottom);
-            InvalidateRect(hWnd, &rec_car_region, TRUE);       // True=erase background,
+        case IDT_TIMER_UI: {
+            // ui_internal_printf("Invalidate %d, %d, %d, %d.", rec_car_region.left, rec_car_region.top, rec_car_region.right, rec_car_region.bottom);
+
+            ui_test_loop();
+            InvalidateRect(hWnd, &rec_car_region, TRUE);     // True=erase background,
             InvalidateRect(hWnd, &rec_labels_region, FALSE); // only invalidate the custom label box area
+        }
+
             break;
         case IDT_TIMER_SIMULATOR:
             //app_run();

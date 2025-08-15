@@ -507,12 +507,12 @@ void ui1_init_widgets(HWND hwnd) { // Labels
 
     ui11_create_label(hwnd, L" Non-manual Input Devices", UI_NONMANUAL_X, UI_NONMANUAL_Y, UI_NONMANUAL_W, UI_NONMANUAL_H);
     ui11_create_label(hwnd, L" Debug", UI_DEGUG_X, UI_DEGUG_Y, UI_DEGUG_W, UI_DEGUG_H);
-    
+
     //[2]create each block
     //leds
     ui_create_led_output(hwnd, UI_OUTPUT_X + 7, UI_OUTPUT_Y + 20, UI_BUTTON_W, UI_BUTTON_H);
     //hop
-    ui_create_button_hop(hwnd, UI_HOP_X+7, UI_HOP_Y+20, UI_BUTTON_W, UI_BUTTON_H);
+    ui_create_button_hop(hwnd, UI_HOP_X + 7, UI_HOP_Y + 20, UI_BUTTON_W, UI_BUTTON_H);
     //cop1
     ui_create_button_cop1(hwnd, UI_COP1_X + 7, UI_COP1_Y + 20, UI_BUTTON_W, UI_BUTTON_H);
     //logbox
@@ -563,15 +563,15 @@ void ui1_init_widgets(HWND hwnd) { // Labels
     UI_DIO_SET_NAME_AS_ITS_ID(ID_TOC_RUN, 1);
 
 }
-        
+
 
 
 int car_y_px = UI_GROUND_Y;
 bool car_is_idle = true;
- 
+
 /*******************************************************************************
  * @brief  called in WM_PAINT event by WndProc()
- * @param  hdc, where to draw 
+ * @param  hdc, where to draw
  * @return xxxx
  *******************************************************************************/
 void ui03_draw_all(HDC hdc) {
@@ -591,14 +591,44 @@ void ui03_draw_all(HDC hdc) {
 
 }
 
-
 /*******************************************************************************
- * @brief  Brief_description_of_the_function
- * @param  xxxx
+ * @brief  this is a test example show how to process events, called by a timer,
  * @param  xxxx
  * @return xxxx
  *******************************************************************************/
+void ui_test_loop() {
+    ui_input_process_1of2();//events are generated here
 
+    //your code to read the events and process your business logics
+
+    ui_input_process_2of2();//update last value for next cycle
+}
+
+
+/*******************************************************************************
+ * @brief  two-step event processing
+ * @param  xxxx
+ * @return xxxx
+ *******************************************************************************/
+void ui_input_process_1of2(void) {
+    int cnt_event_this_cycle = 0;
+    for (int i = 0; i < TOTAL_BUTTION_NUM; i++) {
+        if(ui_input.pin[i].value_last_cycle != ui_input.pin[i].value){
+            ui_input.pin[i].event_flag_this_cycle = 1;
+            ui_input.pin[i].event_cnt++;
+            cnt_event_this_cycle++;
+            ui_internal_printf("---Event id=%d", i);
+        }
+    }
+    if (cnt_event_this_cycle>0) {
+        ui_internal_printf("---sees %d events.", cnt_event_this_cycle);
+    }
+}
+void ui_input_process_2of2(void) {
+    for (int i = 0; i < TOTAL_BUTTION_NUM; i++) {
+        ui_input.pin[i].value_last_cycle = ui_input.pin[i].value;
+    }
+}
 
 #if 0
 /*******************************************************************************

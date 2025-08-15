@@ -356,9 +356,9 @@ void ui_dio_set_value(DIO_STRUCT *pin, int val_in) {
     
     if (pin->value != val_in) {
         pin->value = val_in;
-        pin->event_flag_this_cycle = 1;
-        pin->event_cnt++;
-        ui_internal_printf("New value, %s=%d.", pin->name, pin->value);
+        //pin->event_flag_this_cycle = 1;
+        //pin->event_cnt++;
+        //ui_internal_printf("New value, %s=%d.", pin->name, pin->value);
     }
     //otherwise, there's no need to do anything
 }

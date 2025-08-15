@@ -268,7 +268,9 @@ void ui_callback_type_radio(int id);
 void ui_callback_type_click(int id);
 
 void ui03_draw_all(HDC hdc);
-
+void ui_input_process_1of2(void);
+void ui_input_process_2of2(void);
+void ui_test_loop();
 //int ui64_get_ui_run_ms();
 
 
