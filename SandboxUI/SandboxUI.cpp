@@ -154,9 +154,13 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
         {
             int wmId = LOWORD(wParam);
             // Parse the menu selections
-            ui_callback_type_click(wmId);
-            ui_callback_type_radio(wmId);
-            ui_callback_type_lock_step1(hWnd, wmId);
+            if (HIWORD(wParam) == BN_CLICKED) {
+                //ui_internal_printf("---- Button clicked (id=%d).", wmId);
+                ui_callback_type_click(wmId);
+                ui_callback_type_radio(wmId);
+                ui_callback_type_lock_step1(hWnd, wmId); //there're only 3 lock-type buttons
+            }
+
 
             switch (wmId)
             {

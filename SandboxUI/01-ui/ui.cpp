@@ -60,8 +60,19 @@ typedef struct {
 //#define FILL_BUTTON_ID(name)          { #name, name, 0 }
 
 #define ui_record_pin(ID, level) ui_dio_set_value(&(ui_input.pin[ID]), level);
+
+#define UI_RECORD_CLICK_PIN(ID) \
+    {                                          \
+        ui_input.pin[ID].value = 1;            \
+        ui_input.pin[ID].value_last_cycle = 0; \
+    }
+
 //#define UI_DIO_SET_NAME_AS_ITS_ID(ID) { ui_input.pin[ID].name = #ID;}
-#define UI_DIO_SET_NAME_AS_ITS_ID(ID, VAL) { ui_input.pin[ID].name = #ID; ui_input.pin[ID].value = VAL;}
+#define UI_DIO_SET_NAME_AS_ITS_ID(ID, VAL) \
+    {                                      \
+        ui_input.pin[ID].name = #ID;       \
+        ui_input.pin[ID].value = VAL;      \
+    }
 
 /*******************************************************************************
 ******************************* Private variables ******************************
@@ -93,39 +104,19 @@ LRESULT CALLBACK ui_callback_type_continuous(HWND hwnd, UINT uMsg, WPARAM wParam
     case WM_LBUTTONDOWN:
         switch (bid) {
         case D1_OPEN:
-            ui_internal_printf("COP open door =1.");
-            break;
         case D1_CLOSE:
-            ui_internal_printf("COP close door =1.");
-            break;
-
         case ID_COP2_UP:
-            ui_internal_printf("COP2-UP =1.");
-            break;
         case ID_COP2_DOWN:
-            ui_internal_printf("COP2-DOWN =1.");
-            break;
-
         case ID_TOC_UP:
-            ui_internal_printf("TOC-UP =1.");
-            break;
         case ID_TOC_DOWN:
-            ui_internal_printf("TOC-DOWN =1.");
-            break;
-
         case ID_MACHINEROOM_UP:
-            ui_internal_printf("M.R.-UP =1.");
-            break;
         case ID_MACHINEROOM_DOWN:
-            ui_internal_printf("M.R.-DOWN =1.");
+        case ID_COP3_OPEN_DOOR:
+        case ID_COP3_CLOSE_DOOR:
+            ui_record_pin(bid, 1);
+            ui_internal_printf("continuous-type: %s=1.", ui_input.pin[bid].name);
             break;
 
-        case ID_COP3_OPEN_DOOR:
-            ui_internal_printf("COP3 OPEN DOOR =1.");
-            break;
-        case ID_COP3_CLOSE_DOOR:
-            ui_internal_printf("COP3 CLOSE DOOR =1.");
-            break;
 
         default:break;
         }
@@ -134,39 +125,17 @@ LRESULT CALLBACK ui_callback_type_continuous(HWND hwnd, UINT uMsg, WPARAM wParam
     case WM_LBUTTONUP:
         switch (bid) {
         case D1_OPEN:
-            ui_internal_printf("COP open door =0.");
-            break;
         case D1_CLOSE:
-            ui_internal_printf("COP close door =0.");
-            break;
-
-        case ID_COP3_OPEN_DOOR:
-            ui_internal_printf("COP3 OPEN DOOR =0.");
-            break;
-        case ID_COP3_CLOSE_DOOR:
-            ui_internal_printf("COP3 CLOSE DOOR =0.");
-            break;
-
         case ID_COP2_UP:
-            ui_internal_printf("COP2-UP =0.");
-            break;
         case ID_COP2_DOWN:
-            ui_internal_printf("COP2-DOWN =0.");
-            break;
-
-
         case ID_TOC_UP:
-            ui_internal_printf("TOC-UP =0.");
-            break;
         case ID_TOC_DOWN:
-            ui_internal_printf("TOC-DOWN =0.");
-            break;
-
         case ID_MACHINEROOM_UP:
-            ui_internal_printf("M.R.-UP =0.");
-            break;
         case ID_MACHINEROOM_DOWN:
-            ui_internal_printf("M.R.-DOWN =0.");
+        case ID_COP3_OPEN_DOOR:
+        case ID_COP3_CLOSE_DOOR:
+            ui_record_pin(bid, 0);
+            ui_internal_printf("continuous-type: %s=0.", ui_input.pin[bid].name);
             break;
 
         default:break;
@@ -237,20 +206,10 @@ void ui_callback_type_lock_step1(HWND hwnd, int id) {
     switch (id) {
 
     case ID_MACHINEROOM_ENABLE:
-        __button_machineroom_enable = !__button_machineroom_enable;
-        ui_internal_printf("M.R. ENABLE=%d", __button_machineroom_enable);
-        ui30_draw_custom_button_trigger_redraw(hwnd, id); // Force redraw
-        break;
-
     case ID_COP2_ENABLE:
-        __cop2_enabled = !__cop2_enabled;
-        ui_internal_printf("COP2 ENABLE=%d", __cop2_enabled);
-        ui30_draw_custom_button_trigger_redraw(hwnd, id); // Force redraw
-        break;
-
     case ID_TOC_ENABLE:
-        __button_toc_enable = !__button_toc_enable;
-        ui_internal_printf("TOC ENABLE=%d", __button_toc_enable);
+        ui_input.pin[id].value = (ui_input.pin[id].value == 0) ? 1 : 0;
+        ui_internal_printf("lock-type pin: %s=%d", ui_input.pin[id].name, ui_input.pin[id].value);
         ui30_draw_custom_button_trigger_redraw(hwnd, id); // Force redraw
         break;
 
@@ -271,15 +230,9 @@ void ui_callback_type_lock_step2(LPDRAWITEMSTRUCT lpDrawItem) {
     switch (id) {
 
     case ID_MACHINEROOM_ENABLE:
-        ui30_draw_button_led_black(lpDrawItem, NULL, __button_machineroom_enable);
-        break;
-
     case ID_COP2_ENABLE:
-        ui30_draw_button_led_black(lpDrawItem, NULL, __cop2_enabled);
-        break;
-
     case ID_TOC_ENABLE:
-        ui30_draw_button_led_black(lpDrawItem, NULL, __button_toc_enable);
+        ui30_draw_button_led_black(lpDrawItem, NULL, ui_input.pin[id].value);
         break;
 
     default:
@@ -457,6 +410,9 @@ void ui_callback_type_radio(int id) {
  * @return xxxx
  *******************************************************************************/
 void ui_callback_type_click(int id) {
+    if (H1UP <= id && id <= CF12) {
+        UI_RECORD_CLICK_PIN(id);
+    }
 }
         
 
@@ -548,6 +504,23 @@ void ui1_init_widgets(HWND hwnd) { // Labels
     SetTimer(hwnd, IDT_TIMER_UI, UI_PERIOD_MS, NULL);                       // 50ms(20Hz timer)
     _ui_control_stru.ts_at_start = static_cast<uint32_t>(GetTickCount64()); // ui82_c_get_u_run_ms();
 
+    //type-continuous
+    UI_DIO_SET_NAME_AS_ITS_ID(D1_OPEN, 0);
+    UI_DIO_SET_NAME_AS_ITS_ID(D1_CLOSE, 0);
+    UI_DIO_SET_NAME_AS_ITS_ID(ID_COP2_UP, 0);
+    UI_DIO_SET_NAME_AS_ITS_ID(ID_COP2_DOWN, 0);
+    UI_DIO_SET_NAME_AS_ITS_ID(ID_COP3_OPEN_DOOR, 0);
+    UI_DIO_SET_NAME_AS_ITS_ID(ID_COP3_CLOSE_DOOR, 0);
+    UI_DIO_SET_NAME_AS_ITS_ID(ID_TOC_UP, 0);
+    UI_DIO_SET_NAME_AS_ITS_ID(ID_TOC_DOWN, 0);
+    UI_DIO_SET_NAME_AS_ITS_ID(ID_MACHINEROOM_UP, 0);
+    UI_DIO_SET_NAME_AS_ITS_ID(ID_MACHINEROOM_DOWN, 0);
+    
+    //type-lock, 3 in total
+    UI_DIO_SET_NAME_AS_ITS_ID(ID_MACHINEROOM_ENABLE, 0);
+    UI_DIO_SET_NAME_AS_ITS_ID(ID_COP2_ENABLE, 0);
+    UI_DIO_SET_NAME_AS_ITS_ID(ID_TOC_ENABLE, 0);
+    //radio groups
     UI_DIO_SET_NAME_AS_ITS_ID(ID_HOP2_FIRE_RECALL, 1);
     UI_DIO_SET_NAME_AS_ITS_ID(ID_HOP2_INSP_TOP, 1);
     UI_DIO_SET_NAME_AS_ITS_ID(ID_HOP2_INSP_BOTTOM, 1);
