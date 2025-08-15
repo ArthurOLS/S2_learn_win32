@@ -325,7 +325,7 @@ void ui_create_cop3(HWND hwnd, int x, int y) {
  * @return xxxx
  *******************************************************************************/
 void ui_create_hop2(HWND hwnd, int x, int y) {
-    RADIO_3POS_STRU switch_fire1 = { L"FIRE PH1", L"RESET", L"OFF", L"ON", ID_HOP2_FIRE_RECALL_OFF, ID_HOP2_FIRE_RECALL_OFF, ID_HOP2_FIRE_RECALL_ON, 1 };
+    RADIO_3POS_STRU switch_fire1 = { L"FIRE PH1", L"RESET", L"OFF", L"ON", ID_HOP2_FIRE_RECALL_RESET, ID_HOP2_FIRE_RECALL_OFF, ID_HOP2_FIRE_RECALL_ON, 1 };
     ui_create_radio_type_3pos(hwnd, x + 5, y + 20, &switch_fire1);
 
     RADIO_3POS_STRU switch_insp_top = { L"INSP. ACCESS TOP", L"UP", L"OFF", L"DOWN", ID_HOP2_INSP_TOP_UP, ID_HOP2_INSP_TOP_OFF, ID_HOP2_INSP_TOP_DOWN, 1 };

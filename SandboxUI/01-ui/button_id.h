@@ -35,10 +35,11 @@
 /*******************************************************************************
 ******************************* Exported constants *****************************
 *******************************************************************************/
+//core digital input id, make sure it starts from 0, id is used as the list index
 typedef enum {
 
     //block: output devices
-    ID_MOTOR_EN = 500,
+    ID_MOTOR_EN = 0,
     ID_BUZZER,
     ID_EB_PICK,
     ID_LATERN_UP,
@@ -47,13 +48,12 @@ typedef enum {
 
 
     //[GROUP1]
-    BUTTON_BASE_ID = 1000,
-    H1UP = 1000, // its id = 1000, name="H1UP"
-    H1DN,        // 1001
-    CF1,         // 1002
-    H2UP,        // 1003
-    H2DN,        // 1004
-    CF2,         // 1005
+    H1UP,  
+    H1DN,
+    CF1,         
+    H2UP,        
+    H2DN,        
+    CF2,         
     H3UP,
     H3DN,
     CF3,
@@ -84,59 +84,28 @@ typedef enum {
     CF11,
     CF12,
 
-
-    //[DEBUG BUTTONS]
-    X_APP,  // Simulator Stop
-    X_CORE, // Simulator Start
-    X_SIM,    
-
-    COP_UP = 2000,
-    COP_DN,
-    COP_STOP,
-
-    MOTOR_UP,
-    MOTOR_DN,
-    MOTOR_ST,
-
-    SPEED1, // 0.2 M/S
-    SPEED2, // 1.0 M/S
-    SPEED3, // 2.0 M/S
-
-    NORMAL,
-    INSP,
-    INDP,
-
-    Go_n1m, // test traction to goto -1m abs
-    Go_1m,  // test traction to goto 1m abs
-    Go_5m,  // test traction to goto 2m abs
-
-    RESET, // this will reset and automatically start logging.
-    STOP_LOG,
-    SAVE_PRINT, // save the printf logbox to a file
-    OPEN_DOOR,
-    CLOSE_DOOR,
-    HOLD_DOOR,
-
-
-    //Radio switchs
-
-
     //hop2
+    ID_HOP2_FIRE_RECALL,//radio group
     ID_HOP2_FIRE_RECALL_RESET,
     ID_HOP2_FIRE_RECALL_OFF,
     ID_HOP2_FIRE_RECALL_ON,
+    ID_HOP2_INSP_TOP,//radio group
     ID_HOP2_INSP_TOP_UP,
     ID_HOP2_INSP_TOP_OFF,
     ID_HOP2_INSP_TOP_DOWN,
+    ID_HOP2_INSP_BOTTOM,//radio group
     ID_HOP2_INSP_BOTTOM_UP,
     ID_HOP2_INSP_BOTTOM_OFF,
     ID_HOP2_INSP_BOTTOM_DOWN,
 
     //machineroom block
+    ID_MACHINEROOM_INSP,//group radio
     ID_MACHINEROOM_INSP_ON,
     ID_MACHINEROOM_INSP_OFF,
+    ID_MACHINEROOM_CAR_DOOR_BYPASS,//group
     ID_MACHINEROOM_CAR_DOOR_BYPASS_ON,
     ID_MACHINEROOM_CAR_DOOR_BYPASS_OFF,
+    ID_MACHINEROOM_HALL_DOOR_BYPASS,//group
     ID_MACHINEROOM_HALL_DOOR_BYPASS_ON,
     ID_MACHINEROOM_HALL_DOOR_BYPASS_OFF,
     ID_MACHINEROOM_UP,
@@ -144,21 +113,25 @@ typedef enum {
     ID_MACHINEROOM_DOWN,
 
     //cop2
+    ID_COP2_HOIST_ACCESS,//group
     ID_COP2_HOIST_ACCESS_ON,
     ID_COP2_HOIST_ACCESS_OFF,
-    ID_COP2_IND_ON, //independent service
+    ID_COP2_IND,//group//independent service
+    ID_COP2_IND_ON, 
     ID_COP2_IND_OFF,
-    ID_COP2_RUN_RUN, //run/stop
+    ID_COP2_RUN,//group//run/stop
+    ID_COP2_RUN_RUN, 
     ID_COP2_RUN_STOP,
     ID_COP2_UP,
     ID_COP2_ENABLE,
     ID_COP2_DOWN,
 
     //cop3
+    ID_COP3_FIRE_PH2,//group
     ID_COP3_FIRE_PH2_OFF,
     ID_COP3_FIRE_PH2_HOLD,
     ID_COP3_FIRE_PH2_ON,
-    
+    ID_COP3_RUN,//group
     ID_COP3_RUN_RUN,
     ID_COP3_RUN_STOP,
 
@@ -166,8 +139,10 @@ typedef enum {
     ID_COP3_CLOSE_DOOR,
     ID_COP3_CALL_CACEL,
     //toc
+    ID_TOC_INSP,//group
     ID_TOC_INSP_ON,
     ID_TOC_INSP_OFF,
+    ID_TOC_RUN,//group
     ID_TOC_RUN_RUN,
     ID_TOC_RUN_STOP,
     ID_TOC_UP,
@@ -199,6 +174,39 @@ typedef enum {
     ID_SMOKE4_HOISTWAY,
     ID_SMOKE5_PIT,
 
+    //[DEBUG BUTTONS]
+    X_APP,  // Simulator Stop
+    X_CORE, // Simulator Start
+    X_SIM,    
+
+    COP_UP,
+    COP_DN,
+    COP_STOP,
+
+    MOTOR_UP,
+    MOTOR_DN,
+    MOTOR_ST,
+
+    SPEED1, // 0.2 M/S
+    SPEED2, // 1.0 M/S
+    SPEED3, // 2.0 M/S
+
+    NORMAL,
+    INSP,
+    INDP,
+
+    Go_n1m, // test traction to goto -1m abs
+    Go_1m,  // test traction to goto 1m abs
+    Go_5m,  // test traction to goto 2m abs
+
+    RESET, // this will reset and automatically start logging.
+    STOP_LOG,
+    SAVE_PRINT, // save the printf logbox to a file
+    OPEN_DOOR,
+    CLOSE_DOOR,
+    HOLD_DOOR,
+
+    TOTAL_BUTTION_NUM
 } ENUM_BUTTON_ID;
 
 

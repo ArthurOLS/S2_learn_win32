@@ -9,7 +9,7 @@
 *
 ******************************************************************************
 * @attention
-*
+*           This file has functions that are all independent from each other
 *
 ******************************************************************************
 */
@@ -19,9 +19,11 @@
 *******************************************************************************/
 
 #include <Windows.h>
+#include <stdio.h>
 #include "ui_lowlevel.h"
 #include <commctrl.h> // For SetWindowSubclass, DefSubclassProc
 #include "ui.h"
+#include "ui_logbox.h"
 
 /*******************************************************************************
 ******************************** Private typedef *******************************
@@ -292,6 +294,78 @@ void ui_create_button_type_continuous(HWND hwnd, int x, int y, const wchar_t*nam
     ui10_apply_font_to_control(b1, UI_FONT_9PT);
     SetWindowSubclass(b1, ui_callback_type_continuous, 1, 0);
 }
+
+
+/*******************************************************************************
+ * @brief  get a string like '03:18:25' from u64 ts
+ * @param  char time_str[]: where to store
+ * @param  xxxx
+ * @return xxxx
+ *******************************************************************************/
+void ui65_get_formatted_clock_string(char time_str[], UINT64 ms) {
+    int total_seconds = (int)(ms / 1000);
+    int hours = total_seconds / 3600;
+    int minutes = (total_seconds % 3600) / 60;
+    int seconds = total_seconds % 60;
+
+    // char time_str[25] = { 0 };
+    sprintf_s(time_str, 9, "%02d:%02d:%02d", hours, minutes, seconds);
+}
+
+
+
+/*******************************************************************************
+ * @brief  format a string for latched hall and car calls
+ * @param  xxxx
+ * @param  xxxx
+ * @return xxxx
+ *******************************************************************************/
+void _ui31_print_binary_array(char* buf, size_t buf_size, const int call_table[][3]) {
+    buf[0] = '\0'; // Start with an empty string
+
+    for (int i = 0; i < APP_FLOOR_NUM; i++) {
+        char temp[16];
+        // Format index (1-based), then convert the value to a 3-digit binary string
+        char c0 = (call_table[i][0]) ? 'U' : '_';
+        char c1 = (call_table[i][1]) ? 'D' : '_';
+        char c2 = (call_table[i][2]) ? 'C' : '_';
+        snprintf(temp, sizeof(temp), "%d:%c%c%c", i + 1, c0, c1, c2);
+
+        if (i > 0) {            // if it's not the first element, add a comma
+            if ((i % 4) == 0) { // Add newline for every 4 up/down/car elements and not at end
+                strncat_s(buf, buf_size, "\r\n", 2);
+            }
+            else {
+                strncat_s(buf, buf_size, ", ", 2);
+            }
+        }
+        strncat_s(buf, buf_size, temp, 8);
+    }
+}
+
+
+
+
+/*******************************************************************************
+ * @brief  set value for a pin
+ * @param  pin: which DIO_STRUCT it is
+ * @param  val_in: input from hardware pin
+ * @return xxxx
+ *******************************************************************************/
+void ui_dio_set_value(DIO_STRUCT *pin, int val_in) {
+    
+    if (pin->value != val_in) {
+        pin->value = val_in;
+        pin->event_flag_this_cycle = 1;
+        pin->event_cnt++;
+        ui_internal_printf("New value, %s=%d.", pin->name, pin->value);
+    }
+    //otherwise, there's no need to do anything
+}
+
+   
+
+
 
 /********************************* end of file ********************************/
 

@@ -21,8 +21,9 @@
 #include <windows.h>
 #include <stdio.h>
 
-#include "ui.h" 
 #include "../00-app/top_config.h"
+#include "../00-app/top_datatype.h"
+#include "ui.h" 
 #include "ui_logbox.h"
 
 /*******************************************************************************
@@ -64,7 +65,7 @@
  * @brief  draw car box with a floor line
  * @param  x: block left,
            y: _ui_control_stru.car_box_y;
- * @param  is_idle:  g_app_disp_stru.lv1_state == LV1_STATE_IDLE
+ * @param  is_idle:  disp->lv1_state == LV1_STATE_IDLE
  * @return xxxx
  *******************************************************************************/
 void ui32_draw_cab_box(HDC hdc, int x, int y, bool is_idle) {
@@ -213,7 +214,7 @@ void ui_draw_floors(HDC hdc, int x, int y) {
  * @param  x = UI_ANIMATION_X
  * @return xxxx
  *******************************************************************************/
-void ui39_draw_invalidate_rect_area_debug(HDC hdc, CONST RECT* lpRect) {
+void ui_draw_invalidate_rect_area_debug(HDC hdc, CONST RECT* lpRect) {
     HBRUSH hOldBrush = (HBRUSH)SelectObject(hdc, GetStockObject(NULL_BRUSH));// nbew brush - save old
     HPEN hPen = CreatePen(PS_SOLID, 2, RGB(255, 0, 0));// new red pen
 
@@ -224,6 +225,8 @@ void ui39_draw_invalidate_rect_area_debug(HDC hdc, CONST RECT* lpRect) {
     SelectObject(hdc, hOldBrush);
     DeleteObject(hPen);// delete created pen
 }
+
+
 
 /********************************* end of file ********************************/
 

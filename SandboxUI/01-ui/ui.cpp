@@ -21,6 +21,7 @@
 #include "./../framework.h" //include file for standard system include files,
 #include <stdint.h> //to use int32_t type
 #include <windows.h>
+#include <stdio.h>
 #include <commctrl.h> // For SetWindowSubclass, DefSubclassProc
 #pragma comment(lib, "comctl32.lib")//DefSubclassProc is not part of the core Windows API (windows.h), but part of the Common Controls Library; This library provides the actual implementation of functions declared in commctrl.h.
 
@@ -34,7 +35,6 @@
 ******************************** Private typedef *******************************
 *******************************************************************************/
 
-#define LABEL_STRING_SIZE               512 //lable printf buzzer size
 
 //inner layer, the contorl data ui uses itself
 typedef struct {
@@ -42,24 +42,8 @@ typedef struct {
     int                 car_box_y;          // the y position of cab box bottom line.
     int                 door_opening_width; // 0..40 pix width
     uint32_t ts_at_start;   // recorded ts at starting up time by ui82_c_get_u_run_ms().
+    uint32_t run_ms; //= now_ms() - ms_at_start
     int car_mode;           // 0=simplex, 1=master, 2=slave1
-
-    int col_car; // left pix of this column
-    int col_log;
-    int col_btn;
-
-    int label1_cnt;                     // how many times does label1 update
-    char label1_buf[LABEL_STRING_SIZE]; // string buffer for lable1, to check if the content changes.
-
-    HFONT font1; //global font for this app
-
-    HBRUSH hBrushGreen;
-    HBRUSH hBrushGray;
-    bool greenMode;
-    
-    bool is_enable;
-    bool is_up;
-    bool is_down;
 
 
 } UI_CONTROL_STRU;
@@ -75,11 +59,15 @@ typedef struct {
 
 //#define FILL_BUTTON_ID(name)          { #name, name, 0 }
 
+#define ui_record_pin(ID, level) ui_dio_set_value(&(ui_input.pin[ID]), level);
+//#define UI_DIO_SET_NAME_AS_ITS_ID(ID) { ui_input.pin[ID].name = #ID;}
+#define UI_DIO_SET_NAME_AS_ITS_ID(ID, VAL) { ui_input.pin[ID].name = #ID; ui_input.pin[ID].value = VAL;}
 
 /*******************************************************************************
 ******************************* Private variables ******************************
 *******************************************************************************/
 UI_CONTROL_STRU _ui_control_stru;
+UI_INPUT_STRU ui_input;
 
 
 /*******************************************************************************
@@ -276,7 +264,7 @@ void ui_callback_type_lock_step1(HWND hwnd, int id) {
  * @brief  called by WM_DRAWITEM, originally triggered by InvalidateRect()
  * @param  lpDrawItem: which button to redraw
  * @param  xxxx
- * @return xxxx
+ * @note   works as drawing leds.
  *******************************************************************************/
 void ui_callback_type_lock_step2(LPDRAWITEMSTRUCT lpDrawItem) {
     int id = lpDrawItem->CtlID;
@@ -285,7 +273,6 @@ void ui_callback_type_lock_step2(LPDRAWITEMSTRUCT lpDrawItem) {
     case ID_MACHINEROOM_ENABLE:
         ui30_draw_button_led_black(lpDrawItem, NULL, __button_machineroom_enable);
         break;
-
 
     case ID_COP2_ENABLE:
         ui30_draw_button_led_black(lpDrawItem, NULL, __cop2_enabled);
@@ -310,18 +297,168 @@ void ui_callback_type_lock_step2(LPDRAWITEMSTRUCT lpDrawItem) {
 void ui_callback_type_radio(int id) {
     switch (id) // LOWORD = control ID
     {
+    case ID_HOP2_FIRE_RECALL_RESET:
+        ui_internal_printf("switch to 'Fire PH1-RESET'.");
+        ui_record_pin(ID_HOP2_FIRE_RECALL, 0);
+        break;
+    case ID_HOP2_FIRE_RECALL_OFF:
+        ui_internal_printf("switch to 'Fire PH1-OFF'.");
+        ui_record_pin(ID_HOP2_FIRE_RECALL, 1);
+        break;
+    case ID_HOP2_FIRE_RECALL_ON:
+        ui_internal_printf("switch to 'Fire PH1-ON'.");
+        ui_record_pin(ID_HOP2_FIRE_RECALL, 2);
+        break;
+
+    case ID_HOP2_INSP_TOP_UP:
+        ui_internal_printf("switch to 'HOP2/INSP TOP/UP'.");
+        ui_record_pin(ID_HOP2_INSP_TOP, 0);
+        break;
+    case ID_HOP2_INSP_TOP_OFF:
+        ui_internal_printf("switch to 'HOP2/INSP TOP/OFF'.");
+        ui_record_pin(ID_HOP2_INSP_TOP, 1);
+        break;
+    case ID_HOP2_INSP_TOP_DOWN:
+        ui_internal_printf("switch to 'HOP2/INSP TOP/DOWN'.");
+        ui_record_pin(ID_HOP2_INSP_TOP, 2);
+        break;
+
+
+    case ID_HOP2_INSP_BOTTOM_UP:
+        ui_internal_printf("switch to 'HOP2/INSP BOTTOM/UP'.");
+        ui_record_pin(ID_HOP2_INSP_BOTTOM, 0);
+        break;
+    case ID_HOP2_INSP_BOTTOM_OFF:
+        ui_internal_printf("switch to 'HOP2/INSP BOTTOM/OFF'.");
+        ui_record_pin(ID_HOP2_INSP_BOTTOM, 1);
+        break;
+    case ID_HOP2_INSP_BOTTOM_DOWN:
+        ui_internal_printf("switch to 'HOP2/INSP BOTTOM/DOWN'.");
+        ui_record_pin(ID_HOP2_INSP_BOTTOM, 2);
+        break;
+
+    case ID_MACHINEROOM_INSP_ON:
+        ui_internal_printf("switch to 'MACHINEROOM/INSP/ON'.");
+        ui_record_pin(ID_MACHINEROOM_INSP, 0);
+        break;    
+    case ID_MACHINEROOM_INSP_OFF:
+        ui_internal_printf("switch to 'MACHINEROOM/INSP/OFF'.");
+        ui_record_pin(ID_MACHINEROOM_INSP, 1);
+        break;
+
+    case ID_MACHINEROOM_CAR_DOOR_BYPASS_ON:
+        ui_internal_printf("switch to 'M.R./CAR DOOR BYPASS/ON'.");
+        ui_record_pin(ID_MACHINEROOM_CAR_DOOR_BYPASS, 0);
+        break;
+    case ID_MACHINEROOM_CAR_DOOR_BYPASS_OFF:
+        ui_internal_printf("switch to 'M.R./CAR DOOR BYPASS/OFF'.");
+        ui_record_pin(ID_MACHINEROOM_CAR_DOOR_BYPASS, 1);
+        break;
+
+    case ID_MACHINEROOM_HALL_DOOR_BYPASS_ON:
+        ui_internal_printf("switch to 'M.R./HALL DOOR BYPASS/ON'.");
+        ui_record_pin(ID_MACHINEROOM_HALL_DOOR_BYPASS, 0);
+        break;
+    case ID_MACHINEROOM_HALL_DOOR_BYPASS_OFF:
+        ui_internal_printf("switch to 'M.R./HALL DOOR BYPASS/OFF'.");
+        ui_record_pin(ID_MACHINEROOM_HALL_DOOR_BYPASS, 1);
+        break;    
+    
+    //cop2
+    case ID_COP2_HOIST_ACCESS_ON:
+        ui_internal_printf("switch to 'COP2/HOIST.ACCESS/ON'.");
+        ui_record_pin(ID_COP2_HOIST_ACCESS, 0);
+        break;
+    case ID_COP2_HOIST_ACCESS_OFF:
+        ui_internal_printf("switch to 'COP2/HOIST.ACCESS/OFF'.");
+        ui_record_pin(ID_COP2_HOIST_ACCESS, 1);
+        break;
+
+
+    case ID_COP2_IND_ON:
+        ui_internal_printf("switch to 'COP2/IND. SERVICE/ON'.");
+        ui_record_pin(ID_COP2_IND, 0);
+        break;
+    case ID_COP2_IND_OFF:
+        ui_internal_printf("switch to 'COP2/IND. SERVICE/OFF'.");
+        ui_record_pin(ID_COP2_IND, 1);
+        break;
+            
+
+    case ID_COP2_RUN_STOP:
+        ui_internal_printf("switch to 'COP2/RUN/STOP'.");
+        ui_record_pin(ID_COP2_RUN, 0);
+        break;    
+    case ID_COP2_RUN_RUN:
+        ui_internal_printf("switch to 'COP2/RUN/RUN'.");
+        ui_record_pin(ID_COP2_RUN, 1);
+        break;
+
+    //COP3
     case ID_COP3_FIRE_PH2_OFF:
-        ui_internal_printf("switch to PH2-OFF.");
+        ui_internal_printf("switch to 'COP3/PH2/OFF'.");
+        ui_record_pin(ID_COP3_FIRE_PH2, 0);
         break;
     case ID_COP3_FIRE_PH2_HOLD:
-        ui_internal_printf("switch to PH2-HOLD.");
-        break;
+        ui_internal_printf("switch to 'COP3/PH2/HOLD'.");
+        ui_record_pin(ID_COP3_FIRE_PH2, 1);
+        break;            
     case ID_COP3_FIRE_PH2_ON:
-        ui_internal_printf("switch to PH2-ON.");
+        ui_internal_printf("switch to 'COP3/PH2/ON'.");
+        ui_record_pin(ID_COP3_FIRE_PH2, 2);
+        break;
+
+    case ID_COP3_RUN_STOP:
+        ui_internal_printf("switch to 'COP3/RUN/STOP'.");
+        ui_record_pin(ID_COP3_RUN, 0);
+        break;
+    case ID_COP3_RUN_RUN:
+        ui_internal_printf("switch to 'COP3/RUN/RUN'.");
+        ui_record_pin(ID_COP3_RUN, 1);
+        break;
+
+
+
+    //TOC
+    case ID_TOC_INSP_ON:
+        ui_internal_printf("switch to 'TOC/INSP./ON'.");
+        ui_record_pin(ID_TOC_INSP, 0);
+        break;
+    case ID_TOC_INSP_OFF:
+        ui_internal_printf("switch to 'TOC/INSP./OFF'.");
+        ui_record_pin(ID_TOC_INSP, 1);
+        break;
+
+    case ID_TOC_RUN_STOP:
+        ui_internal_printf("switch to 'TOC/RUN/STOP'.");
+        ui_record_pin(ID_TOC_RUN, 0);
+        break;    
+    case ID_TOC_RUN_RUN:
+        ui_internal_printf("switch to 'TOC/RUN/RUN'.");
+        ui_record_pin(ID_TOC_RUN, 1);
+        break;
+
+
+    // case X:
+    //     ui_internal_printf("switch to 'X'.");
+    //     ui_record_pin(X, X);
+    //     break;
+    default:
         break;
     }
 }
 
+
+
+/*******************************************************************************
+ * @brief  for the common click buttons, called by WndProc on WM_COMMAND event
+ * @param  id: from LOWORD(wParam)
+ * @param  xxxx
+ * @return xxxx
+ *******************************************************************************/
+void ui_callback_type_click(int id) {
+}
+        
 
 /*******************************************************************************
 ******************************* Public Variables *******************************
@@ -411,6 +548,20 @@ void ui1_init_widgets(HWND hwnd) { // Labels
     SetTimer(hwnd, IDT_TIMER_UI, UI_PERIOD_MS, NULL);                       // 50ms(20Hz timer)
     _ui_control_stru.ts_at_start = static_cast<uint32_t>(GetTickCount64()); // ui82_c_get_u_run_ms();
 
+    UI_DIO_SET_NAME_AS_ITS_ID(ID_HOP2_FIRE_RECALL, 1);
+    UI_DIO_SET_NAME_AS_ITS_ID(ID_HOP2_INSP_TOP, 1);
+    UI_DIO_SET_NAME_AS_ITS_ID(ID_HOP2_INSP_BOTTOM, 1);
+    UI_DIO_SET_NAME_AS_ITS_ID(ID_MACHINEROOM_INSP, 1);
+    UI_DIO_SET_NAME_AS_ITS_ID(ID_MACHINEROOM_CAR_DOOR_BYPASS, 1);
+    UI_DIO_SET_NAME_AS_ITS_ID(ID_MACHINEROOM_HALL_DOOR_BYPASS, 1);
+    UI_DIO_SET_NAME_AS_ITS_ID(ID_COP2_HOIST_ACCESS, 1);
+    UI_DIO_SET_NAME_AS_ITS_ID(ID_COP2_IND, 1);
+    UI_DIO_SET_NAME_AS_ITS_ID(ID_COP2_RUN, 1);
+    UI_DIO_SET_NAME_AS_ITS_ID(ID_COP3_FIRE_PH2, 0);
+    UI_DIO_SET_NAME_AS_ITS_ID(ID_COP3_RUN, 1);
+    UI_DIO_SET_NAME_AS_ITS_ID(ID_TOC_INSP, 1);
+    UI_DIO_SET_NAME_AS_ITS_ID(ID_TOC_RUN, 1);
+
 }
         
 
@@ -434,7 +585,7 @@ void ui03_draw_all(HDC hdc) {
     ui_draw_floors(hdc, UI_ANIMATION_X, UI_GROUND_Y);
     ui34_draw_final_limits(hdc, UI_ANIMATION_X);
 
-    // ui31_draw_labels(hdc);
+    //ui31_draw_labels(hdc);
     ui32_draw_cab_box(hdc, UI_ANIMATION_X, car_y_px, car_is_idle);
     ui36_draw_door(hdc, UI_ANIMATION_X, car_y_px, 16);
 
@@ -447,17 +598,94 @@ void ui03_draw_all(HDC hdc) {
  * @param  xxxx
  * @return xxxx
  *******************************************************************************/
-void get_data(int) {
-    const RECT rec_labels_region = {
-        UI_LABELBOX_X - 2,
-        UI_LABELBOX_Y - 2,
-        UI_LABELBOX_X + UI_LABELBOX_W + UI_GAP + UI_LABELBOX2_W + 2,
-        UI_LABELBOX_Y + UI_LABELBOX_H + 2
-    };
 
 
+#if 0
+/*******************************************************************************
+ * @brief  update two labelboxes, Called by draw_all() in WndProc() Timer
+ * @param  xxxx
+ * @param  xxxx
+ * @return xxxx
+ *******************************************************************************/
+void ui31_draw_labels(HDC hdc, TO_UI_STRUCT* disp, UINT64 ms) {
+#define LABEL_STRING_SIZE 512 // lable printf buzzer size
+
+    char buf[LABEL_STRING_SIZE];  // main text buffer which holds the entire string of a label window
+    char buf2[LABEL_STRING_SIZE]; // hold part of label string
+    char time_str[20];
+    int buf_size = sizeof(buf);
+    ui65_get_formatted_clock_string(time_str, ms);
+
+    sprintf_s(buf, "V%s (%s %s)\r\n  *** CAR SIMULATION ***\r\nRun:%s\r\nCmd: %s \r\nAPS Speed: %+05d/%04d(sp)mm/s\r\nAPS Height: %05dmm\r\nDir: %s\r\nState: %s\r\nError: %s \r\n\n  *** DOOR SIMULATION ***\r\nCmd: %s\r\nState: %s\nOpening:%d%% \n\nEnabled: %s,%s,%s.",
+        VERSION_CODE,
+        __DATE__,
+        __TIME__,
+        time_str,
+        sim31_get_cmd_string(disp->car1_cmd),
+        disp->car1_speed,
+        disp->car1_speed_sp,
+        disp->car1_height,
+        sim32_get_dir_string(disp->car1_direction),
+        sim30_get_state_string(disp->car1_state),
+        sim33_get_err_string(disp->car1_error),
+        sim_door_get_cmd_string(disp->door1_cmd),
+        sim_door_get_state_string(disp->door1_state),
+        disp->door1_position,
+        (disp->is_simulator_enable ? "APP" : "X-APP"),
+        (disp->is_core_enable ? "CORE" : "X-CORE"),
+        (disp->is_car_sim_enabled ? "SIM" : "X-SIM"));
+
+    {   // draw text
+        _ui_control_stru.label1_cnt++; // update the counter
+        strcpy_s(_ui_control_stru.label1_buf, LABEL_STRING_SIZE, buf);
+        // SetWindowTextA(hLabel1, buf);
+
+        // set label position rects
+        RECT labelRect1 = { UI_LABELBOX_X, UI_LABELBOX_Y, UI_LABELBOX_X + UI_LABELBOX_W, UI_LABELBOX_Y + UI_LABELBOX_H };
+
+        //ui10_apply_font_to_control(hdc, hFont);
+        SetBkMode(hdc, TRANSPARENT);
+        SetTextColor(hdc, RGB(0, 0, 0)); // black
+        DrawTextA(hdc, buf, -1, &labelRect1, DT_LEFT | DT_TOP | DT_NOPREFIX);
+    }
+
+    // Label2
+
+    sprintf_s(buf, "  *** CORE SERVICE STATUS ***\r\nCalls:");
+    _ui31_print_binary_array(buf2, 100, service_control_stru.calltable);
+    strncat_s(buf, buf_size, buf2, buf_size / 2); // add buf2's content into buf1
+
+    sprintf_s(buf2, "\r\nLanding: %d (%.2f)--> Dest:%d\r\nCall Cnt: %d\r\nLv1: %s, \r\nLv2: %s, \r\nLv3: %s, \r\nLv4: %s, \r\nLv5: %s",
+        disp->current_landing,
+        disp->current_landing_f,
+        service_control_stru.landing_cmd.determined_next_landing,
+        service_control_stru.cnt_total_calls, // call landing cnt
+        fsm_lv1_get_state_string(disp->lv1_state),
+        core_interface_get_lv2_state_string(disp->lv2_state),
+        fsm_lv3_get_state_string(disp->lv3_state),
+        fsm_lv4_get_state_string(disp->lv4_state),
+        lv3_get_door_state_name(disp->lv5_state));
+    strncat_s(buf, buf_size, buf2, buf_size / 2); // add buf2's content into buf1
+
+    if (_ui_control_stru.car_mode == ELEVATOR_MODE_MASTER) {
+        sprintf_s(buf2, "\r\n\n        **SLAVE1**\r\nState:%s\r\nLanding:%d\r\nDoor:%s\r\nService:[%d, %s, %d].",
+            (disp->slave1_is_idle ? "IDLE" : "SERVING"),
+            disp->slave1_current_landing,
+            lv3_get_door_state_name(disp->slave1_door_state),
+            disp->slave1_range2_a,
+            sim32_get_dir_string(disp->slave1_range2_dir),
+            disp->slave1_range2_b);
+        strncat_s(buf, buf_size, buf2, buf_size / 2); // add buf2's content into buf1
+    }
+
+    { // draw label2 text
+        // SetWindowTextA(hLabel2, buf);
+        RECT labelRect2 = { UI_LABELBOX2_X, UI_LABELBOX2_Y, UI_LABELBOX2_X + UI_LABELBOX2_W, UI_LABELBOX2_Y + UI_LABELBOX2_H };
+        DrawTextA(hdc, buf, -1, &labelRect2, DT_LEFT | DT_TOP | DT_NOPREFIX);
+    }
 }
         
+#endif
 
 // update all pixel data for all the ui_draw_xxx() functions.
 // called by IDT_TIMER_UI event in WndProc().
@@ -475,12 +703,12 @@ void get_data(int) {
  * @brief  get ui run tim in ms, it use the global ts_at_start variable
  * @param  xxxx
  * @return ms since app started
- * @note   overflows after ~49 days
+ * @note   overflows after 500 million years
  *******************************************************************************/
-//int ui64_get_ui_run_ms() {
-//    int ts = (int)GetTickCount64() - _ui_control_stru.ts_at_start;
-//    return ts; // overflow after ~49 days
-//}
+UINT64 ui64_get_ui_run_ms() {
+    UINT64 ts = (int)GetTickCount64() - _ui_control_stru.ts_at_start;
+    return ts; // overflow after ~49 days
+}
 
 
 /********************************* end of file ********************************/

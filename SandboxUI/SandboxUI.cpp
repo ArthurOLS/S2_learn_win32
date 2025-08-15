@@ -154,6 +154,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
         {
             int wmId = LOWORD(wParam);
             // Parse the menu selections
+            ui_callback_type_click(wmId);
             ui_callback_type_radio(wmId);
             ui_callback_type_lock_step1(hWnd, wmId);
 
@@ -178,18 +179,17 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
     }
     case WM_PAINT:
         {
-        extern void ui39_draw_invalidate_rect_area_debug(HDC hdc, CONST RECT * lpRect);
+        extern void ui_draw_invalidate_rect_area_debug(HDC hdc, CONST RECT * lpRect);
             PAINTSTRUCT ps;
             HDC hdc = BeginPaint(hWnd, &ps);
             // TODO: Add any drawing code that uses hdc here...
-            //ui03_draw_all(hdc);
-            if(1){ // double 
+            
+            if(1){ // double buffer
                 // get entire client area - full window
                 RECT rc;
                 GetClientRect(hWnd, &rc);
                 int width = rc.right - rc.left;
                 int height = rc.bottom - rc.top;
-
                 // create a compatible memory device context
                 HDC memDC = CreateCompatibleDC(hdc);                            // buffer
                 HBITMAP memBitmap = CreateCompatibleBitmap(hdc, width, height); // bit map
@@ -199,8 +199,8 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
                 // draw everything into the memory device context
                 ui03_draw_all(memDC);
                 // draw debug rectangles into memory device context
-                ui39_draw_invalidate_rect_area_debug(memDC, &rec_car_region); // DEBUG TOOL
-                ui39_draw_invalidate_rect_area_debug(memDC, &rec_labels_region); // DEBUG TOOL
+                //ui_draw_invalidate_rect_area_debug(memDC, &rec_car_region); // DEBUG TOOL
+                //ui_draw_invalidate_rect_area_debug(memDC, &rec_labels_region); // DEBUG TOOL
 
                 BitBlt(hdc, 0, 0, width, height, memDC, 0, 0, SRCCOPY); // blit the memory device context to the screen
                 SelectObject(memDC, oldBitmap);                         // restore old bit map
@@ -223,7 +223,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
         case IDT_TIMER_UI:
             //ui_internal_printf("Invalidate %d, %d, %d, %d.", rec_car_region.left, rec_car_region.top, rec_car_region.right, rec_car_region.bottom);
             InvalidateRect(hWnd, &rec_car_region, TRUE);       // True=erase background,
-            //InvalidateRect(hWnd, &rec_labels_region, FALSE); // only invalidate the custom label box area
+            InvalidateRect(hWnd, &rec_labels_region, FALSE); // only invalidate the custom label box area
             break;
         case IDT_TIMER_SIMULATOR:
             //app_run();

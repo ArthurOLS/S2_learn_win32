@@ -24,6 +24,7 @@
 #include <Windows.h>
 #include "button_id.h"
 #include "../00-app/top_config.h"
+#include "../00-app/top_datatype.h"
 // clang-format off
 
 /*******************************************************************************
@@ -191,23 +192,12 @@
 ********************************* Exported types *******************************
 *******************************************************************************/
 
-//[0] user ui widget model data
+//[0] user ui widget model data, most used when creating widgets
 typedef struct {
     const wchar_t* text;
     int id;//defined in button_id.h
     int value; //not used for now 2025-08-13
 } BUTTON_STRU;
-
-//for app use
-typedef struct {
-    const wchar_t* name;
-    int id;//defined in button_id.h
-    int value; //0=not active, 1=active
-    int value_last_cycle; //storee the value of last cycle, processed by button_thread();
-    int event_flag_this_cycle; //1=event that value turns from 0 to 1 event, processed by tutton_thread();
-    int event_cnt; //cnt for 'event_flag_this_cycle', processed by button_thread();
-
-} DIO_STRUCT;
 
 
 //[1] outer layer, other module data sends to ui
@@ -246,16 +236,16 @@ typedef struct {
     int slave1_range2_a;
     int slave1_range2_b;
 
-} TO_UI_STRUCT;
+} DISP_STRU;
 
 
 //[2] outer layer, data other module gets data from ui
 typedef struct {
-    int i;
+    int cnt;
 
-    BUTTON_STRU cop[APP_FLOOR_NUM+2]; //N floors + open door and close door two buttons
+    DIO_STRUCT pin[TOTAL_BUTTION_NUM]; //all the input pins, each has an unique pin id
 
-} FROM_UI_STRUCT;
+} UI_INPUT_STRU;
 
 
 
@@ -275,6 +265,7 @@ void ui_callback_type_lock_step1(HWND hwnd, int id);
 void ui_callback_type_lock_step2(LPDRAWITEMSTRUCT lpDrawItem);
 void ui_callback_type_led(LPDRAWITEMSTRUCT lpDrawItem);
 void ui_callback_type_radio(int id);
+void ui_callback_type_click(int id);
 
 void ui03_draw_all(HDC hdc);
 

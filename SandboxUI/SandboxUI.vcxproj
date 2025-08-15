@@ -129,6 +129,7 @@
   <ItemGroup>
     <ClInclude Include="00-app\app.h" />
     <ClInclude Include="00-app\top_config.h" />
+    <ClInclude Include="00-app\top_datatype.h" />
     <ClInclude Include="01-ui\button_id.h" />
     <ClInclude Include="01-ui\ui.h" />
     <ClInclude Include="01-ui\ui_logbox.h" />
@@ -143,6 +144,7 @@
     <ClCompile Include="01-ui\ui.cpp" />
     <ClCompile Include="01-ui\ui_animation.cpp" />
     <ClCompile Include="01-ui\ui_create.cpp" />
+    <ClCompile Include="01-ui\ui_data.cpp" />
     <ClCompile Include="01-ui\ui_logbox.cpp" />
     <ClCompile Include="01-ui\ui_lowlevel.cpp" />
     <ClCompile Include="SandboxUI.cpp" />
