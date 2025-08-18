@@ -146,6 +146,23 @@ const char* sim_door_get_cmd_string(int command) {
 }
 
 
+const char* lv3_get_door_state_name(int step) {
+    switch (step) {
+    case LV3_DOOR_STEP_WAIT1:
+        return "LV3_DOOR_WAIT1";
+    case LV3_DOOR_STEP_OPENING:
+        return "LV3_DOOR_OPENING";
+    case LV3_DOOR_STEP_HOLDING:
+        return "LV3_DOOR_HOLDING";
+    case LV3_DOOR_STEP_CLOSING:
+        return "LV3_DOOR_CLOSING";
+    case LV3_DOOR_STEP_CLOSE_CONFIRMED:
+        return "LV3_DOOR_CLOSE_CONFIRMED";
+    default:
+        return "UNKNOWN_LV3_DOOR_STEP"; // Catches any unexpected integer values
+    }
+}
+
 const char* fsm_lv1_get_state_string(int32_t state){
     const char *name[]={
         "IDLE",

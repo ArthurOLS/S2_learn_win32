@@ -42,6 +42,7 @@
 
 //[1] outer layer, other module data sends to ui
 typedef struct {
+    //[Simulator: car1 and door1]
     int car1_cmd;
     int car1_speed_sp; // mm/s
     int car1_speed;    // mm/s
@@ -55,18 +56,20 @@ typedef struct {
     int door1_state;    // to see door simulation output
     int door1_position; // [0, 100], 0=Fully Closed, 100=Fully 0pen
 
-    int lv1_state;
-    int lv2_state; // lv2 ENUM_MODE
-    int lv3_state;
-    int lv4_state;
-    int lv5_state; // for door control state
+    //[App Control]
+    int         is_core_enable;      
+    int         is_car_sim_enabled;  
+    int         is_simulator_enable; 
 
-    int is_core_enable;      
-    int is_car_sim_enabled;  
-    int is_simulator_enable; 
-
-    int current_landing;     // 0=not at a landing, 1..N the landing number
-    float current_landing_f; // float type current landing, display like '3.85'
+    //[Core]
+    int         lv1_state;
+    int         lv2_state; // lv2 ENUM_MODE
+    int         lv3_state;
+    int         lv4_state;
+    int         lv5_state; // for door control state    
+    int32_t     calltable[APP_FLOOR_NUM][3];
+    int         current_landing;     // 0=not at a landing, 1..N the landing number
+    float       current_landing_f; // float type current landing, display like '3.85'
 
     //[Group Control] for master to display slave data
     int slave1_is_idle;

@@ -85,9 +85,6 @@ void ui30_draw_custom_button_trigger_redraw(HWND hwnd, int id);
 void ui_create_button_type_lock(HWND hwnd, int x, int y, const wchar_t* text, int id);
 void ui_create_button_type_click(HWND hwnd, int x, int y, const wchar_t* text, int id);
 
-void ui65_get_formatted_clock_string(char time_str[], UINT64 ms);
-void _ui31_print_binary_array(char* buf, size_t buf_size, const int call_table[][3]);
-
 
 #endif /* __UI_LOWLEVEL_H */
 /********************************* end of file ********************************/

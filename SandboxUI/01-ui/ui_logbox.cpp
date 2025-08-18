@@ -169,7 +169,7 @@ void ui_logbox_clear_content() {
  * @return ms since app started
  * @note   overflows after ~49 days
  *******************************************************************************/
-uint64_t ui_logbox_get_ms64() {
+uint64_t ui_logbox_get_run_ms64() {
     uint64_t ts = GetTickCount64() - __start_time;
     return ts; // overflow after ~49 days for u32, 580 million yrs for u64
 }

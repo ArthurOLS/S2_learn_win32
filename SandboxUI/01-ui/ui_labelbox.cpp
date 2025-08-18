@@ -19,9 +19,12 @@
 *******************************************************************************/
 
 #include <windows.h>
+
 #include "ui.h"
 #include "ui_lowlevel.h"
 #include <stdio.h>
+#include "../00-app/top_sim_constants.h"
+#include "../00-app/top_config.h"
 
 /*******************************************************************************
 ******************************** Private typedef *******************************
@@ -30,6 +33,7 @@
 /*******************************************************************************
 ******************************** Private define ********************************
 *******************************************************************************/
+#define LABEL_STRING_SIZE               512 // lable printf buzzer size
 
 /*******************************************************************************
 ********************************* Private macro ********************************
@@ -49,6 +53,54 @@
 
 
 /*******************************************************************************
+ * @brief  format a string for latched hall and car calls
+ * @param  xxxx
+ * @param  xxxx
+ * @return xxxx
+ *******************************************************************************/
+void _ui31_print_binary_array(char* buf, size_t buf_size, const int call_table[][3]) {
+    buf[0] = '\0'; // Start with an empty string
+
+    for (int i = 0; i < APP_FLOOR_NUM; i++) {
+        char temp[16];
+        // Format index (1-based), then convert the value to a 3-digit binary string
+        char c0 = (call_table[i][0]) ? 'U' : '_';
+        char c1 = (call_table[i][1]) ? 'D' : '_';
+        char c2 = (call_table[i][2]) ? 'C' : '_';
+        snprintf(temp, sizeof(temp), "%d:%c%c%c", i + 1, c0, c1, c2);
+
+        if (i > 0) {            // if it's not the first element, add a comma
+            if ((i % 4) == 0) { // Add newline for every 4 up/down/car elements and not at end
+                strncat_s(buf, buf_size, "\r\n", 2);
+            }
+            else {
+                strncat_s(buf, buf_size, ", ", 2);
+            }
+        }
+        strncat_s(buf, buf_size, temp, 8);
+    }
+}
+
+
+
+/*******************************************************************************
+ * @brief  get a string like '03:18:25' from u64 ts
+ * @param  char time_str[]: where to store
+ * @param  xxxx
+ * @return xxxx
+ *******************************************************************************/
+void ui65_get_formatted_clock_string(char time_str[], UINT64 ms) {
+    int total_seconds = (int)(ms / 1000);
+    int hours = total_seconds / 3600;
+    int minutes = (total_seconds % 3600) / 60;
+    int seconds = total_seconds % 60;
+
+    // char time_str[25] = { 0 };
+    sprintf_s(time_str, 9, "%02d:%02d:%02d", hours, minutes, seconds);
+}
+
+
+/*******************************************************************************
 ******************************* Public Variables *******************************
 *******************************************************************************/
 
@@ -56,63 +108,90 @@
 ******************************* Public functions *******************************
 *******************************************************************************/
 
-#if 1
 /*******************************************************************************
  * @brief  update variables in labelbox, Called by draw_all() in WndProc() Timer
- * @param  xxxx
+ * @param  disp: the display structure
  * @param  xxxx
  * @return xxxx
  *******************************************************************************/
-void ui31_draw_labelbox(HDC hdc, DISP_STRU* disp, UINT64 ms) {
-#define LABEL_STRING_SIZE 512 // lable printf buzzer size
+void ui_draw_labelbox1(HDC hdc, DISP_STRU* disp, UINT64 run_ms) {
+    char buf[LABEL_STRING_SIZE]; // main text buffer which holds the entire string of a label window
+    char time_str[20] = "";
 
-    char buf[LABEL_STRING_SIZE];          // main text buffer which holds the entire string of a label window
-    char buf2[LABEL_STRING_SIZE] = "010"; // hold part of label string
-    char time_str[20];
-    int buf_size = sizeof(buf);
-    ui65_get_formatted_clock_string(time_str, ms);
+    const char* format_str =
+        "*** CAR SIMULATION ***\r\n"
+        "Run:%s\r\n"
+        "Cmd: %s \r\n"
+        "APS Speed: %+05d/%04d(sp)mm/s\r\n"
+        "APS Height: %05dmm\r\n"
+        "Dir: %s\r\n"
+        "State: %s\r\n"
+        "Error: %s \r\n\n"
+        "  *** DOOR SIMULATION ***\r\n"
+        "Cmd: %s\r\n"
+        "State: %s\n"
+        "Opening:%d%% \n\n"
+        "Enabled: %s,%s,%s.";
 
-    sprintf_s(buf, "V%s (%s %s)\r\n  *** CAR SIMULATION ***\r\nRun:%s\r\nCmd: %s \r\nAPS Speed: %+05d/%04d(sp)mm/s\r\nAPS Height: %05dmm\r\nDir: %s\r\nState: %s\r\nError: %s \r\n\n  *** DOOR SIMULATION ***\r\nCmd: %s\r\nState: %s\nOpening:%d%% \n\nEnabled: %s,%s,%s.",
-        VERSION_CODE,
-        __DATE__,
-        __TIME__,
-        time_str,
-        "car1_cmd",
+    //[1] format the display
+    ui65_get_formatted_clock_string(time_str, run_ms);
+
+        sprintf_s(buf, format_str,
+        time_str, //00:01:12
+        sim31_get_cmd_string(disp->car1_cmd), // CMD_STOP
         disp->car1_speed,
         disp->car1_speed_sp,
         disp->car1_height,
-        "car1_direction",
-        "car1_state",  // sim30_get_state_string(disp->car1_state),
-        "car1_error",  //,sim33_get_err_string(disp->car1_error),
-        "door1-cmd",   // sim_door_get_cmd_string(disp->door1_cmd),
-        "door1-state", // sim_door_get_state_string(disp->door1_state),
+        sim32_get_dir_string(disp->car1_direction),
+        sim30_get_state_string(disp->car1_state),
+        sim33_get_err_string(disp->car1_error),
+        sim_door_get_cmd_string(disp->door1_cmd),
+        sim_door_get_state_string(disp->door1_state),
         disp->door1_position,
         (disp->is_simulator_enable ? "APP" : "X-APP"),
         (disp->is_core_enable ? "CORE" : "X-CORE"),
         (disp->is_car_sim_enabled ? "SIM" : "X-SIM"));
 
-    { // draw text
-        // strcpy_s(_ui_control_stru.label1_buf, LABEL_STRING_SIZE, buf);
-        // SetWindowTextA(hLabel1, buf);
+    //[2] draw the label
+    RECT labelRect1 = { UI_LABELBOX_X, UI_LABELBOX_Y, UI_LABELBOX_X + UI_LABELBOX_W, UI_LABELBOX_Y + UI_LABELBOX_H };
+    extern HFONT g_hfont9;
+    SelectObject(hdc, g_hfont9);
+    SetBkMode(hdc, TRANSPARENT);
+    SetTextColor(hdc, RGB(0, 0, 0)); // black
+    Rectangle(hdc, labelRect1.left, labelRect1.top, labelRect1.right, labelRect1.bottom);
+    DrawTextA(hdc, buf, -1, &labelRect1, DT_LEFT | DT_TOP | DT_NOPREFIX);
+}
 
-        // set label position rects
-        RECT labelRect1 = { UI_LABELBOX_X, UI_LABELBOX_Y, UI_LABELBOX_X + UI_LABELBOX_W, UI_LABELBOX_Y + UI_LABELBOX_H };
-
-        extern HFONT g_hfont9;
-        SelectObject(hdc, g_hfont9);
-        SetBkMode(hdc, TRANSPARENT);
-        SetTextColor(hdc, RGB(0, 0, 0)); // black
-        Rectangle(hdc, labelRect1.left, labelRect1.top, labelRect1.right, labelRect1.bottom);
-        DrawTextA(hdc, buf, -1, &labelRect1, DT_LEFT | DT_TOP | DT_NOPREFIX);
-    }
-
-    // Label2
+void ui_draw_labelbox2(HDC hdc, DISP_STRU* disp) {
+    char buf[LABEL_STRING_SIZE];  // holds the entire string
+    char buf2[LABEL_STRING_SIZE]; // hold part of label string
 
     sprintf_s(buf, "  *** CORE SERVICE STATUS ***\r\nCalls:");
-    //==============_ui31_print_binary_array(buf2, 100, service_control_stru.calltable);
+    _ui31_print_binary_array(buf2, 100, disp->calltable, APP_FLOOR_NUM);
+    strncat_s(buf, LABEL_STRING_SIZE, buf2, LABEL_STRING_SIZE / 2); // add buf2's content into buf1
+
+    sprintf_s(buf2, "\r\nLanding: %d (%.2f)--> Dest:%d\r\nCall Cnt: %d\r\nLv1: %s, \r\nLv2: %s, \r\nLv3: %s, \r\nLv4: %s, \r\nLv5: %s",
+        disp->current_landing,
+        disp->current_landing_f,
+        service_control_stru.landing_cmd.determined_next_landing,
+        service_control_stru.cnt_total_calls, // call landing cnt
+        fsm_lv1_get_state_string(disp->lv1_state),
+        core_interface_get_lv2_state_string(disp->lv2_state),
+        fsm_lv3_get_state_string(disp->lv3_state),
+        fsm_lv4_get_state_string(disp->lv4_state),
+        lv3_get_door_state_name(disp->lv5_state));
     strncat_s(buf, buf_size, buf2, buf_size / 2); // add buf2's content into buf1
 
-
+    if (_ui_control_stru.car_mode == ELEVATOR_MODE_MASTER) {
+        sprintf_s(buf2, "\r\n\n        **SLAVE1**\r\nState:%s\r\nLanding:%d\r\nDoor:%s\r\nService:[%d, %s, %d].",
+            (disp->slave1_is_idle ? "IDLE" : "SERVING"),
+            disp->slave1_current_landing,
+            lv3_get_door_state_name(disp->slave1_door_state),
+            disp->slave1_range2_a,
+            sim32_get_dir_string(disp->slave1_range2_dir),
+            disp->slave1_range2_b);
+        strncat_s(buf, buf_size, buf2, buf_size / 2); // add buf2's content into buf1
+    }
 
     { // draw label2 text
         // SetWindowTextA(hLabel2, buf);
@@ -121,6 +200,6 @@ void ui31_draw_labelbox(HDC hdc, DISP_STRU* disp, UINT64 ms) {
     }
 }
 
-#endif
+
 /********************************* end of file ********************************/
 

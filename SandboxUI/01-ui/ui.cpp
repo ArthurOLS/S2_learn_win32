@@ -39,13 +39,15 @@
 
 //inner layer, the contorl data ui uses itself
 typedef struct {
-    uint32_t ui_timer_cnt; //add in ui_test_loop_example()
-    int         run_cnt; // how many times ui has refreshed
-    int         car_box_y;          // the y position of cab box bottom line.
-    int         door_opening_width; // 0..40 pix width
     uint32_t    ts_at_start;   // recorded ts at starting up time by ui82_c_get_u_run_ms().
-    uint32_t    run_ms; //= now_ms() - ms_at_start
-    int         car_mode;           // 0=simplex, 1=master, 2=slave1
+
+    uint32_t    ui_timer_cnt; //add in ui_test_loop_example()
+    int         run_cnt; // how many times ui has refreshed
+
+    int         door_opening_width; // 0..40 pix width
+    int         car_box_y;          // the y position of cab box bottom line.
+
+    //uint32_t    run_ms; //= now_ms() - ms_at_start
 
 
 } UI_CONTROL_STRU;

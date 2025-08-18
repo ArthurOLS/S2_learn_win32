@@ -113,6 +113,17 @@ typedef enum
 	
 } FSM_LV4_STATE_ENUM;
 
+
+// door states
+typedef enum {
+    LV3_DOOR_STEP_WAIT1 = 0,
+    LV3_DOOR_STEP_OPENING,
+    LV3_DOOR_STEP_HOLDING,
+    LV3_DOOR_STEP_CLOSING,
+    LV3_DOOR_STEP_CLOSE_CONFIRMED,
+} FSM_LV3_DOOR_PROCEDURE_ENUM;
+
+
 /*******************************************************************************
 *************************** Exported global variables **************************
 *******************************************************************************/
