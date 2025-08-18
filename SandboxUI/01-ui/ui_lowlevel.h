@@ -56,8 +56,8 @@ typedef struct {
 /*******************************************************************************
 ******************************* Exported constants *****************************
 *******************************************************************************/
-#define UI_FONT_9PT 9   // for text, menu, logbox
-#define UI_FONT_12PT 12 // for title bars, taskbars,
+#define UI_FONT_9PT                     9   // for text, menu, logbox
+#define UI_FONT_12PT                    12 // for title bars, taskbars,
 
 /*******************************************************************************
 *************************** Exported global variables **************************
@@ -87,7 +87,6 @@ void ui_create_button_type_click(HWND hwnd, int x, int y, const wchar_t* text, i
 
 void ui65_get_formatted_clock_string(char time_str[], UINT64 ms);
 void _ui31_print_binary_array(char* buf, size_t buf_size, const int call_table[][3]);
-void ui_dio_set_value(DIO_STRUCT* pin, int val_in);
 
 
 #endif /* __UI_LOWLEVEL_H */

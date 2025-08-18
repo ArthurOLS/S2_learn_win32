@@ -32,8 +32,7 @@
 /*******************************************************************************
 ******************************** Private define ********************************
 *******************************************************************************/
-#define UI_FONT_9PT 9   // for text, menu, logbox
-#define UI_FONT_12PT 12 // for title bars, taskbars,
+
 
 /*******************************************************************************
 ********************************* Private macro ********************************
@@ -42,8 +41,8 @@
 /*******************************************************************************
 ******************************* Private variables ******************************
 *******************************************************************************/
-HFONT hFont9 = NULL; // Nicer font to replace GDI default font
-HFONT hFont12 = NULL; // Nicer font to replace GDI default font
+HFONT g_hfont9 = NULL; // Nicer font to replace GDI default font
+HFONT g_hfont12 = NULL; // Nicer font to replace GDI default font
 
 /*******************************************************************************
 ************************** Private function prototypes *************************
@@ -91,7 +90,7 @@ void ui10_apply_font_to_control(HWND hwndTarget, int pt) {
 void ui_create_font9() {
     int height; // negative value, -12=~9pt in my computer
     height = -MulDiv(9, GetDeviceCaps(GetDC(NULL), LOGPIXELSY), 72);
-    hFont9 = CreateFont(
+    g_hfont9 = CreateFont(
         height,
         0, 0, 0, FW_NORMAL,  // width, escapement, orientation, weight
         FALSE, FALSE, FALSE, // italic, underline, strikeout
@@ -109,6 +108,7 @@ void ui_create_font9() {
  * @param  hwnd, parent windows
  * @return xxxx
  *******************************************************************************/
+//Unicode label
 void ui11_create_label(HWND hwnd, const wchar_t* text, int x, int y, int w, int h) {
     // create label, 12pt
     HWND hStaticLabel = CreateWindow(L"STATIC", text, WS_CHILD | WS_BORDER | WS_VISIBLE,
@@ -116,6 +116,7 @@ void ui11_create_label(HWND hwnd, const wchar_t* text, int x, int y, int w, int 
 
     ui10_apply_font_to_control(hStaticLabel, UI_FONT_9PT);
 }
+//Ascii label
 void ui11_create_label(HWND hwnd, const char* text, int x, int y, int w, int h) {
     // create label, 12pt
     HWND hStaticLabel = CreateWindowA("STATIC", text, WS_CHILD | WS_VISIBLE,
@@ -366,27 +367,6 @@ void _ui31_print_binary_array(char* buf, size_t buf_size, const int call_table[]
     }
 }
 
-
-
-
-/*******************************************************************************
- * @brief  set value for a pin
- * @param  pin: which DIO_STRUCT it is
- * @param  val_in: input from hardware pin
- * @return xxxx
- *******************************************************************************/
-void ui_dio_set_value(DIO_STRUCT *pin, int val_in) {
-    
-    if (pin->value != val_in) {
-        pin->value = val_in;
-        //pin->event_flag_this_cycle = 1;
-        //pin->event_cnt++;
-        //ui_internal_printf("New value, %s=%d.", pin->name, pin->value);
-    }
-    //otherwise, there's no need to do anything
-}
-
-   
 
 
 

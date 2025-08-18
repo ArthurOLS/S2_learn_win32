@@ -23,6 +23,7 @@
 #include <stdio.h> //file operation
 #include "ui_logbox.h" //it self
 #include "ui.h" //to use ui_internal_printf()
+#include "ui_lowlevel.h"
 
 /*******************************************************************************
 ******************************** Private typedef *******************************
@@ -31,6 +32,7 @@
 /*******************************************************************************
 ******************************** Private define ********************************
 *******************************************************************************/
+#define UI_LOGBOX_MAX_SAVE_BYTES 65536
 
 /*******************************************************************************
 ********************************* Private macro ********************************
@@ -39,14 +41,13 @@
 /*******************************************************************************
 ******************************* Private variables ******************************
 *******************************************************************************/
-static HWND __hlogbox; // Global handle to the log display area
-static uint64_t __start_time;
-static char __save_buffer[UI_LOGBOX_MAX_SAVE_BYTES + 1];
+static HWND         __hlogbox; // Global handle to the log display area
+static uint64_t     __start_time;
+static char         __save_buffer[UI_LOGBOX_MAX_SAVE_BYTES + 1]; //for saving content to a file.
 
 /*******************************************************************************
 ************************** Private function prototypes *************************
 *******************************************************************************/
-extern void ui10_apply_font_to_control(HWND hwndTarget, int pt);
 
 /*******************************************************************************
 ******************************* Private functions ******************************
@@ -58,7 +59,7 @@ extern void ui10_apply_font_to_control(HWND hwndTarget, int pt);
  * @param  xxxx
  * @return xxxx
  *******************************************************************************/
-void ui40_append_text_to_logbox_tail(const char* text) {
+void _append_text_to_logbox_tail(const char* text) {
     int len = GetWindowTextLengthW(__hlogbox); // Get current length of the text
 
     SendMessageA(__hlogbox, EM_SETSEL, (WPARAM)len, (LPARAM)len); // Move the caret to the end
@@ -105,7 +106,7 @@ void ui_create_logbox(HWND hwnd, int x, int y, int w, int h, uint64_t set_start_
  * @param  xxxx
  * @return xxxx
  *******************************************************************************/
-void ui41_logbox_printf(const char* fmt, ...) {
+void ui_logbox_printf(const char* fmt, ...) {
     char buffer[512];
 
     // Format the string using va_list
@@ -114,7 +115,7 @@ void ui41_logbox_printf(const char* fmt, ...) {
     vsnprintf(buffer, sizeof(buffer), fmt, args); // Safe version of sprintf
     va_end(args);
 
-    ui40_append_text_to_logbox_tail(buffer);
+    _append_text_to_logbox_tail(buffer);
 }
 
 /*******************************************************************************
@@ -123,7 +124,7 @@ void ui41_logbox_printf(const char* fmt, ...) {
  * @param  xxxx
  * @return xxxx
  *******************************************************************************/
-void ui42_logbox_save_content_to_file(void) {
+void ui_logbox_save_content_to_file(void) {
     int len = GetWindowTextLengthA(__hlogbox);
     if (len < 100) {
         ui_internal_printf("---- E: %d, <100 words, no need to save.", len);
@@ -155,7 +156,7 @@ void ui42_logbox_save_content_to_file(void) {
  * @param  xxxx
  * @return xxxx
  *******************************************************************************/
-void ui43_logbox_clear_content() {
+void ui_logbox_clear_content() {
     SetWindowTextW(__hlogbox, L"");
     InvalidateRect(__hlogbox, NULL, TRUE); // fore a redraw
     UpdateWindow(__hlogbox);
@@ -168,7 +169,7 @@ void ui43_logbox_clear_content() {
  * @return ms since app started
  * @note   overflows after ~49 days
  *******************************************************************************/
-uint64_t ui_get_logbox_ms64() {
+uint64_t ui_logbox_get_ms64() {
     uint64_t ts = GetTickCount64() - __start_time;
     return ts; // overflow after ~49 days for u32, 580 million yrs for u64
 }

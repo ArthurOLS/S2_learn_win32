@@ -39,7 +39,7 @@
 
 //inner layer, the contorl data ui uses itself
 typedef struct {
-    uint32_t ui_timer_cnt; //add in ui_test_loop()
+    uint32_t ui_timer_cnt; //add in ui_test_loop_example()
     int         run_cnt; // how many times ui has refreshed
     int         car_box_y;          // the y position of cab box bottom line.
     int         door_opening_width; // 0..40 pix width
@@ -61,8 +61,14 @@ typedef struct {
 
 //#define FILL_BUTTON_ID(name)          { #name, name, 0 }
 
-#define ui_record_pin(ID, level) ui_dio_set_value(&(ui_input.pin[ID]), level);
+#define ui_record_pin(ID, level) \
+    {                                   \
+        ui_input.pin[ID].value = level; \
+    }                                   \
 
+
+
+//simulate a pin level change for click type buttons.
 #define UI_RECORD_CLICK_PIN(ID) \
     {                                          \
         ui_input.pin[ID].value = 1;            \
@@ -194,9 +200,7 @@ void ui_callback_type_led(LPDRAWITEMSTRUCT lpDrawItem) {
     }
 }
 
-bool __button_machineroom_enable = 0;//0=initial off, 1=on
-bool __cop2_enabled = 0;
-bool __button_toc_enable = 0;
+
 
 /*******************************************************************************
  * @brief  called by main.cpp WM_COMMAND event.
@@ -456,7 +460,30 @@ void ui_callback_type_click(int id) {
  * @param  xxxx
  * @return xxxx
  *******************************************************************************/
-void ui1_init_widgets(HWND hwnd) { // Labels
+void ui2_draw_layout_lables(HWND hwnd) { // Labels
+    //[1] create main window top layout
+    char buf1[50];
+    sprintf_s(buf1, "Version: %s\nBuild: %s, %s", VERSION_CODE, __DATE__, __TIME__);
+    ui11_create_label(hwnd, buf1, UI_VERSION_X, UI_VERSION_Y, UI_VERSION_W, UI_VERSION_H);
+    // ui11_create_label(hwnd, L" Simulator", UI_LABELBOX_X, UI_LABELBOX_Y, UI_LABELBOX_W, UI_LABELBOX_H);
+    // ui11_create_label(hwnd, L" ElevatorCore", UI_LABELBOX2_X, UI_LABELBOX2_Y, UI_LABELBOX2_W, UI_LABELBOX2_H);
+    ui_create_logbox(hwnd, COLUMN2_X, UI_LOGBOX_Y, UI_LOGBOX_W, UI_LOGBOX_H, 0);
+    // column4
+    ui11_create_label(hwnd, L" HOPs", UI_HOP_X, UI_HOP_Y, UI_HOP_W, UI_HOP_H);
+    ui11_create_label(hwnd, L" HOP2 (Fire Service)", UI_HOP2_X, UI_HOP2_Y, UI_HOP2_W, UI_HOP2_H);
+    ui11_create_label(hwnd, L" Machineroom", UI_MACHINEROOM_X, UI_MACHINEROOM_Y, UI_MACHINEROOM_W, UI_MACHINEROOM_H);
+
+    // column5
+    ui11_create_label(hwnd, L" COP1 (Passenger Panel)", UI_COP1_X, UI_COP1_Y, UI_COP1_W, UI_COP1_H);
+    ui11_create_label(hwnd, L" COP2 (Inspection)", UI_COP2_X, UI_COP2_Y, UI_COP2_W, UI_COP2_H);
+    ui11_create_label(hwnd, L" COP3 (Fire Service)", UI_COP3_X, UI_COP3_Y, UI_COP3_W, UI_COP3_H);
+    ui11_create_label(hwnd, L" TOC", UI_TOC_X, UI_TOC_Y, UI_TOC_W, UI_TOC_H);
+
+    ui11_create_label(hwnd, L" Non-manual Input Devices", UI_NONMANUAL_X, UI_NONMANUAL_Y, UI_NONMANUAL_W, UI_NONMANUAL_H);
+    ui11_create_label(hwnd, L" Debug", UI_DEGUG_X, UI_DEGUG_Y, UI_DEGUG_W, UI_DEGUG_H);
+}
+
+void ui2_create_widgets(HWND hwnd) {
     extern void ui_create_led_output(HWND hwnd, int gx, int gy, int bw, int bh);
     extern void ui_create_button_hop(HWND hwnd, int gx, int gy, int bw, int bh);
     extern void ui_create_button_cop1(HWND hwnd, int gx, int gy, int bw, int bh);
@@ -467,33 +494,9 @@ void ui1_init_widgets(HWND hwnd) { // Labels
     extern void ui_create_toc(HWND hwnd, int x, int y);
     extern void ui_create_button_nonmanual(HWND hwnd, int gx, int gy);
     extern void ui_create_button_debug(HWND hwnd, int gx, int gy);
-
-    ui_create_font9();
-
-    //[1] create main window top layout
-    char buf1[50];
-    sprintf_s(buf1, "Version: %s\nBuild: %s, %s",  VERSION_CODE, __DATE__, __TIME__);
-    ui11_create_label(hwnd, buf1, UI_OUTPUT_X, UI_OUTPUT_Y, UI_OUTPUT_W, UI_OUTPUT_H);
-    //ui11_create_label(hwnd, L" Simulator", UI_LABELBOX_X, UI_LABELBOX_Y, UI_LABELBOX_W, UI_LABELBOX_H);
-    //ui11_create_label(hwnd, L" ElevatorCore", UI_LABELBOX2_X, UI_LABELBOX2_Y, UI_LABELBOX2_W, UI_LABELBOX2_H);
-    ui_create_logbox(hwnd, COLUMN2_X, UI_LOGBOX_Y, UI_LOGBOX_W, UI_LOGBOX_H, 0);
-    //column4
-    ui11_create_label(hwnd, L" HOPs", UI_HOP_X, UI_HOP_Y, UI_HOP_W, UI_HOP_H);
-    ui11_create_label(hwnd, L" HOP2 (Fire Service)", UI_HOP2_X, UI_HOP2_Y, UI_HOP2_W, UI_HOP2_H);
-    ui11_create_label(hwnd, L" Machineroom", UI_MACHINEROOM_X, UI_MACHINEROOM_Y, UI_MACHINEROOM_W, UI_MACHINEROOM_H);
-
-    //column5
-    ui11_create_label(hwnd, L" COP1 (Passenger Panel)", UI_COP1_X, UI_COP1_Y, UI_COP1_W, UI_COP1_H);
-    ui11_create_label(hwnd, L" COP2 (Inspection)", UI_COP2_X, UI_COP2_Y, UI_COP2_W, UI_COP2_H);
-    ui11_create_label(hwnd, L" COP3 (Fire Service)", UI_COP3_X, UI_COP3_Y, UI_COP3_W, UI_COP3_H);
-    ui11_create_label(hwnd, L" TOC", UI_TOC_X, UI_TOC_Y, UI_TOC_W, UI_TOC_H);
-
-    ui11_create_label(hwnd, L" Non-manual Input Devices", UI_NONMANUAL_X, UI_NONMANUAL_Y, UI_NONMANUAL_W, UI_NONMANUAL_H);
-    ui11_create_label(hwnd, L" Debug", UI_DEGUG_X, UI_DEGUG_Y, UI_DEGUG_W, UI_DEGUG_H);
-
     //[2]create each block
     //leds
-    //ui_create_led_output(hwnd, UI_OUTPUT_X + 7, UI_OUTPUT_Y + 20, UI_BUTTON_W, UI_BUTTON_H);
+    //ui_create_led_output(hwnd, UI_VERSION_X + 7, UI_VERSION_Y + 20, UI_BUTTON_W, UI_BUTTON_H);
     //hop
     ui_create_button_hop(hwnd, UI_HOP_X + 7, UI_HOP_Y + 20, UI_BUTTON_W, UI_BUTTON_H);
     //cop1
@@ -508,29 +511,27 @@ void ui1_init_widgets(HWND hwnd) { // Labels
 
     //hop2
     ui_create_hop2(hwnd, UI_HOP2_X, UI_HOP2_Y);
-
     //machineroom
     ui_create_machineroom(hwnd, UI_MACHINEROOM_X, UI_MACHINEROOM_Y);
-
     //cop2
     ui_create_cop2(hwnd, UI_COP2_X, UI_COP2_Y);
-
     //cop3
     ui_create_cop3(hwnd, UI_COP3_X, UI_COP3_Y);
-
     //top
     ui_create_toc(hwnd, UI_TOC_X, UI_TOC_Y);
-
     //non manual
     ui_create_button_nonmanual(hwnd, UI_NONMANUAL_X, UI_NONMANUAL_Y);
-
     //debug
     ui_create_button_debug(hwnd, UI_DEGUG_X, UI_DEGUG_Y);
+}
 
+void ui2_init_data(HWND hwnd) {
     //[3] UI timer
     SetTimer(hwnd, IDT_TIMER_UI, UI_PERIOD_MS, NULL);                       // 50ms(20Hz timer)
     _ui_control_stru.ts_at_start = static_cast<uint32_t>(GetTickCount64()); // ui82_c_get_u_run_ms();
 
+    ui_create_font9();
+    //[4] Init ui_input structure
     //type-continuous
     UI_DIO_SET_NAME_AS_ITS_ID(D1_OPEN, 0);
     UI_DIO_SET_NAME_AS_ITS_ID(D1_CLOSE, 0);
@@ -561,80 +562,19 @@ void ui1_init_widgets(HWND hwnd) { // Labels
     UI_DIO_SET_NAME_AS_ITS_ID(ID_COP3_RUN, 1);
     UI_DIO_SET_NAME_AS_ITS_ID(ID_TOC_INSP, 1);
     UI_DIO_SET_NAME_AS_ITS_ID(ID_TOC_RUN, 1);
+}
 
+void ui2_init(HWND hwnd) { 
+    ui2_init_data(hwnd);
+    ui2_draw_layout_lables(hwnd);
+    ui2_create_widgets(hwnd);
 }
 
 
 
-#if 1
-/*******************************************************************************
- * @brief  update two labelboxes, Called by draw_all() in WndProc() Timer
- * @param  xxxx
- * @param  xxxx
- * @return xxxx
- *******************************************************************************/
-void ui31_draw_labels(HDC hdc, DISP_STRU* disp, UINT64 ms) {
-#define LABEL_STRING_SIZE 512 // lable printf buzzer size
-
-    char buf[LABEL_STRING_SIZE];  // main text buffer which holds the entire string of a label window
-    char buf2[LABEL_STRING_SIZE] = "010"; // hold part of label string
-    char time_str[20];
-    int buf_size = sizeof(buf);
-    ui65_get_formatted_clock_string(time_str, ms);
-
-    sprintf_s(buf, "V%s (%s %s)\r\n  *** CAR SIMULATION ***\r\nRun:%s\r\nCmd: %s \r\nAPS Speed: %+05d/%04d(sp)mm/s\r\nAPS Height: %05dmm\r\nDir: %s\r\nState: %s\r\nError: %s \r\n\n  *** DOOR SIMULATION ***\r\nCmd: %s\r\nState: %s\nOpening:%d%% \n\nEnabled: %s,%s,%s.",
-        VERSION_CODE,
-        __DATE__,
-        __TIME__,
-        time_str,
-        "car1_cmd",
-        disp->car1_speed,
-        disp->car1_speed_sp,
-        disp->car1_height,
-        "car1_direction",
-        "car1_state",  // sim30_get_state_string(disp->car1_state),
-        "car1_error",  //,sim33_get_err_string(disp->car1_error),
-        "door1-cmd",   // sim_door_get_cmd_string(disp->door1_cmd),
-        "door1-state", // sim_door_get_state_string(disp->door1_state),
-        disp->door1_position,
-        (disp->is_simulator_enable ? "APP" : "X-APP"),
-        (disp->is_core_enable ? "CORE" : "X-CORE"),
-        (disp->is_car_sim_enabled ? "SIM" : "X-SIM"));
-
-    { // draw text
-        // strcpy_s(_ui_control_stru.label1_buf, LABEL_STRING_SIZE, buf);
-        // SetWindowTextA(hLabel1, buf);
-
-        // set label position rects
-        RECT labelRect1 = { UI_LABELBOX_X, UI_LABELBOX_Y, UI_LABELBOX_X + UI_LABELBOX_W, UI_LABELBOX_Y + UI_LABELBOX_H };
-
-        extern HFONT hFont9;
-        SelectObject(hdc, hFont9);
-        SetBkMode(hdc, TRANSPARENT);
-        SetTextColor(hdc, RGB(0, 0, 0)); // black
-        Rectangle(hdc, labelRect1.left, labelRect1.top, labelRect1.right, labelRect1.bottom);
-        DrawTextA(hdc, buf, -1, &labelRect1, DT_LEFT | DT_TOP | DT_NOPREFIX);
-    }
-
-    // Label2
-
-    sprintf_s(buf, "  *** CORE SERVICE STATUS ***\r\nCalls:");
-    //==============_ui31_print_binary_array(buf2, 100, service_control_stru.calltable);
-    strncat_s(buf, buf_size, buf2, buf_size / 2); // add buf2's content into buf1
 
 
 
-    { // draw label2 text
-        // SetWindowTextA(hLabel2, buf);
-        RECT labelRect2 = { UI_LABELBOX2_X, UI_LABELBOX2_Y, UI_LABELBOX2_X + UI_LABELBOX2_W, UI_LABELBOX2_Y + UI_LABELBOX2_H };
-        DrawTextA(hdc, buf, -1, &labelRect2, DT_LEFT | DT_TOP | DT_NOPREFIX);
-    }
-}
-
-#endif
-
-int car_y_px = UI_GROUND_Y;
-bool car_is_idle = true;
 
 /*******************************************************************************
  * @brief  called in WM_PAINT event by WndProc()
@@ -643,12 +583,12 @@ bool car_is_idle = true;
  *******************************************************************************/
 void ui03_draw_all(HDC hdc) {
 
-
     _ui_control_stru.run_cnt++;
 
     ui_draw_floors(hdc, UI_ANIMATION_X, UI_GROUND_Y);
     ui34_draw_final_limits(hdc, UI_ANIMATION_X);
-    ui31_draw_labels(hdc, &disp_stru, _ui_control_stru.run_cnt);
+    //ui31_draw_labelbox(hdc, &disp_stru, _ui_control_stru.run_cnt);
+    bool car_is_idle = true;
     ui32_draw_cab_box(hdc, UI_ANIMATION_X, _ui_control_stru.car_box_y, car_is_idle);
     ui36_draw_door(hdc, UI_ANIMATION_X, _ui_control_stru.car_box_y, _ui_control_stru.door_opening_width);
 
@@ -662,7 +602,7 @@ void ui03_draw_all(HDC hdc) {
  * @note   called by UI timer
  * @return xxxx
  *******************************************************************************/
-void ui_test_loop() {
+void ui_test_loop_example() {
     _ui_control_stru.ui_timer_cnt++;
     ui_input_process_1of2();//events are generated here
 
@@ -680,7 +620,7 @@ void ui_test_loop() {
                 disp_stru.car1_height = SIM_SHAFT_FINAL_BOTTOM;
             }
         }
-        _ui_control_stru.car_box_y = ui_calc_car_y_pix(disp_stru.car1_height);
+        _ui_control_stru.car_box_y = ui_convert_car_y_pix(disp_stru.car1_height);
 
         // update door position
         {
@@ -689,7 +629,7 @@ void ui_test_loop() {
                 disp_stru.door1_position = 0;
             }
         }
-        _ui_control_stru.door_opening_width = ui_calc_door_opening(disp_stru.door1_position);
+        _ui_control_stru.door_opening_width = ui_convert_door_opening(disp_stru.door1_position);
     }
 
     ui_input_process_2of2();//update last value for next cycle
@@ -731,10 +671,10 @@ void ui_input_process_2of2(void) {
  * @return ms since app started
  * @note   overflows after 500 million years
  *******************************************************************************/
-UINT64 ui64_get_ui_run_ms() {
-    UINT64 ts = (int)GetTickCount64() - _ui_control_stru.ts_at_start;
-    return ts; // overflow after ~49 days
-}
+//UINT64 ui64_get_ui_run_ms() {
+//    UINT64 ts = (int)GetTickCount64() - _ui_control_stru.ts_at_start;
+//    return ts; // overflow after ~49 days
+//}
 
 
 /********************************* end of file ********************************/

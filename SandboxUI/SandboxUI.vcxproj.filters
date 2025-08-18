@@ -57,6 +57,12 @@
     <ClInclude Include="01-ui\ui_animation.h">
       <Filter>01-ui</Filter>
     </ClInclude>
+    <ClInclude Include="01-ui\ui_config.h">
+      <Filter>01-ui</Filter>
+    </ClInclude>
+    <ClInclude Include="00-app\top_sim_constants.h">
+      <Filter>00-app</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="SandboxUI.cpp">
@@ -82,6 +88,12 @@
     </ClCompile>
     <ClCompile Include="01-ui\ui_data.cpp">
       <Filter>01-ui</Filter>
+    </ClCompile>
+    <ClCompile Include="01-ui\ui_labelbox.cpp">
+      <Filter>01-ui</Filter>
+    </ClCompile>
+    <ClCompile Include="00-app\top_sim_constants.c">
+      <Filter>00-app</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -131,7 +131,7 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
 //
 LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
-    int car_bottom_y = ui_calc_car_y_pix(disp_stru.car1_height);
+    int car_bottom_y = ui_convert_car_y_pix(disp_stru.car1_height);
     const RECT rec_car_region = {
         UI_ANIMATION_X + UI_CAR_X - 10,
         car_bottom_y - UI_CAR_H - 5,
@@ -216,7 +216,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
         break;
 
     case WM_CREATE: //************
-        ui1_init_widgets(hWnd);
+        ui2_init(hWnd);
         break;
     case WM_DESTROY:
         PostQuitMessage(0);
@@ -227,7 +227,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
         case IDT_TIMER_UI: {
             // ui_internal_printf("Invalidate %d, %d, %d, %d.", rec_car_region.left, rec_car_region.top, rec_car_region.right, rec_car_region.bottom);
 
-            ui_test_loop();
+            ui_test_loop_example(); //handling model changes
             InvalidateRect(hWnd, &rec_car_region, TRUE);     // True=erase background,
             InvalidateRect(hWnd, &rec_labels_region, FALSE); // only invalidate the custom label box area
         }

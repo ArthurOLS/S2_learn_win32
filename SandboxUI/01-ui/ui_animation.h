@@ -46,8 +46,8 @@ extern void ui32_draw_cab_box(HDC hdc, int x, int y, bool is_idle);
 extern void ui36_draw_door(HDC hdc, int x, int car_y, int opening);
 extern void ui34_draw_final_limits(HDC hdc, int x);
 extern void ui_draw_floors(HDC hdc, int x, int y);
-extern int ui_calc_car_y_pix(int car_realtime_position_mm);
-extern int ui_calc_door_opening(int per);
+extern int ui_convert_car_y_pix(int car_realtime_position_mm);
+extern int ui_convert_door_opening(int per);
 
 
 #endif /* __UI_ANIMATION_H */

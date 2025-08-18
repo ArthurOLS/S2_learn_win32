@@ -232,7 +232,7 @@ void ui_draw_invalidate_rect_area_debug(HDC hdc, CONST RECT* lpRect) {
  * @param  mm, the car's position from simulator
  * @return pixel, the car's bottom y pixel positon between shaft top and bottom limit
  *******************************************************************************/
-int ui_calc_car_y_pix(int car_realtime_position_mm) {
+int ui_convert_car_y_pix(int car_realtime_position_mm) {
     int y_pix;
     y_pix = UI_GROUND_Y - car_realtime_position_mm / UI_PIXEL_RATIO;
     return y_pix;
@@ -243,11 +243,15 @@ int ui_calc_car_y_pix(int car_realtime_position_mm) {
  * @param  per, opening percentage, 0--100
  * @return width of door opening, 0~32pix
  *******************************************************************************/
-int ui_calc_door_opening(int per) {
+int ui_convert_door_opening(int per) {
     int opening_width;
     opening_width = per * UI_DOOR_W / 100;
     return opening_width;
 }
+
+
+
+
 
 /********************************* end of file ********************************/
 
