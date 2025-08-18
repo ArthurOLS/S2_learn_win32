@@ -213,7 +213,7 @@ typedef struct {
 
     int door1_cmd;      // door simulation input
     int door1_state;    // to see door simulation output
-    int door1_position; // to see door simulation output
+    int door1_position; // [0, 100], 0=Fully Closed, 100=Fully 0pen
 
     int lv1_state;
     int lv2_state; // lv2 ENUM_MODE
@@ -256,6 +256,8 @@ typedef struct {
 /*******************************************************************************
 *************************** Exported global variables **************************
 *******************************************************************************/
+
+extern DISP_STRU disp_stru;
 
 /*******************************************************************************
 ******************************* Exported functions *****************************

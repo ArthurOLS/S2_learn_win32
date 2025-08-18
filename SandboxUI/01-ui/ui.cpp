@@ -30,6 +30,7 @@
 #include "ui.h"
 #include "ui_lowlevel.h"
 #include "ui_logbox.h"
+#include "ui_animation.h"
 
 /*******************************************************************************
 ******************************** Private typedef *******************************
@@ -80,7 +81,7 @@ typedef struct {
 *******************************************************************************/
 UI_CONTROL_STRU _ui_control_stru;
 UI_INPUT_STRU ui_input;
-
+DISP_STRU disp_stru;
 
 /*******************************************************************************
 ************************** Private function prototypes *************************
@@ -446,10 +447,12 @@ void ui1_init_widgets(HWND hwnd) { // Labels
     extern void ui_create_button_nonmanual(HWND hwnd, int gx, int gy);
     extern void ui_create_button_debug(HWND hwnd, int gx, int gy);
 
+    ui_create_font9();
+
     //[1] create main window top layout
     ui11_create_label(hwnd, L" Output Devices", UI_OUTPUT_X, UI_OUTPUT_Y, UI_OUTPUT_W, UI_OUTPUT_H);
-    ui11_create_label(hwnd, L" Simulator", UI_LABELBOX_X, UI_LABELBOX_Y, UI_LABELBOX_W, UI_LABELBOX_H);
-    ui11_create_label(hwnd, L" ElevatorCore", UI_LABELBOX2_X, UI_LABELBOX2_Y, UI_LABELBOX2_W, UI_LABELBOX2_H);
+    //ui11_create_label(hwnd, L" Simulator", UI_LABELBOX_X, UI_LABELBOX_Y, UI_LABELBOX_W, UI_LABELBOX_H);
+    //ui11_create_label(hwnd, L" ElevatorCore", UI_LABELBOX2_X, UI_LABELBOX2_Y, UI_LABELBOX2_W, UI_LABELBOX2_H);
     ui_create_logbox(hwnd, COLUMN2_X, UI_LOGBOX_Y, UI_LOGBOX_W, UI_LOGBOX_H, 0);
     //column4
     ui11_create_label(hwnd, L" HOPs", UI_HOP_X, UI_HOP_Y, UI_HOP_W, UI_HOP_H);
@@ -540,6 +543,73 @@ void ui1_init_widgets(HWND hwnd) { // Labels
 
 
 
+#if 1
+/*******************************************************************************
+ * @brief  update two labelboxes, Called by draw_all() in WndProc() Timer
+ * @param  xxxx
+ * @param  xxxx
+ * @return xxxx
+ *******************************************************************************/
+void ui31_draw_labels(HDC hdc, DISP_STRU* disp, UINT64 ms) {
+#define LABEL_STRING_SIZE 512 // lable printf buzzer size
+
+    char buf[LABEL_STRING_SIZE];  // main text buffer which holds the entire string of a label window
+    char buf2[LABEL_STRING_SIZE] = "010"; // hold part of label string
+    char time_str[20];
+    int buf_size = sizeof(buf);
+    ui65_get_formatted_clock_string(time_str, ms);
+
+    sprintf_s(buf, "V%s (%s %s)\r\n  *** CAR SIMULATION ***\r\nRun:%s\r\nCmd: %s \r\nAPS Speed: %+05d/%04d(sp)mm/s\r\nAPS Height: %05dmm\r\nDir: %s\r\nState: %s\r\nError: %s \r\n\n  *** DOOR SIMULATION ***\r\nCmd: %s\r\nState: %s\nOpening:%d%% \n\nEnabled: %s,%s,%s.",
+        VERSION_CODE,
+        __DATE__,
+        __TIME__,
+        time_str,
+        "car1_cmd",
+        disp->car1_speed,
+        disp->car1_speed_sp,
+        disp->car1_height,
+        "car1_direction",
+        "car1_state",  // sim30_get_state_string(disp->car1_state),
+        "car1_error",  //,sim33_get_err_string(disp->car1_error),
+        "door1-cmd",   // sim_door_get_cmd_string(disp->door1_cmd),
+        "door1-state", // sim_door_get_state_string(disp->door1_state),
+        disp->door1_position,
+        (disp->is_simulator_enable ? "APP" : "X-APP"),
+        (disp->is_core_enable ? "CORE" : "X-CORE"),
+        (disp->is_car_sim_enabled ? "SIM" : "X-SIM"));
+
+    { // draw text
+        // strcpy_s(_ui_control_stru.label1_buf, LABEL_STRING_SIZE, buf);
+        // SetWindowTextA(hLabel1, buf);
+
+        // set label position rects
+        RECT labelRect1 = { UI_LABELBOX_X, UI_LABELBOX_Y, UI_LABELBOX_X + UI_LABELBOX_W, UI_LABELBOX_Y + UI_LABELBOX_H };
+
+        extern HFONT hFont9;
+        SelectObject(hdc, hFont9);
+        SetBkMode(hdc, TRANSPARENT);
+        SetTextColor(hdc, RGB(0, 0, 0)); // black
+        Rectangle(hdc, labelRect1.left, labelRect1.top, labelRect1.right, labelRect1.bottom);
+        DrawTextA(hdc, buf, -1, &labelRect1, DT_LEFT | DT_TOP | DT_NOPREFIX);
+    }
+
+    // Label2
+
+    sprintf_s(buf, "  *** CORE SERVICE STATUS ***\r\nCalls:");
+    //==============_ui31_print_binary_array(buf2, 100, service_control_stru.calltable);
+    strncat_s(buf, buf_size, buf2, buf_size / 2); // add buf2's content into buf1
+
+
+
+    { // draw label2 text
+        // SetWindowTextA(hLabel2, buf);
+        RECT labelRect2 = { UI_LABELBOX2_X, UI_LABELBOX2_Y, UI_LABELBOX2_X + UI_LABELBOX2_W, UI_LABELBOX2_Y + UI_LABELBOX2_H };
+        DrawTextA(hdc, buf, -1, &labelRect2, DT_LEFT | DT_TOP | DT_NOPREFIX);
+    }
+}
+
+#endif
+
 int car_y_px = UI_GROUND_Y;
 bool car_is_idle = true;
 
@@ -549,21 +619,20 @@ bool car_is_idle = true;
  * @return xxxx
  *******************************************************************************/
 void ui03_draw_all(HDC hdc) {
-    extern void ui32_draw_cab_box(HDC hdc, int x, int y, bool is_idle);
-    extern void ui36_draw_door(HDC hdc, int x, int car_y, int opening);
-    extern void ui34_draw_final_limits(HDC hdc, int x);
-    extern void ui_draw_floors(HDC hdc, int x, int y);
+
 
     _ui_control_stru.run_cnt++;
 
     ui_draw_floors(hdc, UI_ANIMATION_X, UI_GROUND_Y);
     ui34_draw_final_limits(hdc, UI_ANIMATION_X);
-
-    //ui31_draw_labels(hdc);
-    ui32_draw_cab_box(hdc, UI_ANIMATION_X, car_y_px, car_is_idle);
-    ui36_draw_door(hdc, UI_ANIMATION_X, car_y_px, 16);
+    ui31_draw_labels(hdc, &disp_stru, _ui_control_stru.run_cnt);
+    ui32_draw_cab_box(hdc, UI_ANIMATION_X, _ui_control_stru.car_box_y, car_is_idle);
+    ui36_draw_door(hdc, UI_ANIMATION_X, _ui_control_stru.car_box_y, _ui_control_stru.door_opening_width);
 
 }
+
+
+
 
 /*******************************************************************************
  * @brief  this is a test example show how to process events.
@@ -575,6 +644,30 @@ void ui_test_loop() {
     ui_input_process_1of2();//events are generated here
 
     //your code to read the events and process your business logics
+    //  update all pixel data for all the ui_draw_xxx() functions.
+    // called by IDT_TIMER_UI event in WndProc().
+    // void ui02_update_ui_model_data_in_timer(DISP_STRU * d)
+    {
+
+        // update cab position pixel
+        // int positionMM = disp_stru.car1_height;
+        {
+            disp_stru.car1_height += 20;
+            if (disp_stru.car1_height > SIM_SHAFT_TOP_FINAL) {
+                disp_stru.car1_height = SIM_SHAFT_FINAL_BOTTOM;
+            }
+        }
+        _ui_control_stru.car_box_y = ui_calc_car_y_pix(disp_stru.car1_height);
+
+        // update door position
+        {
+            disp_stru.door1_position += 1;
+            if (disp_stru.door1_position > 100) {
+                disp_stru.door1_position = 0;
+            }
+        }
+        _ui_control_stru.door_opening_width = ui_calc_door_opening(disp_stru.door1_position);
+    }
 
     ui_input_process_2of2();//update last value for next cycle
 }
@@ -605,103 +698,8 @@ void ui_input_process_2of2(void) {
     }
 }
 
-#if 0
-/*******************************************************************************
- * @brief  update two labelboxes, Called by draw_all() in WndProc() Timer
- * @param  xxxx
- * @param  xxxx
- * @return xxxx
- *******************************************************************************/
-void ui31_draw_labels(HDC hdc, TO_UI_STRUCT* disp, UINT64 ms) {
-#define LABEL_STRING_SIZE 512 // lable printf buzzer size
 
-    char buf[LABEL_STRING_SIZE];  // main text buffer which holds the entire string of a label window
-    char buf2[LABEL_STRING_SIZE]; // hold part of label string
-    char time_str[20];
-    int buf_size = sizeof(buf);
-    ui65_get_formatted_clock_string(time_str, ms);
 
-    sprintf_s(buf, "V%s (%s %s)\r\n  *** CAR SIMULATION ***\r\nRun:%s\r\nCmd: %s \r\nAPS Speed: %+05d/%04d(sp)mm/s\r\nAPS Height: %05dmm\r\nDir: %s\r\nState: %s\r\nError: %s \r\n\n  *** DOOR SIMULATION ***\r\nCmd: %s\r\nState: %s\nOpening:%d%% \n\nEnabled: %s,%s,%s.",
-        VERSION_CODE,
-        __DATE__,
-        __TIME__,
-        time_str,
-        sim31_get_cmd_string(disp->car1_cmd),
-        disp->car1_speed,
-        disp->car1_speed_sp,
-        disp->car1_height,
-        sim32_get_dir_string(disp->car1_direction),
-        sim30_get_state_string(disp->car1_state),
-        sim33_get_err_string(disp->car1_error),
-        sim_door_get_cmd_string(disp->door1_cmd),
-        sim_door_get_state_string(disp->door1_state),
-        disp->door1_position,
-        (disp->is_simulator_enable ? "APP" : "X-APP"),
-        (disp->is_core_enable ? "CORE" : "X-CORE"),
-        (disp->is_car_sim_enabled ? "SIM" : "X-SIM"));
-
-    {   // draw text
-        _ui_control_stru.label1_cnt++; // update the counter
-        strcpy_s(_ui_control_stru.label1_buf, LABEL_STRING_SIZE, buf);
-        // SetWindowTextA(hLabel1, buf);
-
-        // set label position rects
-        RECT labelRect1 = { UI_LABELBOX_X, UI_LABELBOX_Y, UI_LABELBOX_X + UI_LABELBOX_W, UI_LABELBOX_Y + UI_LABELBOX_H };
-
-        //ui10_apply_font_to_control(hdc, hFont);
-        SetBkMode(hdc, TRANSPARENT);
-        SetTextColor(hdc, RGB(0, 0, 0)); // black
-        DrawTextA(hdc, buf, -1, &labelRect1, DT_LEFT | DT_TOP | DT_NOPREFIX);
-    }
-
-    // Label2
-
-    sprintf_s(buf, "  *** CORE SERVICE STATUS ***\r\nCalls:");
-    _ui31_print_binary_array(buf2, 100, service_control_stru.calltable);
-    strncat_s(buf, buf_size, buf2, buf_size / 2); // add buf2's content into buf1
-
-    sprintf_s(buf2, "\r\nLanding: %d (%.2f)--> Dest:%d\r\nCall Cnt: %d\r\nLv1: %s, \r\nLv2: %s, \r\nLv3: %s, \r\nLv4: %s, \r\nLv5: %s",
-        disp->current_landing,
-        disp->current_landing_f,
-        service_control_stru.landing_cmd.determined_next_landing,
-        service_control_stru.cnt_total_calls, // call landing cnt
-        fsm_lv1_get_state_string(disp->lv1_state),
-        core_interface_get_lv2_state_string(disp->lv2_state),
-        fsm_lv3_get_state_string(disp->lv3_state),
-        fsm_lv4_get_state_string(disp->lv4_state),
-        lv3_get_door_state_name(disp->lv5_state));
-    strncat_s(buf, buf_size, buf2, buf_size / 2); // add buf2's content into buf1
-
-    if (_ui_control_stru.car_mode == ELEVATOR_MODE_MASTER) {
-        sprintf_s(buf2, "\r\n\n        **SLAVE1**\r\nState:%s\r\nLanding:%d\r\nDoor:%s\r\nService:[%d, %s, %d].",
-            (disp->slave1_is_idle ? "IDLE" : "SERVING"),
-            disp->slave1_current_landing,
-            lv3_get_door_state_name(disp->slave1_door_state),
-            disp->slave1_range2_a,
-            sim32_get_dir_string(disp->slave1_range2_dir),
-            disp->slave1_range2_b);
-        strncat_s(buf, buf_size, buf2, buf_size / 2); // add buf2's content into buf1
-    }
-
-    { // draw label2 text
-        // SetWindowTextA(hLabel2, buf);
-        RECT labelRect2 = { UI_LABELBOX2_X, UI_LABELBOX2_Y, UI_LABELBOX2_X + UI_LABELBOX2_W, UI_LABELBOX2_Y + UI_LABELBOX2_H };
-        DrawTextA(hdc, buf, -1, &labelRect2, DT_LEFT | DT_TOP | DT_NOPREFIX);
-    }
-}
-        
-#endif
-
-// update all pixel data for all the ui_draw_xxx() functions.
-// called by IDT_TIMER_UI event in WndProc().
-//void ui02_update_ui_model_data_in_timer(APP_DISPLAY_STRU* d) {
-//
-//    // update cab position pixel
-//    int positionMM = d->car1_height;
-//    _ui_control_stru.car_box_y = UI_GROUND_Y - positionMM / UI_PIXEL_RATIO;
-//    // update door position
-//    _ui_control_stru.door_opening_width = d->door1_position * DOOR_OPENING_WIDTH / SIM_DOOR_POSITION_SCALE;
-//}
 
 
 /*******************************************************************************

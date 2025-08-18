@@ -9,6 +9,7 @@
 #include "01-ui/ui.h"
 #include "00-app/top_config.h"
 #include "01-ui/ui_logbox.h"
+#include "01-ui/ui_animation.h"
 
 
 #define MAX_LOADSTRING 100
@@ -130,7 +131,7 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
 //
 LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
-    int car_bottom_y = UI_GROUND_Y;
+    int car_bottom_y = ui_calc_car_y_pix(disp_stru.car1_height);
     const RECT rec_car_region = {
         UI_ANIMATION_X + UI_CAR_X - 10,
         car_bottom_y - UI_CAR_H - 5,
@@ -155,7 +156,6 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
             int wmId = LOWORD(wParam);
             // Parse the menu selections
             if (HIWORD(wParam) == BN_CLICKED) {
-                //ui_internal_printf("---- Button clicked (id=%d).", wmId);
                 ui_callback_type_click(wmId);
                 ui_callback_type_radio(wmId);
                 ui_callback_type_lock_step1(hWnd, wmId); //there're only 3 lock-type buttons
@@ -203,8 +203,8 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
                 // draw everything into the memory device context
                 ui03_draw_all(memDC);
                 // draw debug rectangles into memory device context
-                //ui_draw_invalidate_rect_area_debug(memDC, &rec_car_region); // DEBUG TOOL
-                //ui_draw_invalidate_rect_area_debug(memDC, &rec_labels_region); // DEBUG TOOL
+                ui_draw_invalidate_rect_area_debug(memDC, &rec_car_region); // DEBUG TOOL
+                ui_draw_invalidate_rect_area_debug(memDC, &rec_labels_region); // DEBUG TOOL
 
                 BitBlt(hdc, 0, 0, width, height, memDC, 0, 0, SRCCOPY); // blit the memory device context to the screen
                 SelectObject(memDC, oldBitmap);                         // restore old bit map

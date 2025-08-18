@@ -42,6 +42,8 @@
 /*******************************************************************************
 ******************************* Private variables ******************************
 *******************************************************************************/
+HFONT hFont9 = NULL; // Nicer font to replace GDI default font
+HFONT hFont12 = NULL; // Nicer font to replace GDI default font
 
 /*******************************************************************************
 ************************** Private function prototypes *************************
@@ -86,6 +88,20 @@ void ui10_apply_font_to_control(HWND hwndTarget, int pt) {
     }
 }
 
+void ui_create_font9() {
+    int height; // negative value, -12=~9pt in my computer
+    height = -MulDiv(9, GetDeviceCaps(GetDC(NULL), LOGPIXELSY), 72);
+    hFont9 = CreateFont(
+        height,
+        0, 0, 0, FW_NORMAL,  // width, escapement, orientation, weight
+        FALSE, FALSE, FALSE, // italic, underline, strikeout
+        DEFAULT_CHARSET,
+        OUT_DEFAULT_PRECIS,
+        CLIP_DEFAULT_PRECIS,
+        CLEARTYPE_QUALITY,
+        DEFAULT_PITCH | FF_DONTCARE,
+        L"Segoe UI");
+}
 
 
 /*******************************************************************************
