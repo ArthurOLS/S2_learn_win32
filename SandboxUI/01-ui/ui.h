@@ -59,7 +59,7 @@
 #define UI_OUTPUT_X                     COLUMN1_X
 #define UI_OUTPUT_Y                     COLUMN_TOP_Y    
 #define UI_OUTPUT_W                     200
-#define UI_OUTPUT_H                     115//(COLUMN_BOTTOM_Y - COLUMN_TOP_Y)
+#define UI_OUTPUT_H                     80//(COLUMN_BOTTOM_Y - COLUMN_TOP_Y)
 
 //animation
 #define UI_ANIMATION_X                  COLUMN1_X

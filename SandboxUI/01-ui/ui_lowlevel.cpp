@@ -116,6 +116,13 @@ void ui11_create_label(HWND hwnd, const wchar_t* text, int x, int y, int w, int 
 
     ui10_apply_font_to_control(hStaticLabel, UI_FONT_9PT);
 }
+void ui11_create_label(HWND hwnd, const char* text, int x, int y, int w, int h) {
+    // create label, 12pt
+    HWND hStaticLabel = CreateWindowA("STATIC", text, WS_CHILD | WS_VISIBLE,
+        x, y, w, h, hwnd, NULL, NULL, NULL);
+
+    //ui10_apply_font_to_control(hStaticLabel, UI_FONT_9PT);
+}
 
 /*******************************************************************************
  * @brief  creat 9pt lable in a location, (x,y,w,h), solid border

@@ -70,6 +70,7 @@ typedef struct {
 void ui10_apply_font_to_control(HWND hwndTarget, int pt);
 void ui_create_font9();
 void ui11_create_label(HWND hwnd, const wchar_t* text, int x, int y, int w, int h);
+void ui11_create_label(HWND hwnd, const char* text, int x, int y, int w, int h);
 void ui11_create_label_no_border(HWND hwnd, const wchar_t* text, int x, int y, int w, int h);
 
 void ui_create_radio_type_3pos(HWND hwnd, int x, int y, RADIO_3POS_STRU* pr);

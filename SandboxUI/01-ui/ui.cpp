@@ -450,7 +450,9 @@ void ui1_init_widgets(HWND hwnd) { // Labels
     ui_create_font9();
 
     //[1] create main window top layout
-    ui11_create_label(hwnd, L" Output Devices", UI_OUTPUT_X, UI_OUTPUT_Y, UI_OUTPUT_W, UI_OUTPUT_H);
+    char buf1[50];
+    sprintf_s(buf1, "Version: %s\nBuild: %s, %s",  VERSION_CODE, __DATE__, __TIME__);
+    ui11_create_label(hwnd, buf1, UI_OUTPUT_X, UI_OUTPUT_Y, UI_OUTPUT_W, UI_OUTPUT_H);
     //ui11_create_label(hwnd, L" Simulator", UI_LABELBOX_X, UI_LABELBOX_Y, UI_LABELBOX_W, UI_LABELBOX_H);
     //ui11_create_label(hwnd, L" ElevatorCore", UI_LABELBOX2_X, UI_LABELBOX2_Y, UI_LABELBOX2_W, UI_LABELBOX2_H);
     ui_create_logbox(hwnd, COLUMN2_X, UI_LOGBOX_Y, UI_LOGBOX_W, UI_LOGBOX_H, 0);
@@ -470,7 +472,7 @@ void ui1_init_widgets(HWND hwnd) { // Labels
 
     //[2]create each block
     //leds
-    ui_create_led_output(hwnd, UI_OUTPUT_X + 7, UI_OUTPUT_Y + 20, UI_BUTTON_W, UI_BUTTON_H);
+    //ui_create_led_output(hwnd, UI_OUTPUT_X + 7, UI_OUTPUT_Y + 20, UI_BUTTON_W, UI_BUTTON_H);
     //hop
     ui_create_button_hop(hwnd, UI_HOP_X + 7, UI_HOP_Y + 20, UI_BUTTON_W, UI_BUTTON_H);
     //cop1
