@@ -177,7 +177,8 @@ typedef enum {
     //[DEBUG BUTTONS]
     X_APP,  // Simulator Stop
     X_CORE, // Simulator Start
-    X_SIM,    
+    X_SIM, 
+    ID_SHOW_IO_LIST,//
 
     COP_UP,
     COP_DN,

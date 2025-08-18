@@ -413,7 +413,28 @@ void ui_callback_type_radio(int id) {
  *******************************************************************************/
 void ui_callback_type_click(int id) {
     if (H1UP <= id && id <= CF12) {
-        UI_RECORD_CLICK_PIN(id);
+        UI_RECORD_CLICK_PIN(id); //simulate a pin level change
+    }
+    if (id == ID_SHOW_IO_LIST) {
+    #define BUFFER_SIZE 1000
+        char buf[BUFFER_SIZE] = "Showing IO list:";
+        //show all io pins status in logbox
+        for (int i = 0; i < TOTAL_BUTTION_NUM; i++) {
+            char temp[16] = "";
+            if (ui_input.pin[i].value != 0) {
+                sprintf_s(temp, "%d", i);
+                strncat_s(buf, BUFFER_SIZE, temp, 16);
+            }
+
+
+            if ((i % 10) == 0) { // Add newline for every 4 up/down/car elements and not at end
+                strncat_s(buf, BUFFER_SIZE, "\r\n", 2);
+            }
+            else {
+                strncat_s(buf, BUFFER_SIZE, ", ", 2);
+            }
+        }
+        ui_internal_printf("%s", buf);
     }
 }
         

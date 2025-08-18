@@ -128,6 +128,7 @@ BUTTON_STRU button_debug[] = {
     { L"X_APP",X_APP, 0 },  // Simulator Stop
     { L"X_CORE",X_CORE, 0 }, // Simulator Start
     { L"X_SIM",X_SIM, 0 },
+    { L"Show IO list",ID_SHOW_IO_LIST, 0 },
 
     { L"COP_UP",COP_UP, 0 },
     { L"COP_DN",COP_DN, 0 },
