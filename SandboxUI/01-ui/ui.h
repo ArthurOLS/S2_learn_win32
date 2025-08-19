@@ -62,6 +62,7 @@ typedef struct {
     int         is_simulator_enable; 
 
     //[Core]
+    int         car_mode;//0=simplex, 1=master, 2=slave1
     int         lv1_state;
     int         lv2_state; // lv2 ENUM_MODE
     int         lv3_state;
@@ -70,6 +71,8 @@ typedef struct {
     int32_t     calltable[APP_FLOOR_NUM][3];
     int         current_landing;     // 0=not at a landing, 1..N the landing number
     float       current_landing_f; // float type current landing, display like '3.85'
+    int         determined_next_landing; //current target landing
+    int         cnt_total_calls;
 
     //[Group Control] for master to display slave data
     int slave1_is_idle;

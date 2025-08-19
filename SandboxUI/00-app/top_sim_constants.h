@@ -83,6 +83,14 @@ typedef enum {
     DOOR_STATE_ERROR,
 } SIM_DOOR_STATE_ENUM;
 
+
+typedef enum {
+    LV1_STATE_IDLE = 0,
+    LV1_STATE_SERVICE_DOWN,
+    LV1_STATE_SERVICE_UP,
+
+} FSM_LV1_STATE_ENUM;
+
 typedef enum
 { 
 	LV2_INIT = 0,
@@ -147,7 +155,9 @@ extern "C" {
     const char* core_interface_get_lv2_state_string(int32_t state);
     const char* fsm_lv3_get_state_string(int32_t state);
     const char* fsm_lv4_get_state_string(int32_t state);
-
+    
+    //door state
+    const char* lv3_get_door_state_name(int step);
 
 
 #ifdef __cplusplus

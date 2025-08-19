@@ -27,10 +27,12 @@
 
 
 #include "../00-app/top_config.h"
+#include "../00-app/top_sim_constants.h"
 #include "ui.h"
 #include "ui_lowlevel.h"
 #include "ui_logbox.h"
 #include "ui_animation.h"
+#include "ui_labelbox.h"
 
 /*******************************************************************************
 ******************************** Private typedef *******************************
@@ -87,9 +89,9 @@ typedef struct {
 /*******************************************************************************
 ******************************* Private variables ******************************
 *******************************************************************************/
-UI_CONTROL_STRU _ui_control_stru;
-UI_INPUT_STRU ui_input;
-DISP_STRU disp_stru;
+UI_CONTROL_STRU     _ui_control_stru;
+UI_INPUT_STRU       ui_input;
+DISP_STRU           disp_stru;
 
 /*******************************************************************************
 ************************** Private function prototypes *************************
@@ -587,10 +589,12 @@ void ui03_draw_all(HDC hdc) {
 
     _ui_control_stru.run_cnt++;
 
+    ui_draw_labelbox1(hdc, &disp_stru, ui_logbox_get_run_ms64());
+    ui_draw_labelbox2(hdc, &disp_stru);
+
     ui_draw_floors(hdc, UI_ANIMATION_X, UI_GROUND_Y);
     ui34_draw_final_limits(hdc, UI_ANIMATION_X);
-    //ui31_draw_labelbox(hdc, &disp_stru, _ui_control_stru.run_cnt);
-    bool car_is_idle = true;
+    bool car_is_idle = (disp_stru.lv1_state == LV1_STATE_IDLE);
     ui32_draw_cab_box(hdc, UI_ANIMATION_X, _ui_control_stru.car_box_y, car_is_idle);
     ui36_draw_door(hdc, UI_ANIMATION_X, _ui_control_stru.car_box_y, _ui_control_stru.door_opening_width);
 

@@ -99,16 +99,16 @@ typedef enum {
  * Core controller parameters
  ******************************************************************************/
 // Motion Controlling
-#define MOTION_INTECEPTION_DIST_MIN (0.8f) // The car can perform interception when it's this distance from stop point
+#define MOTION_INTECEPTION_DIST_MIN     (0.8f) // The car can perform interception when it's this distance from stop point
 // Door control
-#define DOOR_STEP_WAIT1_MS (500)    // in ms
-#define DOOR_STEP_HOLDING_MS (2000) // Door open wait time in MS
+#define DOOR_STEP_WAIT1_MS              (500)    // in ms
+#define DOOR_STEP_HOLDING_MS            (2000) // Door open wait time in MS
 
 
 // Car speed presetting for button in manual mode.
-#define DEF_CAR_SPEED1 200  // mm/s
-#define DEF_CAR_SPEED2 1000 // mm/s
-#define DEF_CAR_SPEED3 2000 // mm/s
+#define DEF_CAR_SPEED1                  200  // mm/s
+#define DEF_CAR_SPEED2                  1000 // mm/s
+#define DEF_CAR_SPEED3                  2000 // mm/s
 
 
 //clang-format on

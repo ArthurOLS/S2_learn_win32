@@ -63,6 +63,9 @@
     <ClInclude Include="00-app\top_sim_constants.h">
       <Filter>00-app</Filter>
     </ClInclude>
+    <ClInclude Include="01-ui\ui_labelbox.h">
+      <Filter>01-ui</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="SandboxUI.cpp">

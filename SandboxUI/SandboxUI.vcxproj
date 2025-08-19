@@ -135,6 +135,7 @@
     <ClInclude Include="01-ui\ui.h" />
     <ClInclude Include="01-ui\ui_animation.h" />
     <ClInclude Include="01-ui\ui_config.h" />
+    <ClInclude Include="01-ui\ui_labelbox.h" />
     <ClInclude Include="01-ui\ui_logbox.h" />
     <ClInclude Include="01-ui\ui_lowlevel.h" />
     <ClInclude Include="framework.h" />

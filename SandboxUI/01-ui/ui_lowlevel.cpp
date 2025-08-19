@@ -122,7 +122,7 @@ void ui11_create_label(HWND hwnd, const char* text, int x, int y, int w, int h) 
     HWND hStaticLabel = CreateWindowA("STATIC", text, WS_CHILD | WS_VISIBLE,
         x, y, w, h, hwnd, NULL, NULL, NULL);
 
-    //ui10_apply_font_to_control(hStaticLabel, UI_FONT_9PT);
+    ui10_apply_font_to_control(hStaticLabel, UI_FONT_9PT);
 }
 
 /*******************************************************************************

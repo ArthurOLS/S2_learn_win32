@@ -1,9 +1,9 @@
 /**
 ********************************************************************************
-* @file    ui_animation.h
+* @file    ui_labelbox.h
 * @author  Arthur
 * @version V1.0
-* @date    2025-08-18 09:06:50
+* @date    2025-08-19 08:52:42
 * @brief   Public functions and datatypes from this function
 *
 *  
@@ -16,13 +16,12 @@
 /*******************************************************************************
 ********************* Define to prevent recursive inclusion ********************
 *******************************************************************************/
-#ifndef __UI_ANIMATION_H
-#define __UI_ANIMATION_H
+#ifndef __UI_LABELBOX_H
+#define __UI_LABELBOX_H
 /*******************************************************************************
 ************************************ Includes **********************************
 *******************************************************************************/
-#include <windows.h>
-#include "ui_config.h"
+#include "ui.h"
 
 /*******************************************************************************
 ********************************* Exported macro *******************************
@@ -43,20 +42,11 @@
 /*******************************************************************************
 ******************************* Exported functions *****************************
 *******************************************************************************/
-extern void ui32_draw_cab_box(HDC hdc, int x, int y, bool is_idle);
-extern void ui36_draw_door(HDC hdc, int x, int car_y, int opening);
-extern void ui34_draw_final_limits(HDC hdc, int x);
-extern void ui_draw_floors(HDC hdc, int x, int y);
-extern int ui_convert_car_y_pix(int car_realtime_position_mm);
-extern int ui_convert_door_opening(int per);
+void ui_draw_labelbox1(HDC hdc, DISP_STRU* disp, UINT64 run_ms);
 
-#if UI_DRAW_DEBUG_RED_BOX
-void ui_draw_invalidate_rect_area_debug(HDC hdc, const RECT* lpRect);
-#else
-#define ui_draw_invalidate_rect_area_debug(hdc, lpRect) ((void)0)// no-op replacement 
-#endif
+void ui_draw_labelbox2(HDC hdc, DISP_STRU * disp);
 
 
-#endif /* __UI_ANIMATION_H */
+#endif /* __UI_LABELBOX_H */
 /********************************* end of file ********************************/
 

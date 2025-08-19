@@ -214,6 +214,7 @@ void ui_draw_floors(HDC hdc, int x, int y) {
  * @param  x = UI_ANIMATION_X
  * @return xxxx
  *******************************************************************************/
+#if UI_DRAW_DEBUG_RED_BOX
 void ui_draw_invalidate_rect_area_debug(HDC hdc, CONST RECT* lpRect) {
     HBRUSH hOldBrush = (HBRUSH)SelectObject(hdc, GetStockObject(NULL_BRUSH));// nbew brush - save old
     HPEN hPen = CreatePen(PS_SOLID, 2, RGB(255, 0, 0));// new red pen
@@ -225,7 +226,7 @@ void ui_draw_invalidate_rect_area_debug(HDC hdc, CONST RECT* lpRect) {
     SelectObject(hdc, hOldBrush);
     DeleteObject(hPen);// delete created pen
 }
-
+#endif
 
 /*******************************************************************************
  * @brief  convert realtime car positon to realtime pixel position for animation 
