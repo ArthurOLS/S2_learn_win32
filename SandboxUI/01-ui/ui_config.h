@@ -38,7 +38,7 @@
 
 #define UI_PERIOD_MS                    30   // refresh ui data and display every 50ms
 
-#define UI_DRAW_DEBUG_RED_BOX           0
+#define UI_DRAW_DEBUG_RED_BOX           0 //0=disable, 1=enable the ui_draw_invalidate_rect_area_debug()
 
 /*******************************************************************************
 ********************************* Higher layouts   *****************************

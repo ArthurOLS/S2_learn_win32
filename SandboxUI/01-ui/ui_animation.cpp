@@ -178,7 +178,7 @@ void ui34_draw_final_limits(HDC hdc, int x)
 * @param  y = UI_GROUND_Y
 * @return xxxx
 *******************************************************************************/
-void ui_draw_floors(HDC hdc, int x, int y) {
+void ui35_draw_floors(HDC hdc, int x, int y) {
     HPEN hPen = CreatePen(PS_SOLID, 1, RGB(0, 0, 0));     // 2px black line
     HBRUSH hBrush = (HBRUSH)GetStockObject(HOLLOW_BRUSH); // No fill
     HPEN hOldPen = (HPEN)SelectObject(hdc, hPen);// Select them into the device context

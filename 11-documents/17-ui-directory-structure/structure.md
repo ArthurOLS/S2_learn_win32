@@ -1,25 +1,12 @@
 # UI Structure
 
-button_id.h
-ENUM_BUTTON_ID
+## Input Data from UI/(or Platform Hardware Pins) to App/(or core)
 
-ui.cpp
+![1](image.png)
 
-UI_CONTROL_STRU _ui_control_stru;
-UI_INPUT_STRU ui_input;
-DISP_STRU disp_stru;
+## Structure
 
-
-
-
-
-
-
-
-
-
-
-
+![2](structure.png)
 
 
 

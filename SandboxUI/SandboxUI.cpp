@@ -200,7 +200,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
                 FillRect(memDC, &rc, (HBRUSH)(COLOR_WINDOW + 1));               // fill background in memory device context
 
                 // draw everything into the memory device context
-                ui03_draw_all(memDC);
+                ui3_draw_all(memDC);
                 // draw debug rectangles into memory device context
                 ui_draw_invalidate_rect_area_debug(memDC, &rec_car_region); // DEBUG TOOL
                 ui_draw_invalidate_rect_area_debug(memDC, &rec_labels_region); // DEBUG TOOL
@@ -226,7 +226,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
         case IDT_TIMER_UI: {
             // ui_internal_printf("Invalidate %d, %d, %d, %d.", rec_car_region.left, rec_car_region.top, rec_car_region.right, rec_car_region.bottom);
 
-            ui_test_loop_example(); //handling model changes
+            ui4_test_loop_example(); //handling model changes
             InvalidateRect(hWnd, &rec_car_region, TRUE);     // True=erase background,
             InvalidateRect(hWnd, &rec_labels_region, FALSE); // only invalidate the custom label box area
         }

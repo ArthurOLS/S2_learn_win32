@@ -42,9 +42,9 @@
 /*******************************************************************************
 ******************************* Exported functions *****************************
 *******************************************************************************/
-void ui_draw_labelbox1(HDC hdc, DISP_STRU* disp, UINT64 run_ms);
+void ui31_draw_labelbox1(HDC hdc, DISP_STRU* disp, UINT64 run_ms);
 
-void ui_draw_labelbox2(HDC hdc, DISP_STRU * disp);
+void ui31_draw_labelbox2(HDC hdc, DISP_STRU * disp);
 
 
 #endif /* __UI_LABELBOX_H */

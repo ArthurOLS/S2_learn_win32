@@ -31,7 +31,7 @@
 ********************************* Exported types *******************************
 *******************************************************************************/
 
-//for app use
+//for app(core) use
 typedef struct {
     const char* name;
     int id;//defined in button_id.h

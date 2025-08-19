@@ -114,7 +114,7 @@ void _get_formatted_clock_string(char time_str[], UINT64 ms) {
  * @param  run_ms: time since app starts
  * @return xxxx
  *******************************************************************************/
-void ui_draw_labelbox1(HDC hdc, DISP_STRU* disp, UINT64 run_ms) {
+void ui31_draw_labelbox1(HDC hdc, DISP_STRU* disp, UINT64 run_ms) {
     char buf[LABEL_STRING_SIZE]; // main text buffer which holds the entire string of a label window
     char time_str[20] = "";
 
@@ -162,7 +162,7 @@ void ui_draw_labelbox1(HDC hdc, DISP_STRU* disp, UINT64 run_ms) {
     DrawTextA(hdc, buf, -1, &labelRect1, DT_LEFT | DT_TOP | DT_NOPREFIX);
 }
 
-void ui_draw_labelbox2(HDC hdc, DISP_STRU* disp) {
+void ui31_draw_labelbox2(HDC hdc, DISP_STRU* disp) {
     char buf[LABEL_STRING_SIZE];  // holds the entire string
     char buf2[LABEL_STRING_SIZE]; // hold part of label string
 
