@@ -66,6 +66,12 @@
     <ClInclude Include="01-ui\ui_labelbox.h">
       <Filter>01-ui</Filter>
     </ClInclude>
+    <ClInclude Include="01-ui\ui_logfile.h">
+      <Filter>01-ui</Filter>
+    </ClInclude>
+    <ClInclude Include="01-ui\ui_configfile.h">
+      <Filter>01-ui</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="SandboxUI.cpp">
@@ -97,6 +103,12 @@
     </ClCompile>
     <ClCompile Include="00-app\top_sim_constants.c">
       <Filter>00-app</Filter>
+    </ClCompile>
+    <ClCompile Include="01-ui\ui_logfile.cpp">
+      <Filter>01-ui</Filter>
+    </ClCompile>
+    <ClCompile Include="01-ui\ui_configfile.cpp">
+      <Filter>01-ui</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

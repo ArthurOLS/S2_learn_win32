@@ -33,6 +33,8 @@
 #include "ui_logbox.h"
 #include "ui_animation.h"
 #include "ui_labelbox.h"
+#include "ui_logfile.h"
+#include "ui_configfile.h"
 
 /*******************************************************************************
 ******************************** Private typedef *******************************
@@ -258,6 +260,10 @@ void ui2_init(HWND hwnd) {
     _init_data(hwnd);
     _draw_top_layout_lables(hwnd);
     _create_most_widgets(hwnd);
+
+    ui40_load_config();
+    ui41_print_all_config();
+    ui61_start_logging(USE_TIMESTAMP_NAME); // NULL=use default date-time naming for log files.
 }
 
 

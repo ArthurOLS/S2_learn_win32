@@ -67,14 +67,14 @@ void _print_binary_array(char* buf, size_t buf_size, const int call_table[][3]) 
         char c0 = (call_table[i][0]) ? 'U' : '_';
         char c1 = (call_table[i][1]) ? 'D' : '_';
         char c2 = (call_table[i][2]) ? 'C' : '_';
-        snprintf(temp, sizeof(temp), "%d:%c%c%c", i + 1, c0, c1, c2);
+        snprintf(temp, sizeof(temp), " %02d:%c%c%c", i + 1, c0, c1, c2);
 
         if (i > 0) {            // if it's not the first element, add a comma
             if ((i % 6) == 0) { // Add newline for every 4 up/down/car elements and not at end
                 strncat_s(buf, buf_size, "\r\n", 2);
             }
             else {
-                strncat_s(buf, buf_size, ", ", 2);
+                strncat_s(buf, buf_size, ",", 2);
             }
         }
         strncat_s(buf, buf_size, temp, 8);

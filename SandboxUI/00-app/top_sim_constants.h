@@ -4,7 +4,7 @@
 * @author  Arthur
 * @version V1.0
 * @date    2025-08-18 15:54:00
-* @brief   top layer constand from simulation module
+* @brief   top layer constants from simulation module
 *
 *  
 ********************************************************************************
