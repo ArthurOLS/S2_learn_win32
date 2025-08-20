@@ -1,12 +1,12 @@
 /**
 ********************************************************************************
-* @file    ui_lowlevel.h
+* @file    ipc.h Inter-Process Communication between master and slave(s)
 * @author  Arthur
 * @version V1.0
-* @date    2025-08-07 11:02:20
+* @date    June19, 2025
 * @brief   Public functions and datatypes from this function
 *
-*  
+*                      
 ********************************************************************************
 * @attention
 *
@@ -16,14 +16,12 @@
 /*******************************************************************************
 ********************* Define to prevent recursive inclusion ********************
 *******************************************************************************/
-#ifndef __UI_LOWLEVEL_H
-#define __UI_LOWLEVEL_H
+#ifndef _IPC_H
+#define _IPC_H
 /*******************************************************************************
 ************************************ Includes **********************************
 *******************************************************************************/
-
-#include <Windows.h>
-#include "00-app/top_datatype.h"
+//#include XXX
 
 /*******************************************************************************
 ********************************* Exported macro *******************************
@@ -33,31 +31,12 @@
 ********************************* Exported types *******************************
 *******************************************************************************/
 
-typedef struct {
-    const wchar_t* label;
-    const wchar_t* r0_label;
-    const wchar_t* r1_label;
-    const wchar_t* r2_label;
-    int id0, id1, id2;
-                        //0=r0 is checked, 1=r1 is checked, 2=r2 is checked,
-    int state_default;  // which is checked when created
-
-} RADIO_3POS_STRU;
-
-typedef struct {
-    const wchar_t* label;
-    const wchar_t* r0_label;
-    const wchar_t* r1_label;
-    int id0, id1;
-    int state_default; // which is checked when created
-
-} RADIO_2POS_STRU;
 
 /*******************************************************************************
 ******************************* Exported constants *****************************
 *******************************************************************************/
-#define UI_FONT_9PT                     9   // for text, menu, logbox
-#define UI_FONT_12PT                    12 // for title bars, taskbars,
+#define SHMEM_NAME  L"Local\\SimSharedMemory1"
+#define MUTEX_NAME  L"Local\\SimSharedMutex1"
 
 /*******************************************************************************
 *************************** Exported global variables **************************
@@ -67,25 +46,9 @@ typedef struct {
 ******************************* Exported functions *****************************
 *******************************************************************************/
 
-void ui10_apply_font_to_control(HWND hwndTarget, int pt);
-void ui_create_font9();
+void ipc1_init(void);
+void ipc2_master_read_write(void);
+void ipc3_slave_collect_data_to_shmem(void);
 
-void ui11_create_label(HWND hwnd, const wchar_t* text, int x, int y, int w, int h);
-void ui11_create_label(HWND hwnd, const char* text, int x, int y, int w, int h);
-void ui11_create_label_no_border(HWND hwnd, const wchar_t* text, int x, int y, int w, int h);
-void ui_create_radio_type_3pos(HWND hwnd, int x, int y, RADIO_3POS_STRU* pr);
-void ui_create_radio_type_2pos(HWND hwnd, int x, int y, RADIO_2POS_STRU* pr);
-void ui_create_button_type_continuous(HWND hwnd, int x, int y, const wchar_t* name, int id);
-void ui_create_button_type_lock(HWND hwnd, int x, int y, const wchar_t* text, int id);
-void ui_create_button_type_click(HWND hwnd, int x, int y, const wchar_t* text, int id);
-
-void ui30_draw_button_led_black(LPDRAWITEMSTRUCT lpDrawItem, const wchar_t* text, bool state);
-void ui30_draw_button_led_color(LPDRAWITEMSTRUCT lpDrawItem, const wchar_t* text, bool state, int color);
-void ui30_draw_custom_button_trigger_redraw(HWND hwnd, int id);
-
-
-
-
-#endif /* __UI_LOWLEVEL_H */
+#endif /* _IPC_H */
 /********************************* end of file ********************************/
-

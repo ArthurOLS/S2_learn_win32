@@ -26,8 +26,7 @@
 #pragma comment(lib, "comctl32.lib")//DefSubclassProc is not part of the core Windows API (windows.h), but part of the Common Controls Library; This library provides the actual implementation of functions declared in commctrl.h.
 
 
-#include "../00-app/top_config.h"
-#include "../00-app/top_sim_constants.h"
+#include "00-app/top_sim_constants.h"
 #include "ui.h"
 #include "ui_lowlevel.h"
 #include "ui_logbox.h"
@@ -35,6 +34,7 @@
 #include "ui_labelbox.h"
 #include "ui_logfile.h"
 #include "ui_configfile.h"
+#include "ui_app.h"
 
 /*******************************************************************************
 ******************************** Private typedef *******************************
@@ -91,7 +91,7 @@ typedef struct {
 /*******************************************************************************
 ******************************* Private variables ******************************
 *******************************************************************************/
-UI_CONTROL_STRU     _ui_control_stru;
+UI_CONTROL_STRU     _ui_presenter;
 UI_INPUT_STRU       ui_input;
 DISP_STRU           disp_stru;
 
@@ -178,13 +178,13 @@ void _create_most_widgets(HWND hwnd) {
 void _init_data(HWND hwnd) {
     //[3] UI timer
     SetTimer(hwnd, IDT_TIMER_UI, UI_PERIOD_MS, NULL);                       // 50ms(20Hz timer)
-    _ui_control_stru.ts_at_start = static_cast<uint32_t>(GetTickCount64()); // ui82_c_get_u_run_ms();
+    _ui_presenter.ts_at_start = static_cast<uint32_t>(GetTickCount64()); // ui82_c_get_u_run_ms();
 
     ui_create_font9();
     //[4] Init ui_input structure
     // type-continuous
-    UI_DIO_SET_NAME_AS_ITS_ID(D1_OPEN, 0);
-    UI_DIO_SET_NAME_AS_ITS_ID(D1_CLOSE, 0);
+    UI_DIO_SET_NAME_AS_ITS_ID(ID_DOOR1_OPEN, 0);
+    UI_DIO_SET_NAME_AS_ITS_ID(ID_DOOR1_CLOSE, 0);
     UI_DIO_SET_NAME_AS_ITS_ID(ID_COP2_UP, 0);
     UI_DIO_SET_NAME_AS_ITS_ID(ID_COP2_DOWN, 0);
     UI_DIO_SET_NAME_AS_ITS_ID(ID_COP3_OPEN_DOOR, 0);
@@ -231,7 +231,7 @@ void _input_process_1of2(void) {
         }
     }
     if (cnt_event_this_cycle > 0) {
-        ui_internal_printf("---sees %d events in loop %d.", cnt_event_this_cycle, _ui_control_stru.ui_timer_cnt);
+        ui_internal_printf("---sees %d events in loop %d.", cnt_event_this_cycle, _ui_presenter.ui_timer_cnt);
     }
 }
 void _input_process_2of2(void) {
@@ -261,9 +261,17 @@ void ui2_init(HWND hwnd) {
     _draw_top_layout_lables(hwnd);
     _create_most_widgets(hwnd);
 
-    ui40_load_config();
+    ui40_load_config(); //read file and load values
     ui41_print_all_config();
     ui61_start_logging(USE_TIMESTAMP_NAME); // NULL=use default date-time naming for log files.
+
+    //ui41_logbox_printf("\r\nSim Hz=%d.", SIM_HZ);
+    //ui41_logbox_printf("\r\nCar Acc=%dmm/s^2.", SIM_CAR_ACCELERATION);
+    //ui41_logbox_printf("\r\nFloor Height=%dmm.", SIM_FLOOR_HEIGHT);
+    //ui41_logbox_printf("\r\nSim shaft finals top=%dmm, bottom=%dmm.", SIM_SHAFT_TOP_FINAL, SIM_SHAFT_FINAL_BOTTOM);
+    //ui41_logbox_printf("\r\nUI top=%d, bottom=%d.", UI_LIMIT_TOP, UI_LIMIT_BOTTOM);
+
+
 }
 
 
@@ -275,16 +283,16 @@ void ui2_init(HWND hwnd) {
  *******************************************************************************/
 void ui3_draw_all(HDC hdc) {
 
-    _ui_control_stru.run_cnt++;
+    _ui_presenter.run_cnt++;
 
     ui31_draw_labelbox1(hdc, &disp_stru, ui_logbox_get_run_ms64());
     ui31_draw_labelbox2(hdc, &disp_stru);
 
     bool car_is_idle = (disp_stru.lv1_state == LV1_STATE_IDLE);
-    ui32_draw_cab_box(hdc, UI_ANIMATION_X, _ui_control_stru.car_box_y, car_is_idle);
+    ui32_draw_cab_box(hdc, UI_ANIMATION_X, _ui_presenter.car_box_y, car_is_idle);
     ui34_draw_final_limits(hdc, UI_ANIMATION_X);
     ui35_draw_floors(hdc, UI_ANIMATION_X, UI_GROUND_Y);
-    ui36_draw_door(hdc, UI_ANIMATION_X, _ui_control_stru.car_box_y, _ui_control_stru.door_opening_width);
+    ui36_draw_door(hdc, UI_ANIMATION_X, _ui_presenter.car_box_y, _ui_presenter.door_opening_width);
 
 }
 
@@ -296,7 +304,7 @@ void ui3_draw_all(HDC hdc) {
  * @return xxxx
  *******************************************************************************/
 void ui4_test_loop_example() {
-    _ui_control_stru.ui_timer_cnt++;
+    _ui_presenter.ui_timer_cnt++;
     _input_process_1of2();//events are generated here
 
     //your code to read the events and process your business logics here:
@@ -309,7 +317,7 @@ void ui4_test_loop_example() {
                 disp_stru.car1_height = SIM_SHAFT_FINAL_BOTTOM;
             }
         }
-        _ui_control_stru.car_box_y = ui_convert_car_y_pix(disp_stru.car1_height);
+        _ui_presenter.car_box_y = ui_convert_car_y_pix(disp_stru.car1_height);
 
         //[2]update door position
         {
@@ -318,7 +326,7 @@ void ui4_test_loop_example() {
                 disp_stru.door1_position = 0;
             }
         }
-        _ui_control_stru.door_opening_width = ui_convert_door_opening(disp_stru.door1_position);
+        _ui_presenter.door_opening_width = ui_convert_door_opening(disp_stru.door1_position);
     }
 
     _input_process_2of2();//update last value for next cycle
@@ -340,8 +348,8 @@ LRESULT CALLBACK ui_callback_type_continuous(HWND hwnd, UINT uMsg, WPARAM wParam
     switch (uMsg) {
     case WM_LBUTTONDOWN:
         switch (bid) {
-        case D1_OPEN:
-        case D1_CLOSE:
+        case ID_DOOR1_OPEN:
+        case ID_DOOR1_CLOSE:
         case ID_COP2_UP:
         case ID_COP2_DOWN:
         case ID_TOC_UP:
@@ -362,8 +370,8 @@ LRESULT CALLBACK ui_callback_type_continuous(HWND hwnd, UINT uMsg, WPARAM wParam
 
     case WM_LBUTTONUP:
         switch (bid) {
-        case D1_OPEN:
-        case D1_CLOSE:
+        case ID_DOOR1_OPEN:
+        case ID_DOOR1_CLOSE:
         case ID_COP2_UP:
         case ID_COP2_DOWN:
         case ID_TOC_UP:
@@ -648,30 +656,41 @@ void ui_callback_type_radio(int id) {
  * @return xxxx
  *******************************************************************************/
 void ui_callback_type_click(int id) {
-    if (H1UP <= id && id <= CF12) {
+    if (ID_01_UP <= id && id <= ID_12_CAR) {
         UI_RECORD_CLICK_PIN(id); // simulate a pin level change
     }
+
     if (id == ID_SHOW_IO_LIST) {
-#define BUFFER_SIZE 1000
-        char buf[BUFFER_SIZE] = "Showing IO list:";
-        // show all io pins status in logbox
-        for (int i = 0; i < TOTAL_BUTTION_NUM; i++) {
-            char temp[16] = "";
-            if (ui_input.pin[i].value != 0) {
-                sprintf_s(temp, "%d", i);
-                strncat_s(buf, BUFFER_SIZE, temp, 16);
-            }
-
-
-            if ((i % 10) == 0) { // Add newline for every 4 up/down/car elements and not at end
-                strncat_s(buf, BUFFER_SIZE, "\r\n", 2);
-            }
-            else {
-                strncat_s(buf, BUFFER_SIZE, ", ", 2);
-            }
-        }
-        ui_internal_printf("%s", buf);
+        on_click_show_io_list();
     }
+
+    if (id == SAVE_PRINT) {
+        ui_logbox_save_content_to_file();
+    }
+
+    //    case RESET:  //TODO
+    //app_reset(hWnd);
+    //app_init(hWnd, param2);
+    //break;
+
+    if (id == STOP_LOG) {
+        ui63_stop_logging();
+    }
+
+
+
+//case OPEN_DOOR:
+//    sim_door_set_cmd(&_door1, ENUM_DOOR_CMD_OPEN);
+//    ui_internal_printf("Manually open the door.") break;
+//
+//case CLOSE_DOOR:
+//    sim_door_set_cmd(&_door1, ENUM_DOOR_CMD_CLOSE);
+//    ui_internal_printf("Manually close the door.") break;
+//
+//case HOLD_DOOR:
+//    sim_door_set_cmd(&_door1, ENUM_DOOR_CMD_NONE);
+//    ui_internal_printf("Manually hold the door.");
+//    break;
 }
      
 

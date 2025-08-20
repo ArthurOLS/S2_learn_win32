@@ -21,7 +21,7 @@
 /*******************************************************************************
 ************************************ Includes **********************************
 *******************************************************************************/
-#include "../00-app/top_config.h"
+#include "00-app/top_config.h"
 
 
 /*******************************************************************************
@@ -178,11 +178,11 @@
 #define UI_CAR_FILL_COLOR               0x00d7ff // 0=No fill, other=color code in 0xBBGGRR, 0xffa080=pale blue, 0x00d7ff=gold
 // Door boxes
 #define UI_DOOR_W                       32
-#define UI_DOOR_H                       40
+#define UI_DOOR_H                       35
 #define UI_DOOR_FILL_COLOR              0x0000af // in 0xBBGGRR
 // Ground line (horizon)
 #define UI_GROUND_LINE_X_LEFT           0
-#define UI_GROUND_LINE_X_RIGHT          (UI_GROUND_LINE_X_LEFT + 150) // full width of the block
+#define UI_GROUND_LINE_X_RIGHT          (UI_LIMIT_X) // full width of the block
 
 /*******************************************************************************
 ********************************* Exported macro *******************************

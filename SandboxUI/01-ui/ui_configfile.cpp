@@ -33,9 +33,8 @@
 
 #include <direct.h> //_mkdir()
 
-#include "../00-app/top_config.h"
-#include "ui_configfile.h"
 #include "ui.h"
+#include "ui_configfile.h"
 #include "ui_logbox.h"
 
 /*******************************************************************************

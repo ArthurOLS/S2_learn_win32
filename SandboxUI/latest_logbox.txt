@@ -1,0 +1,25 @@
+
+[0 UI]: client area window size w=1521,h=911.
+***********************************************
+-Config.ini parameters: (default value)
+ - WindowX=10 (0).
+ - WindowY=-20 (0).
+ - Mode=148 (0).
+***********************************************
+
+[0 UI]: Start logging into 'logs/log_2025-08-20_16-02-36.csv'.
+[0 UI]: ---Event id=41
+[0 UI]: ---Event id=45
+[0 UI]: ---Event id=49
+[0 UI]: ---Event id=53
+[0 UI]: ---Event id=56
+[0 UI]: ---Event id=59
+[0 UI]: ---Event id=65
+[0 UI]: ---Event id=68
+[0 UI]: ---Event id=71
+[0 UI]: ---Event id=81
+[0 UI]: ---Event id=87
+[0 UI]: ---Event id=90
+[0 UI]: ---sees 12 events in loop 1.
+[6 UI]: Logging is stopped.
+[9 UI]: ---- save logbox printing contents to .txt file.

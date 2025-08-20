@@ -23,8 +23,8 @@
 *******************************************************************************/
 #include <Windows.h>
 #include "button_id.h"
-#include "../00-app/top_config.h"
-#include "../00-app/top_datatype.h"
+#include "00-app/top_config.h"
+#include "00-app/top_datatype.h"
 #include "ui_config.h"
 // clang-format off
 
@@ -101,7 +101,10 @@ typedef struct {
 *************************** Exported global variables **************************
 *******************************************************************************/
 
-extern DISP_STRU disp_stru;
+extern DISP_STRU            disp_stru;
+extern UI_INPUT_STRU        ui_input;
+
+
 
 /*******************************************************************************
 ******************************* Exported functions *****************************

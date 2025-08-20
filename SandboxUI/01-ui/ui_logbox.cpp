@@ -125,9 +125,11 @@ void ui_logbox_printf(const char* fmt, ...) {
  * @return xxxx
  *******************************************************************************/
 void ui_logbox_save_content_to_file(void) {
+    ui_internal_printf("---- save logbox printing contents to .txt file.")
+
     int len = GetWindowTextLengthA(__hlogbox);
     if (len < 100) {
-        ui_internal_printf("---- E: %d, <100 words, no need to save.", len);
+        ui_internal_printf("---- E: %d, <100B, no need to save.", len);
         return;
     }
     if (len > UI_LOGBOX_MAX_SAVE_BYTES) {
@@ -143,7 +145,7 @@ void ui_logbox_save_content_to_file(void) {
         fwrite(__save_buffer, sizeof(char), len, file);
         fclose(file);
 
-        ui_internal_printf("---- OK: save %d words to %s.", len, filename);
+        ui_internal_printf("---- OK: save %dB to %s.", len, filename);
     }
     else {
         ui_internal_printf("---- NG: failed to save logbox.");

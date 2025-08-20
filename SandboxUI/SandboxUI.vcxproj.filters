@@ -42,26 +42,17 @@
     <ClInclude Include="01-ui\button_id.h">
       <Filter>01-ui</Filter>
     </ClInclude>
-    <ClInclude Include="00-app\top_config.h">
-      <Filter>00-app</Filter>
-    </ClInclude>
     <ClInclude Include="01-ui\ui_lowlevel.h">
       <Filter>01-ui</Filter>
     </ClInclude>
     <ClInclude Include="01-ui\ui_logbox.h">
       <Filter>01-ui</Filter>
     </ClInclude>
-    <ClInclude Include="00-app\top_datatype.h">
-      <Filter>00-app</Filter>
-    </ClInclude>
     <ClInclude Include="01-ui\ui_animation.h">
       <Filter>01-ui</Filter>
     </ClInclude>
     <ClInclude Include="01-ui\ui_config.h">
       <Filter>01-ui</Filter>
-    </ClInclude>
-    <ClInclude Include="00-app\top_sim_constants.h">
-      <Filter>00-app</Filter>
     </ClInclude>
     <ClInclude Include="01-ui\ui_labelbox.h">
       <Filter>01-ui</Filter>
@@ -71,6 +62,18 @@
     </ClInclude>
     <ClInclude Include="01-ui\ui_configfile.h">
       <Filter>01-ui</Filter>
+    </ClInclude>
+    <ClInclude Include="01-ui\ui_app.h">
+      <Filter>01-ui</Filter>
+    </ClInclude>
+    <ClInclude Include="00-app\top_config.h">
+      <Filter>00-app</Filter>
+    </ClInclude>
+    <ClInclude Include="00-app\top_datatype.h">
+      <Filter>00-app</Filter>
+    </ClInclude>
+    <ClInclude Include="00-app\top_sim_constants.h">
+      <Filter>00-app</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -101,14 +104,17 @@
     <ClCompile Include="01-ui\ui_labelbox.cpp">
       <Filter>01-ui</Filter>
     </ClCompile>
-    <ClCompile Include="00-app\top_sim_constants.c">
-      <Filter>00-app</Filter>
-    </ClCompile>
     <ClCompile Include="01-ui\ui_logfile.cpp">
       <Filter>01-ui</Filter>
     </ClCompile>
     <ClCompile Include="01-ui\ui_configfile.cpp">
       <Filter>01-ui</Filter>
+    </ClCompile>
+    <ClCompile Include="01-ui\ui_app.cpp">
+      <Filter>01-ui</Filter>
+    </ClCompile>
+    <ClCompile Include="00-app\top_sim_constants.c">
+      <Filter>00-app</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

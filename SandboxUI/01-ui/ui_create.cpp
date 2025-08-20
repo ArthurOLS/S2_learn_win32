@@ -21,7 +21,6 @@
 
 #include <windows.h>
 
-#include "../00-app/top_config.h"
 #include "ui.h"
 #include "ui_lowlevel.h"
 #include "ui_logbox.h"
@@ -55,51 +54,51 @@ BUTTON_STRU button_output[] = {
 
 BUTTON_STRU button_hop[] = {
     { L"__SKIP", 0, 0 }, //'__SKIP' means the button invisiable
-    { L"10🔻", H10DN, 0 },
+    { L"10🔻", ID_10_DOWN, 0 },
 
-    { L"9🔺", H9UP, 0 },
-    { L"9🔻", H9DN, 0 },
+    { L"9🔺", ID_09_UP, 0 },
+    { L"9🔻", ID_09_DOWN, 0 },
 
-    { L"8🔺", H8UP, 0 },
-    { L"8🔻", H8DN, 0 },
+    { L"8🔺", ID_08_UP, 0 },
+    { L"8🔻", ID_08_DOWN, 0 },
 
-    { L"7🔺", H7UP, 0 },
-    { L"7🔻", H7DN, 0 },
+    { L"7🔺", ID_07_UP, 0 },
+    { L"7🔻", ID_07_DOWN, 0 },
 
-    { L"6🔺", H6UP, 0 },
-    { L"6🔻", H6DN, 0 },
+    { L"6🔺", ID_06_UP, 0 },
+    { L"6🔻", ID_06_DOWN, 0 },
 
-    { L"5🔺", H5UP, 0 },
-    { L"5🔻", H5DN, 0 },
+    { L"5🔺", ID_05_UP, 0 },
+    { L"5🔻", ID_05_DOWN, 0 },
 
-    { L"4🔺", H4UP, 0 },
-    { L"4🔻", H4DN, 0 },
+    { L"4🔺", ID_04_UP, 0 },
+    { L"4🔻", ID_04_DOWN, 0 },
 
-    { L"3🔺", H3UP, 0 },
-    { L"3🔻", H3DN, 0 },
+    { L"3🔺", ID_03_UP, 0 },
+    { L"3🔻", ID_03_DOWN, 0 },
 
-    { L"2🔺", H2UP, 0 },
-    { L"2🔻", H2DN, 0 },
+    { L"2🔺", ID_02_UP, 0 },
+    { L"2🔻", ID_02_DOWN, 0 },
 
-    { L"1🔺", H1UP, 0 },
+    { L"1🔺", ID_01_UP, 0 },
 };
 
 BUTTON_STRU button_cop1[] = {
-    { L"12", CF12, 0 },
-    { L"11", CF11, 0 },    
-    { L"10", CF10, 0 },
-    { L"9", CF9, 0 },
-    { L"8", CF8, 0 },
-    { L"7", CF7, 0 },
-    { L"6", CF6, 0 },
-    { L"5", CF5, 0 },
-    { L"4", CF4, 0 },
-    { L"3", CF3, 0 },
-    { L"2", CF2, 0 },
-    { L"1", CF1, 0 },
+    { L"12", ID_12_CAR, 0 },
+    { L"11", ID_11_CAR, 0 },    
+    { L"10", ID_10_CAR, 0 },
+    { L"9", ID_09_CAR, 0 },
+    { L"8", ID_08_CAR, 0 },
+    { L"7", ID_07_CAR, 0 },
+    { L"6", ID_06_CAR, 0 },
+    { L"5", ID_05_CAR, 0 },
+    { L"4", ID_04_CAR, 0 },
+    { L"3", ID_03_CAR, 0 },
+    { L"2", ID_02_CAR, 0 },
+    { L"1", ID_01_CAR, 0 },
 
-    { L"OPEN DOOR", D1_OPEN, 0 },
-    { L"CLOSE DOOR ", D1_CLOSE, 0 },
+    { L"OPEN DOOR", ID_DOOR1_OPEN, 0 },
+    { L"CLOSE DOOR ", ID_DOOR1_CLOSE, 0 },
 
 };
 
@@ -263,7 +262,7 @@ void ui_create_button_cop1(HWND hwnd, int gx, int gy, int bw, int bh) {
     for (int i = 0; i < num; i++) {
         HWND b1;
         DWORD style;
-        if (button_cop1[i].id == D1_CLOSE || button_cop1[i].id == D1_OPEN) {
+        if (button_cop1[i].id == ID_DOOR1_CLOSE || button_cop1[i].id == ID_DOOR1_OPEN) {
             style = WS_VISIBLE | WS_CHILD | WS_BORDER;
         }
         else {
@@ -276,7 +275,7 @@ void ui_create_button_cop1(HWND hwnd, int gx, int gy, int bw, int bh) {
             hwnd, (HMENU)(INT_PTR)(button_cop1[i].id), NULL, NULL);
         ui10_apply_font_to_control(b1, UI_FONT_9PT);
 
-        if (button_cop1[i].id == D1_CLOSE || button_cop1[i].id == D1_OPEN) {
+        if (button_cop1[i].id == ID_DOOR1_CLOSE || button_cop1[i].id == ID_DOOR1_OPEN) {
             style = WS_VISIBLE | WS_CHILD;
             SetWindowSubclass(b1, ui_callback_type_continuous, 1, 0);
         }

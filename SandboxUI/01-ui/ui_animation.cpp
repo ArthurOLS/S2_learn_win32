@@ -21,8 +21,6 @@
 #include <windows.h>
 #include <stdio.h>
 
-#include "../00-app/top_config.h"
-#include "../00-app/top_datatype.h"
 #include "ui.h" 
 #include "ui_logbox.h"
 
@@ -64,7 +62,7 @@
 /*******************************************************************************
  * @brief  draw car box with a floor line
  * @param  x: block left,
-           y: _ui_control_stru.car_box_y;
+           y: _ui_presenter.car_box_y;
  * @param  is_idle:  disp->lv1_state == LV1_STATE_IDLE
  * @return xxxx
  *******************************************************************************/
@@ -82,10 +80,18 @@ void ui32_draw_cab_box(HDC hdc, int x, int y, bool is_idle) {
     HBRUSH hOldBrush = (HBRUSH)SelectObject(hdc, GetStockObject(NULL_BRUSH)); // No fill for border
     //[1] Draw the rectangle border
     Rectangle(hdc, r.left, r.top, r.right, r.bottom);
+
+
     //[2] draw a horizon line on bottom of the box...
     MoveToEx(hdc, r.left-1, y, NULL);    // Start at bottom-right
     LineTo(hdc, x+UI_LIMIT_X, y);   //connect to the 'final limits line'
-    
+    //[1.2] draw a label
+    char label[8] = "";
+    int labelY = y;
+    sprintf_s(label, "Y:%d", labelY); //
+    //TextOutA(hdc, x, y+20, label, (int)strlen(label));    
+    DrawTextA(hdc, label, -1, &r, DT_CENTER | DT_TOP | DT_NOPREFIX);
+    //clean up
     SelectObject(hdc, hOldPen);// Restore old objects and clean up
     SelectObject(hdc, hOldBrush);
     DeleteObject(hPen);
@@ -94,8 +100,8 @@ void ui32_draw_cab_box(HDC hdc, int x, int y, bool is_idle) {
 /*******************************************************************************
  * @brief  draw car door frame (hollow box) and opening (color filling)
  * @param  x: block x
- * @param  car_y: _ui_control_stru.car_box_y;
- * @param  opening: _ui_control_stru.door_opening_width
+ * @param  car_y: _ui_presenter.car_box_y;
+ * @param  opening: _ui_presenter.door_opening_width
  * @return xxxx
  *******************************************************************************/
 void ui36_draw_door(HDC hdc, int x, int car_y, int opening) {

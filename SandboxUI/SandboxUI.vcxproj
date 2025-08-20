@@ -104,6 +104,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <AdditionalIncludeDirectories>$(ProjectDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -132,6 +133,7 @@
     <ClInclude Include="00-app\top_datatype.h" />
     <ClInclude Include="00-app\top_sim_constants.h" />
     <ClInclude Include="01-ui\button_id.h" />
+    <ClInclude Include="01-ui\ui_app.h" />
     <ClInclude Include="01-ui\ui_configfile.h" />
     <ClInclude Include="01-ui\ui_logfile.h" />
     <ClInclude Include="01-ui\ui.h" />
@@ -148,6 +150,7 @@
   <ItemGroup>
     <ClCompile Include="00-app\app.cpp" />
     <ClCompile Include="00-app\top_sim_constants.c" />
+    <ClCompile Include="01-ui\ui_app.cpp" />
     <ClCompile Include="01-ui\ui_configfile.cpp" />
     <ClCompile Include="01-ui\ui_logfile.cpp" />
     <ClCompile Include="01-ui\ui.cpp" />

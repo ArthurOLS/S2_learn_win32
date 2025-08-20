@@ -23,8 +23,7 @@
 #include "ui.h"
 #include "ui_lowlevel.h"
 #include <stdio.h>
-#include "../00-app/top_sim_constants.h"
-#include "../00-app/top_config.h"
+#include "00-app/top_sim_constants.h"
 
 /*******************************************************************************
 ******************************** Private typedef *******************************
