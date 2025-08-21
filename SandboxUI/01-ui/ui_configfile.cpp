@@ -28,14 +28,13 @@
 ************************************ Includes **********************************
 *******************************************************************************/
 
-#include <windows.h>
-#include <stdio.h>
+#include <stdint.h> //to use int32_t type
+#include <windows.h> //to use HWND
+#include <stdio.h> //use sprintf()
 
 #include <direct.h> //_mkdir()
 
-#include "ui.h"
-#include "ui_configfile.h"
-#include "ui_logbox.h"
+#include "ui_logbox.h"//use ui_printf()
 
 /*******************************************************************************
 ******************************** Private typedef *******************************

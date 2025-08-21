@@ -72,7 +72,13 @@
     <ClInclude Include="00-app\top_datatype.h">
       <Filter>00-app</Filter>
     </ClInclude>
-    <ClInclude Include="00-app\top_sim_constants.h">
+    <ClInclude Include="00-app\top_sim_datatype.h">
+      <Filter>00-app</Filter>
+    </ClInclude>
+    <ClInclude Include="00-app\top_core_datatype.h">
+      <Filter>00-app</Filter>
+    </ClInclude>
+    <ClInclude Include="00-app\top.h">
       <Filter>00-app</Filter>
     </ClInclude>
   </ItemGroup>
@@ -113,7 +119,10 @@
     <ClCompile Include="01-ui\ui_app.cpp">
       <Filter>01-ui</Filter>
     </ClCompile>
-    <ClCompile Include="00-app\top_sim_constants.c">
+    <ClCompile Include="00-app\top_sim_datatype.c">
+      <Filter>00-app</Filter>
+    </ClCompile>
+    <ClCompile Include="00-app\top_core_datatype.c">
       <Filter>00-app</Filter>
     </ClCompile>
   </ItemGroup>

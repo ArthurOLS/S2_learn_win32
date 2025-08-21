@@ -19,12 +19,13 @@
 /*******************************************************************************
 ************************************ Includes **********************************
 *******************************************************************************/
+#include <stdint.h> //to use int32_t type
+#include <windows.h> //to use HWND
 #include <stdio.h>
+
 #include <time.h>
 #include <string.h>
 #include <direct.h> //_mkdir()
-
-#include "ui.h"
 #include <tchar.h>
 
 #include "ui_logbox.h"

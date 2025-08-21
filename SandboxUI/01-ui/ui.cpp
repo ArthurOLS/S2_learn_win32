@@ -18,16 +18,14 @@
 ************************************ Includes **********************************
 *******************************************************************************/
 
-#include "./../framework.h" //include file for standard system include files,
+//#include "./../framework.h" //include file for standard system include files,
 #include <stdint.h> //to use int32_t type
-#include <windows.h>
-#include <stdio.h>
-#include <commctrl.h> // For SetWindowSubclass, DefSubclassProc
-#pragma comment(lib, "comctl32.lib")//DefSubclassProc is not part of the core Windows API (windows.h), but part of the Common Controls Library; This library provides the actual implementation of functions declared in commctrl.h.
+#include <windows.h> //to use HWND
+#include <stdio.h> //use sprintf()
 
-
-#include "00-app/top_sim_constants.h"
-#include "ui.h"
+#include "00-app/top.h"
+#include "button_id.h"
+#include "ui.h" //to use ui datatype
 #include "ui_lowlevel.h"
 #include "ui_logbox.h"
 #include "ui_animation.h"
@@ -35,6 +33,9 @@
 #include "ui_logfile.h"
 #include "ui_configfile.h"
 #include "ui_app.h"
+
+#include <commctrl.h> // For SetWindowSubclass, DefSubclassProc
+#pragma comment(lib, "comctl32.lib")//DefSubclassProc is not part of the core Windows API (windows.h), but part of the Common Controls Library; This library provides the actual implementation of functions declared in commctrl.h.
 
 /*******************************************************************************
 ******************************** Private typedef *******************************
@@ -279,9 +280,10 @@ void ui2_init(HWND hwnd) {
 /*******************************************************************************
  * @brief  called in WM_PAINT event by WndProc()
  * @param  hdc, where to draw
+ *         int car_height_mm, car real time postion, in mm.
  * @return xxxx
  *******************************************************************************/
-void ui3_draw_all(HDC hdc) {
+void ui3_draw_all(HDC hdc ) {
 
     _ui_presenter.run_cnt++;
 
@@ -294,6 +296,43 @@ void ui3_draw_all(HDC hdc) {
     ui35_draw_floors(hdc, UI_ANIMATION_X, UI_GROUND_Y);
     ui36_draw_door(hdc, UI_ANIMATION_X, _ui_presenter.car_box_y, _ui_presenter.door_opening_width);
 
+
+}
+
+
+void ui3_doublebuffer_paint(HWND hWnd, int car_height_mm) {
+    PAINTSTRUCT ps;
+    HDC hdc = BeginPaint(hWnd, &ps);
+    // TODO: Add any drawing code that uses hdc here...
+
+    if (1) { // double buffer
+        // get entire client area - full window
+        RECT rc;
+        GetClientRect(hWnd, &rc);
+        int width = rc.right - rc.left;
+        int height = rc.bottom - rc.top;
+        // create a compatible memory device context
+        HDC memDC = CreateCompatibleDC(hdc);                            // buffer
+        HBITMAP memBitmap = CreateCompatibleBitmap(hdc, width, height); // bit map
+        HBITMAP oldBitmap = (HBITMAP)SelectObject(memDC, memBitmap);    // use this bitmap
+        FillRect(memDC, &rc, (HBRUSH)(COLOR_WINDOW + 1));               // fill background in memory device context
+
+        // draw everything into the memory device context
+        // #########################################
+        ui3_draw_all(memDC);
+        // #########################################
+        // draw debug rectangles into memory device context
+        RECT rec_car_region = ui_ani_get_rec_car_region(car_height_mm);
+        RECT rec_labels_region = ui_ani_get_rec_labels_region();
+        ui_draw_invalidate_rect_area_debug(memDC, &rec_car_region);  // DEBUG TOOL
+        ui_draw_invalidate_rect_area_debug(memDC, &rec_labels_region); // DEBUG TOOL
+
+        BitBlt(hdc, 0, 0, width, height, memDC, 0, 0, SRCCOPY); // blit the memory device context to the screen
+        SelectObject(memDC, oldBitmap);                         // restore old bit map
+        DeleteObject(memBitmap);                                // delete memBitmap
+        DeleteDC(memDC);                                        // delete memory device context
+    }
+    EndPaint(hWnd, &ps);
 }
 
 

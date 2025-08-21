@@ -18,12 +18,14 @@
 ************************************ Includes **********************************
 *******************************************************************************/
 
-#include <windows.h>
+#include <stdint.h> //to use int32_t type
+#include <windows.h> //to use HWND
+#include <stdio.h> //use sprintf()
 
-#include "ui.h"
-#include "ui_lowlevel.h"
-#include <stdio.h>
-#include "00-app/top_sim_constants.h"
+#include "00-app/top.h"
+#include "button_id.h"
+#include "ui.h" //to use ui datatype
+#include "ui_config.h"//UI_LABELBOX_X
 
 /*******************************************************************************
 ******************************** Private typedef *******************************

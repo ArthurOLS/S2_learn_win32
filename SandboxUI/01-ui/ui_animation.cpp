@@ -18,11 +18,12 @@
 /*******************************************************************************
 ************************************ Includes **********************************
 *******************************************************************************/
-#include <windows.h>
-#include <stdio.h>
+#include <stdint.h> //to use int32_t type
+#include <windows.h> //to use HWND
+#include <stdio.h> //use sprintf()
 
-#include "ui.h" 
-#include "ui_logbox.h"
+#include "00-app/top.h"
+#include "ui_config.h"
 
 /*******************************************************************************
 ******************************** Private typedef *******************************
@@ -257,6 +258,57 @@ int ui_convert_door_opening(int per) {
 }
 
 
+
+/*******************************************************************************
+ * @brief  get the rec of the car, which is a little wider
+ * @param  car1_height;   // mm, -1000... 30000
+ * @return xxxx
+ *******************************************************************************/
+RECT ui_ani_get_rec_car_region(int car1_height) { 
+    int car_bottom_y = ui_convert_car_y_pix(car1_height);
+    RECT rec_car_region = {
+        UI_ANIMATION_X + UI_CAR_X - 9,
+        car_bottom_y - UI_CAR_H - 5,
+        UI_ANIMATION_X + UI_CAR_X + UI_CAR_W + 5,
+        car_bottom_y + 5
+    };
+
+    return rec_car_region;
+}
+  
+
+/*******************************************************************************
+ * @brief  get the rec of the lable (box1 and 2)
+ * @param  xxxx
+ * @return xxxx
+ *******************************************************************************/
+RECT ui_ani_get_rec_labels_region(void) {
+    // label redraw region
+    RECT rec_labels_region = {
+        UI_LABELBOX_X - 2,
+        UI_LABELBOX_Y - 2,
+        UI_LABELBOX_X + UI_LABELBOX_W + UI_GAP + UI_LABELBOX2_W + 2,
+        UI_LABELBOX_Y + UI_LABELBOX_H + 2
+    };
+
+    return rec_labels_region;
+}
+        
+
+/*******************************************************************************
+ * @brief  invalidate car and lable rectangles to enable animation
+ * @param  car1_height;   // mm, -1000... 30000
+ * @param  xxxx
+ * @return xxxx
+ *******************************************************************************/
+void ui_ani_invaldate_rec(HWND hWnd, int car1_height) {
+    RECT car = ui_ani_get_rec_car_region(car1_height);
+    RECT labels = ui_ani_get_rec_labels_region();
+
+    InvalidateRect(hWnd, &car, TRUE);     // True=erase background,
+    InvalidateRect(hWnd, &labels, FALSE); // only invalidate the custom label box area
+}
+        
 
 
 

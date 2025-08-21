@@ -129,9 +129,11 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="00-app\app.h" />
+    <ClInclude Include="00-app\top.h" />
     <ClInclude Include="00-app\top_config.h" />
+    <ClInclude Include="00-app\top_core_datatype.h" />
     <ClInclude Include="00-app\top_datatype.h" />
-    <ClInclude Include="00-app\top_sim_constants.h" />
+    <ClInclude Include="00-app\top_sim_datatype.h" />
     <ClInclude Include="01-ui\button_id.h" />
     <ClInclude Include="01-ui\ui_app.h" />
     <ClInclude Include="01-ui\ui_configfile.h" />
@@ -149,7 +151,8 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="00-app\app.cpp" />
-    <ClCompile Include="00-app\top_sim_constants.c" />
+    <ClCompile Include="00-app\top_core_datatype.c" />
+    <ClCompile Include="00-app\top_sim_datatype.c" />
     <ClCompile Include="01-ui\ui_app.cpp" />
     <ClCompile Include="01-ui\ui_configfile.cpp" />
     <ClCompile Include="01-ui\ui_logfile.cpp" />

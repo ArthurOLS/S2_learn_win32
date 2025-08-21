@@ -21,8 +21,8 @@
 #include <windows.h>
 #include <stdint.h>
 #include <stdio.h> //file operation
+
 #include "ui_logbox.h" //it self
-#include "ui.h" //to use ui_internal_printf()
 #include "ui_lowlevel.h"
 
 /*******************************************************************************

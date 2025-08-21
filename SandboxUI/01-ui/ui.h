@@ -21,13 +21,11 @@
 /*******************************************************************************
 ************************************ Includes **********************************
 *******************************************************************************/
-#include <Windows.h>
-#include "button_id.h"
-#include "00-app/top_config.h"
-#include "00-app/top_datatype.h"
-#include "ui_config.h"
-// clang-format off
 
+// clang-format off
+//Need to include "top_config.h".
+//Need to include "button_id.h".
+#include "button_id.h"
 
 /*******************************************************************************
 ********************************* Exported macro *******************************
@@ -120,6 +118,7 @@ LRESULT CALLBACK ui_callback_type_continuous(HWND hwnd, UINT uMsg, WPARAM wParam
 
 void ui2_init(HWND hwnd);
 void ui3_draw_all(HDC hdc);
+void ui3_doublebuffer_paint(HWND hWnd, int car_height_mm);
 void ui4_test_loop_example();
 
 

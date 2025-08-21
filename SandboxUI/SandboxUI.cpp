@@ -6,9 +6,11 @@
 /*******************************************************************************
 ************************************ Includes **********************************
 *******************************************************************************/
-#include "01-ui/ui.h"
-#include "01-ui/ui_logbox.h"
+#include "00-app/top.h"
+#include "01-ui/button_id.h"
+#include "01-ui/ui.h" //to use ui datatype#include "01-ui/ui_logbox.h"
 #include "01-ui/ui_animation.h"
+#include "01-ui/ui_logbox.h"
 
 
 #define MAX_LOADSTRING 100
@@ -103,10 +105,13 @@ ATOM MyRegisterClass(HINSTANCE hInstance)
 BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
 {
    hInst = hInstance; // Store instance handle in our global variable
-
+   // #########################################
    HWND hWnd = CreateWindowW(szWindowClass, szTitle, WS_OVERLAPPEDWINDOW,
-       0 /*WINDOWS_START_X*/, 0 /*WINDOWS_START_Y*/, WINDOWS_WIDTH+12, WINDOWS_HEIGHT+5, nullptr, nullptr, hInstance, nullptr);
-
+       0 /*WINDOWS_START_X*/, 0 /*WINDOWS_START_Y*/, 
+       WINDOWS_WIDTH+12, 
+       WINDOWS_HEIGHT+5, 
+       nullptr, nullptr, hInstance, nullptr);
+   // #########################################
    if (!hWnd)
    {
       return FALSE;
@@ -130,23 +135,7 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
 //
 LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
-    int car_bottom_y = ui_convert_car_y_pix(disp_stru.car1_height);
-    const RECT rec_car_region = {
-        UI_ANIMATION_X + UI_CAR_X - 10,
-        car_bottom_y - UI_CAR_H - 5,
-        UI_ANIMATION_X + UI_CAR_X + UI_CAR_W + 5,
-        car_bottom_y + 5
-    };
-
-
-    // label redraw region
-    const RECT rec_labels_region = {
-        UI_LABELBOX_X-2,
-        UI_LABELBOX_Y-2,
-        UI_LABELBOX_X + UI_LABELBOX_W + UI_GAP + UI_LABELBOX2_W+2, 
-        UI_LABELBOX_Y + UI_LABELBOX_H + 2
-    };
-
+    int car_height_mm = disp_stru.car1_height;
 
     switch (message)
     {
@@ -154,12 +143,13 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
         {
             int wmId = LOWORD(wParam);
             // Parse the menu selections
+            // #########################################
             if (HIWORD(wParam) == BN_CLICKED) {
                 ui_callback_type_click(wmId);
                 ui_callback_type_radio(wmId);
                 ui_callback_type_lock_step1(hWnd, wmId); //there're only 3 lock-type buttons
             }
-
+            // #########################################
 
             switch (wmId)
             {
@@ -176,45 +166,23 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
         }
         break;
     case WM_DRAWITEM: { //wParam:the control's ID (like BUTTON_ID_UP); lParam:a pointer to a DRAWITEMSTRUCT struct
+        //#########################################
         ui_callback_type_lock_step2((LPDRAWITEMSTRUCT)lParam);
         ui_callback_type_led((LPDRAWITEMSTRUCT)lParam);
+        // #########################################
         return TRUE; // always return TRUE
     }
     case WM_PAINT:
-        {
-            PAINTSTRUCT ps;
-            HDC hdc = BeginPaint(hWnd, &ps);
-            // TODO: Add any drawing code that uses hdc here...
-            
-            if(1){ // double buffer
-                // get entire client area - full window
-                RECT rc;
-                GetClientRect(hWnd, &rc);
-                int width = rc.right - rc.left;
-                int height = rc.bottom - rc.top;
-                // create a compatible memory device context
-                HDC memDC = CreateCompatibleDC(hdc);                            // buffer
-                HBITMAP memBitmap = CreateCompatibleBitmap(hdc, width, height); // bit map
-                HBITMAP oldBitmap = (HBITMAP)SelectObject(memDC, memBitmap);    // use this bitmap
-                FillRect(memDC, &rc, (HBRUSH)(COLOR_WINDOW + 1));               // fill background in memory device context
+        // #########################################
+        ui3_doublebuffer_paint(hWnd, car_height_mm);
 
-                // draw everything into the memory device context
-                ui3_draw_all(memDC);
-                // draw debug rectangles into memory device context
-                ui_draw_invalidate_rect_area_debug(memDC, &rec_car_region); // DEBUG TOOL
-                ui_draw_invalidate_rect_area_debug(memDC, &rec_labels_region); // DEBUG TOOL
-
-                BitBlt(hdc, 0, 0, width, height, memDC, 0, 0, SRCCOPY); // blit the memory device context to the screen
-                SelectObject(memDC, oldBitmap);                         // restore old bit map
-                DeleteObject(memBitmap);                                // delete memBitmap
-                DeleteDC(memDC);                                        // delete memory device context
-            }
-            EndPaint(hWnd, &ps);
-        }
+        // #########################################
         break;
 
-    case WM_CREATE: //************
+    case WM_CREATE: 
+        // #########################################
         ui2_init(hWnd);
+        // #########################################
         break;
     case WM_DESTROY:
         PostQuitMessage(0);
@@ -223,11 +191,12 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
     case WM_TIMER: // All timers go here.
         switch (wParam) {
         case IDT_TIMER_UI: {
+            // #########################################
             // ui_internal_printf("Invalidate %d, %d, %d, %d.", rec_car_region.left, rec_car_region.top, rec_car_region.right, rec_car_region.bottom);
-
             ui4_test_loop_example(); //handling model changes
-            InvalidateRect(hWnd, &rec_car_region, TRUE);     // True=erase background,
-            InvalidateRect(hWnd, &rec_labels_region, FALSE); // only invalidate the custom label box area
+            ui_ani_invaldate_rec(hWnd, car_height_mm);
+
+            // #########################################
         }
 
             break;
@@ -265,3 +234,5 @@ INT_PTR CALLBACK About(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
     }
     return (INT_PTR)FALSE;
 }
+
+/********************************* end of file ********************************/

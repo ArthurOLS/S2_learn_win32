@@ -22,8 +22,8 @@
 #include <stdio.h>
 #include "ui_lowlevel.h"
 #include <commctrl.h> // For SetWindowSubclass, DefSubclassProc
-#include "ui.h"
-#include "ui_logbox.h"
+
+#include "ui_config.h" // use UI_BUTTON_W_WIDE definition
 
 /*******************************************************************************
 ******************************** Private typedef *******************************
