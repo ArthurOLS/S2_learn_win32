@@ -82,16 +82,9 @@ void ui32_draw_cab_box(HDC hdc, int x, int y, bool is_idle) {
     //[1] Draw the rectangle border
     Rectangle(hdc, r.left, r.top, r.right, r.bottom);
 
-
     //[2] draw a horizon line on bottom of the box...
     MoveToEx(hdc, r.left-1, y, NULL);    // Start at bottom-right
     LineTo(hdc, x+UI_LIMIT_X, y);   //connect to the 'final limits line'
-    //[1.2] draw a label
-    char label[8] = "";
-    int labelY = y;
-    sprintf_s(label, "Y:%d", labelY); //
-    //TextOutA(hdc, x, y+20, label, (int)strlen(label));    
-    DrawTextA(hdc, label, -1, &r, DT_CENTER | DT_TOP | DT_NOPREFIX);
     //clean up
     SelectObject(hdc, hOldPen);// Restore old objects and clean up
     SelectObject(hdc, hOldBrush);
@@ -142,6 +135,21 @@ void ui36_draw_door(HDC hdc, int x, int car_y, int opening) {
     DeleteObject(hPen);
 }
 
+
+
+/*******************************************************************************
+ * @brief  draw text label on car box, center aligned.
+ * @param  x: block left,
+           y: _ui_presenter.car_box_y;
+ * @return xxxx
+ *******************************************************************************/
+void ui32_draw_cab_label(HDC hdc, int x, int y, char* text) {
+    RECT r = { x + UI_CAR_X, (y)-UI_CAR_H, x + UI_CAR_X + UI_CAR_W, y + 1 }; // l,t,r,b
+
+    DrawTextA(hdc, text, -1, &r, DT_CENTER | DT_TOP | DT_NOPREFIX);
+
+}
+        
 
 /*******************************************************************************
  * @brief  draw final limits: two red circles and a line conneting them

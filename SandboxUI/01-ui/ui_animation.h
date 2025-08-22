@@ -43,16 +43,17 @@
 /*******************************************************************************
 ******************************* Exported functions *****************************
 *******************************************************************************/
-extern void ui32_draw_cab_box(HDC hdc, int x, int y, bool is_idle);
-extern void ui34_draw_final_limits(HDC hdc, int x);
-extern void ui35_draw_floors(HDC hdc, int x, int y);
-extern void ui36_draw_door(HDC hdc, int x, int car_y, int opening);
-extern int  ui_convert_car_y_pix(int car_realtime_position_mm);
-extern int  ui_convert_door_opening(int per);
+void ui32_draw_cab_box(HDC hdc, int x, int y, bool is_idle);
+void ui34_draw_final_limits(HDC hdc, int x);
+void ui35_draw_floors(HDC hdc, int x, int y);
+void ui36_draw_door(HDC hdc, int x, int car_y, int opening);
+void ui32_draw_cab_label(HDC hdc, int x, int y, char* text);
+int ui_convert_car_y_pix(int car_realtime_position_mm);
+int  ui_convert_door_opening(int per);
 
-extern RECT ui_ani_get_rec_car_region(int car1_height);
-extern RECT ui_ani_get_rec_labels_region(void);
-extern void ui_ani_invaldate_rec(HWND hWnd, int car1_height);
+RECT ui_ani_get_rec_car_region(int car1_height);
+RECT ui_ani_get_rec_labels_region(void);
+void ui_ani_invaldate_rec(HWND hWnd, int car1_height);
 
 
 #if UI_DRAW_DEBUG_RED_BOX

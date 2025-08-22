@@ -308,8 +308,12 @@ void ui3_draw_all(HDC hdc ) {
     //when the car position data is not ready from outside, the car box is hidded.
     if ((SIM_SHAFT_FINAL_BOTTOM <= disp_stru.car1_height) && (disp_stru.car1_height < SIM_SHAFT_TOP_FINAL)) {
         bool car_is_idle = (disp_stru.lv1_state == LV1_STATE_IDLE);
+        char label[32] = "";
+        sprintf_s(label, "%d\n%.1f", disp_stru.car1_height, disp_stru.current_landing_f); 
         ui32_draw_cab_box(hdc, UI_ANIMATION_X, _ui_presenter.car_box_y, car_is_idle);
         ui36_draw_door(hdc, UI_ANIMATION_X, _ui_presenter.car_box_y, _ui_presenter.door_opening_width);
+        ui32_draw_cab_label(hdc, UI_ANIMATION_X, _ui_presenter.car_box_y, label);
+        
     }
     ui34_draw_final_limits(hdc, UI_ANIMATION_X);
     ui35_draw_floors(hdc, UI_ANIMATION_X, UI_GROUND_Y);
