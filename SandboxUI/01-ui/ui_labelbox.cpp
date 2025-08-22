@@ -71,7 +71,7 @@ void _print_binary_array(char* buf, size_t buf_size, const int call_table[][3]) 
         snprintf(temp, sizeof(temp), " %02d:%c%c%c", i + 1, c0, c1, c2);
 
         if (i > 0) {            // if it's not the first element, add a comma
-            if ((i % 6) == 0) { // Add newline for every 4 up/down/car elements and not at end
+            if ((i % 4) == 0) { // Add newline for every 4 up/down/car elements and not at end
                 strncat_s(buf, buf_size, "\r\n", 2);
             }
             else {
@@ -155,8 +155,8 @@ void ui31_draw_labelbox1(HDC hdc, DISP_STRU* disp, UINT64 run_ms) {
 
     //[2] draw the label
     RECT labelRect1 = { UI_LABELBOX_X, UI_LABELBOX_Y, UI_LABELBOX_X + UI_LABELBOX_W, UI_LABELBOX_Y + UI_LABELBOX_H };
-    extern HFONT g_hfont9;
-    SelectObject(hdc, g_hfont9);
+    extern HFONT g_hfont9_Consolas;
+    SelectObject(hdc, g_hfont9_Consolas);
     SetBkMode(hdc, TRANSPARENT);
     SetTextColor(hdc, RGB(0, 0, 0)); // black
     Rectangle(hdc, labelRect1.left, labelRect1.top, labelRect1.right, labelRect1.bottom);

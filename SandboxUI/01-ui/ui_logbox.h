@@ -49,7 +49,7 @@ void ui_logbox_clear_content();
 uint64_t ui_logbox_get_run_ms64();
 
 #define ui_internal_printf(...)                                         \
-    ui_logbox_printf("\r\n[%d UI]: ", (ui_logbox_get_run_ms64() / 1000)); \
+    ui_logbox_printf("\r\n[%03d UI]: ", (ui_logbox_get_run_ms64() / 1000)); \
     ui_logbox_printf(__VA_ARGS__);
 
 #endif /* __UI_LOGBOX_H */

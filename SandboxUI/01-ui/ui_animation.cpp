@@ -124,12 +124,12 @@ void ui36_draw_door(HDC hdc, int x, int car_y, int opening) {
     Rectangle(hdc, r.left, r.top, r.right, r.bottom);
 
     //[2]draw door slides
-    if (opening > 0) {//draw an rectangle of the opening
+    if (opening > 1) {//draw an rectangle of the opening
         LONG door_open = opening;
         RECT ro = { 
             r.left + 1, 
             car_y-UI_DOOR_H + 1, 
-            r.left + 1 + door_open, 
+            r.left + door_open, 
             car_y 
         }; // l,t,r,b
         HBRUSH hFillBrush = CreateSolidBrush(UI_DOOR_FILL_COLOR);
@@ -254,6 +254,9 @@ int ui_convert_car_y_pix(int car_realtime_position_mm) {
 int ui_convert_door_opening(int per) {
     int opening_width;
     opening_width = per * UI_DOOR_W / 100;
+    if (opening_width > UI_DOOR_W) {
+        opening_width = UI_DOOR_W;
+    }
     return opening_width;
 }
 

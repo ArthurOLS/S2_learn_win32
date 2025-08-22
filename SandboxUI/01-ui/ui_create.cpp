@@ -59,6 +59,12 @@ BUTTON_STRU button_output[] = {
 
 BUTTON_STRU button_hop[] = {
     { L"__SKIP", 0, 0 }, //'__SKIP' means the button invisiable
+    { L"12🔻", ID_TOP_DOWN, 0 },
+    
+    { L"11🔺", ID_11_UP, 0 },
+    { L"11🔻", ID_11_DOWN, 0 },
+    
+    { L"10🔺", ID_10_UP, 0 },
     { L"10🔻", ID_10_DOWN, 0 },
 
     { L"9🔺", ID_09_UP, 0 },
@@ -89,7 +95,7 @@ BUTTON_STRU button_hop[] = {
 };
 
 BUTTON_STRU button_cop1[] = {
-    { L"12", ID_12_CAR, 0 },
+    { L"12", ID_TOP_CAR, 0 },
     { L"11", ID_11_CAR, 0 },    
     { L"10", ID_10_CAR, 0 },
     { L"9", ID_09_CAR, 0 },

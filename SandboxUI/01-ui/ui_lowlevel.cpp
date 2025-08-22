@@ -41,7 +41,8 @@
 /*******************************************************************************
 ******************************* Private variables ******************************
 *******************************************************************************/
-HFONT g_hfont9 = NULL; // Nicer font to replace GDI default font
+HFONT g_hfont9_SegoeUI = NULL; // Nicer font to replace GDI default font
+HFONT g_hfont9_Consolas = NULL; // Nicer font to replace GDI default font
 HFONT g_hfont12 = NULL; // Nicer font to replace GDI default font
 
 /*******************************************************************************
@@ -86,20 +87,37 @@ void ui10_apply_font_to_control(HWND hwndTarget, int pt) {
         SendMessage(hwndTarget, WM_SETFONT, (WPARAM)hf, TRUE);
     }
 }
+void ui10_apply_font_to_control_consolas(HWND hwndTarget, int pt) {
+    int height; //negative value, -12=~9pt in my computer
+    height = -MulDiv(pt, GetDeviceCaps(GetDC(NULL), LOGPIXELSY), 72);
+    HFONT hf = CreateFont(
+        height, 
+        0, 0, 0, FW_NORMAL, // width, escapement, orientation, weight
+        FALSE, FALSE, FALSE, // italic, underline, strikeout
+        DEFAULT_CHARSET,OUT_DEFAULT_PRECIS,CLIP_DEFAULT_PRECIS,CLEARTYPE_QUALITY,DEFAULT_PITCH | FF_DONTCARE,
+        L"Consolas");
+
+    if (hf && hwndTarget) {
+        SendMessage(hwndTarget, WM_SETFONT, (WPARAM)hf, TRUE);
+    }
+}
 
 void ui_create_font9() {
     int height; // negative value, -12=~9pt in my computer
     height = -MulDiv(9, GetDeviceCaps(GetDC(NULL), LOGPIXELSY), 72);
-    g_hfont9 = CreateFont(
+    g_hfont9_SegoeUI = CreateFont(
         height,
         0, 0, 0, FW_NORMAL,  // width, escapement, orientation, weight
         FALSE, FALSE, FALSE, // italic, underline, strikeout
-        DEFAULT_CHARSET,
-        OUT_DEFAULT_PRECIS,
-        CLIP_DEFAULT_PRECIS,
-        CLEARTYPE_QUALITY,
-        DEFAULT_PITCH | FF_DONTCARE,
+        DEFAULT_CHARSET,OUT_DEFAULT_PRECIS,CLIP_DEFAULT_PRECIS,CLEARTYPE_QUALITY,DEFAULT_PITCH | FF_DONTCARE,
         L"Segoe UI");
+
+    g_hfont9_Consolas = CreateFont(
+        height,
+        0, 0, 0, FW_NORMAL,  // width, escapement, orientation, weight
+        FALSE, FALSE, FALSE, // italic, underline, strikeout
+        DEFAULT_CHARSET, OUT_DEFAULT_PRECIS, CLIP_DEFAULT_PRECIS, CLEARTYPE_QUALITY, DEFAULT_PITCH | FF_DONTCARE,
+        L"Consolas");
 }
 
 

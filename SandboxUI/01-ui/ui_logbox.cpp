@@ -89,7 +89,7 @@ void ui_create_logbox(HWND hwnd, int x, int y, int w, int h, uint64_t set_start_
         x, y, w, h, // x, y, width, height (adjust as needed)
         hwnd, NULL, NULL, NULL);
 
-    ui10_apply_font_to_control(__hlogbox, 9);
+    ui10_apply_font_to_control_consolas(__hlogbox, 9);
 
     if (set_start_ts == 0){
         __start_time = GetTickCount64();
@@ -107,6 +107,18 @@ void ui_create_logbox(HWND hwnd, int x, int y, int w, int h, uint64_t set_start_
  * @return xxxx
  *******************************************************************************/
 void ui_logbox_printf(const char* fmt, ...) {
+    char buffer[512];
+
+    // Format the string using va_list
+    va_list args;
+    va_start(args, fmt);
+    vsnprintf(buffer, sizeof(buffer), fmt, args); // Safe version of sprintf
+    va_end(args);
+
+    _append_text_to_logbox_tail(buffer);
+}
+
+extern "C" void ui_logbox_printf_extern_c(const char* fmt, ...) {
     char buffer[512];
 
     // Format the string using va_list
@@ -174,6 +186,11 @@ void ui_logbox_clear_content() {
 uint64_t ui_logbox_get_run_ms64() {
     uint64_t ts = GetTickCount64() - __start_time;
     return ts; // overflow after ~49 days for u32, 580 million yrs for u64
+}
+
+extern "C" uint32_t ui_logbox_get_run_ms32_extern_c() {
+    uint64_t ts = GetTickCount64() - __start_time;
+    return (uint32_t)ts; // overflow after ~49 days for u32, 580 million yrs for u64
 }
 
 /********************************* end of file ********************************/

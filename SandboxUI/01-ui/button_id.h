@@ -40,7 +40,7 @@ typedef enum {
 
     //[GROUP1] button id for passengers
     ID_01_UP,  
-    ID_01_DOWN,
+    ID_01_DOWN, //first floor DOWN is a dummy IO.
     ID_01_CAR,         
     ID_02_UP,        
     ID_02_DOWN,        
@@ -69,8 +69,12 @@ typedef enum {
     ID_10_UP,
     ID_10_DOWN,
     ID_10_CAR,
+    ID_11_UP,
+    ID_11_DOWN,
     ID_11_CAR,
-    ID_12_CAR,
+    ID_TOP_UP, //top floor UP is a dummy IO.
+    ID_TOP_DOWN,
+    ID_TOP_CAR,
 
     ID_DOOR1_OPEN,
     ID_DOOR1_CLOSE,

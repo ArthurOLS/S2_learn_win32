@@ -49,6 +49,11 @@ typedef struct {
     uint32_t    ui_timer_cnt; //add in ui4_test_loop_example()
     int         run_cnt; // how many times ui has refreshed
 
+    //model data (for demo only)
+    int         car_pos_mm_demo;
+    int         door_pos_per_demo;
+
+    //presenter data
     int         door_opening_width; // 0..40 pix width
     int         car_box_y;          // the y position of cab box bottom line.
 
@@ -184,6 +189,9 @@ void _init_data(HWND hwnd) {
     SetTimer(hwnd, IDT_TIMER_UI, UI_PERIOD_MS, NULL);                       // 50ms(20Hz timer)
     _ui_presenter.ts_at_start = static_cast<uint32_t>(GetTickCount64()); // ui82_c_get_u_run_ms();
 
+    disp_stru.car1_height    = SIM_SHAFT_FINAL_BOTTOM -1;
+    disp_stru.door1_position = -1;
+
     ui_create_font9();
     //[4] Init ui_input structure
     // type-continuous
@@ -290,16 +298,21 @@ void ui2_init(HWND hwnd) {
 void ui3_draw_all(HDC hdc ) {
 
     _ui_presenter.run_cnt++;
+    _ui_presenter.car_box_y = ui_convert_car_y_pix(disp_stru.car1_height);
+    _ui_presenter.door_opening_width = ui_convert_door_opening(disp_stru.door1_position);
+
 
     ui31_draw_labelbox1(hdc, &disp_stru, ui_logbox_get_run_ms64());
     ui31_draw_labelbox2(hdc, &disp_stru);
 
-    bool car_is_idle = (disp_stru.lv1_state == LV1_STATE_IDLE);
-    ui32_draw_cab_box(hdc, UI_ANIMATION_X, _ui_presenter.car_box_y, car_is_idle);
+    //when the car position data is not ready from outside, the car box is hidded.
+    if ((SIM_SHAFT_FINAL_BOTTOM <= disp_stru.car1_height) && (disp_stru.car1_height < SIM_SHAFT_TOP_FINAL)) {
+        bool car_is_idle = (disp_stru.lv1_state == LV1_STATE_IDLE);
+        ui32_draw_cab_box(hdc, UI_ANIMATION_X, _ui_presenter.car_box_y, car_is_idle);
+        ui36_draw_door(hdc, UI_ANIMATION_X, _ui_presenter.car_box_y, _ui_presenter.door_opening_width);
+    }
     ui34_draw_final_limits(hdc, UI_ANIMATION_X);
     ui35_draw_floors(hdc, UI_ANIMATION_X, UI_GROUND_Y);
-    ui36_draw_door(hdc, UI_ANIMATION_X, _ui_presenter.car_box_y, _ui_presenter.door_opening_width);
-
 
 }
 
@@ -355,40 +368,39 @@ void ui4_test_loop_example() {
         //[1]update cab position pixel
         // int positionMM = disp_stru.car1_height;
         {
-            disp_stru.car1_height += 20;
-            if (disp_stru.car1_height > SIM_SHAFT_TOP_FINAL) {
-                disp_stru.car1_height = SIM_SHAFT_FINAL_BOTTOM;
+            _ui_presenter.car_pos_mm_demo += 20;
+            if (_ui_presenter.car_pos_mm_demo > SIM_SHAFT_TOP_FINAL) {
+                _ui_presenter.car_pos_mm_demo = SIM_SHAFT_FINAL_BOTTOM;
             }
+            disp_stru.car1_height = _ui_presenter.car_pos_mm_demo;
+            _ui_presenter.car_box_y = ui_convert_car_y_pix(disp_stru.car1_height);
         }
-        _ui_presenter.car_box_y = ui_convert_car_y_pix(disp_stru.car1_height);
 
         //[2]update door position
         {
-            disp_stru.door1_position += 1;
-            if (disp_stru.door1_position > 100) {
-                disp_stru.door1_position = 0;
+            _ui_presenter.door_pos_per_demo += 1;
+            if (_ui_presenter.door_pos_per_demo > 150) {
+                _ui_presenter.door_pos_per_demo = 0;
             }
+            disp_stru.door1_position = _ui_presenter.door_pos_per_demo;
+            _ui_presenter.door_opening_width = ui_convert_door_opening(disp_stru.door1_position);
         }
-        _ui_presenter.door_opening_width = ui_convert_door_opening(disp_stru.door1_position);
     }
 
     _input_process_2of2();//update last value for next cycle
 }
 
 
-void ui4_ani_loop() {
-    //_ui_presenter.ui_timer_cnt++;
-    //_input_process_1of2(); // events are generated here
 
-    //// your code to read the events and process your business logics here:
-    //{
-    //    //disp_stru.car1_height = ?
-    //    //disp_stru.door1_position = ?
-    //    _ui_presenter.car_box_y = ui_convert_car_y_pix(disp_stru.car1_height);
-    //    _ui_presenter.door_opening_width = ui_convert_door_opening(disp_stru.door1_position);
-    //}
+/*******************************************************************************
+ * @brief  update animation presenter data
+ * @param  car_pos_mm: in mm, from disp_stru.car1_height
+ * @param  door_opening_per: in percent, from disp_stru.door1_position
+ * @return xxxx
+ *******************************************************************************/
+void ui4_ani_presenter() {
 
-    //_input_process_2of2(); // update last value for next cycle
+
 }
 
 /*******************************************************************************
@@ -724,6 +736,7 @@ void ui_callback_type_click(int id) {
 
     // #########################################
     //for UI related buttons.
+    //on_ui_debug_buttons()
     if (id == ID_SHOW_IO_LIST) { //Show UI's IOs
         on_click_show_io_list();
     }
