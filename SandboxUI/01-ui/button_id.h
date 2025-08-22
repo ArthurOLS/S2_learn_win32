@@ -38,15 +38,6 @@
 //core digital input id, make sure it starts from 0, id is used as the list index
 typedef enum {
 
-    //block: output devices
-    ID_MOTOR_EN = 0,
-    ID_BUZZER,
-    ID_EB_PICK,
-    ID_LATERN_UP,
-    ID_LATERN_DN,
-    ID_CHIME,
-
-
     //[GROUP1] button id for passengers
     ID_01_UP,  
     ID_01_DOWN,
@@ -80,10 +71,10 @@ typedef enum {
     ID_10_CAR,
     ID_11_CAR,
     ID_12_CAR,
+
     ID_DOOR1_OPEN,
     ID_DOOR1_CLOSE,
 
-    CALL_BUTTON_MAX,
     //hop2
     ID_HOP2_FIRE_RECALL,//radio group
     ID_HOP2_FIRE_RECALL_RESET,
@@ -149,6 +140,14 @@ typedef enum {
     ID_TOC_ENABLE,
     ID_TOC_DOWN,
 
+    //block: output devices
+    ID_MOTOR_EN,
+    ID_BUZZER,
+    ID_EB_PICK,
+    ID_LATERN_UP,
+    ID_LATERN_DN,
+    ID_CHIME,
+
     //non-manual input device
     ID_MOTOR_ENABLED,
     ID_MB_PICKED,
@@ -174,11 +173,17 @@ typedef enum {
     ID_SMOKE4_HOISTWAY,
     ID_SMOKE5_PIT,
 
-    //[DEBUG BUTTONS]
+    
+    //[DEBUG BUTTONS for UI]
+    ID_SHOW_IO_LIST,//
+    STOP_LOG,
+    SAVE_PRINT, // save the printf logbox to a file
+
+    //[DEBUG BUTTONS for App]
+    ID_APP_RESET, // this will reset and automatically start logging.
     X_APP,  // Simulator Stop
     X_CORE, // Simulator Start
     X_SIM, 
-    ID_SHOW_IO_LIST,//
 
     COP_UP,
     COP_DN,
@@ -200,12 +205,11 @@ typedef enum {
     Go_1m,  // test traction to goto 1m abs
     Go_5m,  // test traction to goto 2m abs
 
-    RESET, // this will reset and automatically start logging.
-    STOP_LOG,
-    SAVE_PRINT, // save the printf logbox to a file
     OPEN_DOOR,
     CLOSE_DOOR,
     HOLD_DOOR,
+
+
 
     TOTAL_BUTTION_NUM
 } ENUM_BUTTON_ID;

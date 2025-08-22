@@ -121,7 +121,7 @@ void ui31_draw_labelbox1(HDC hdc, DISP_STRU* disp, UINT64 run_ms) {
 
     const char* format_str =
         "     --- [CAR SIMULATION] ---\r\n"
-        "-Run:%s\r\n"
+        "-Run: %s\r\n"
         "-Cmd: %s \r\n"
         "-APS Speed: %+05d/%04d(sp)mm/s\r\n"
         "-APS Height: %05dmm\r\n"
@@ -131,7 +131,7 @@ void ui31_draw_labelbox1(HDC hdc, DISP_STRU* disp, UINT64 run_ms) {
         "     --- [DOOR SIMULATION] ---\r\n"
         "-Cmd: %s\r\n"
         "-State: %s\n"
-        "-Opening:%d%% \n\n"
+        "-Opening: %d%% \n\n"
         "-Enabled: %s, %s, %s.";
 
     //[1] format the display
@@ -197,10 +197,10 @@ void ui31_draw_labelbox2(HDC hdc, DISP_STRU* disp) {
     if (disp->car_mode == ELEVATOR_MODE_MASTER) {
         const char* format_str2 =
             "\r\n\n     --- [SLAVE1] ---\r\n"
-            "-State:%s\r\n"
-            "-Landing:%d\r\n"
-            "-Door:%s\r\n"
-            "-Service:[%d, %s, %d].";
+            "-State : %s\r\n"
+            "-Landing: %d\r\n"
+            "-Door: %s\r\n"
+            "-Service: [%d, %s, %d].";
         sprintf_s(buf2, format_str2,
             (disp->slave1_is_idle ? "IDLE" : "SERVING"),
             disp->slave1_current_landing,

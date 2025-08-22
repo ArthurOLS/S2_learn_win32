@@ -134,11 +134,18 @@
 #define UI_NONMANUAL_W                  190
 #define UI_NONMANUAL_H                  (COLUMN_BOTTOM_Y - COLUMN_TOP_Y)
 
-//debug
-#define UI_DEGUG_X                      COLUMN7_X
-#define UI_DEGUG_Y                      COLUMN_TOP_Y
-#define UI_DEGUG_W                      190
-#define UI_DEGUG_H                      (COLUMN_BOTTOM_Y - COLUMN_TOP_Y)
+//debug ui
+#define UI_DEGUG_UI_X                   COLUMN7_X
+#define UI_DEGUG_UI_Y                   COLUMN_TOP_Y
+#define UI_DEGUG_UI_W                   190
+#define UI_DEGUG_UI_H                   (120)
+
+//debug app
+#define UI_DEGUG_APP_X                  COLUMN7_X
+#define UI_DEGUG_APP_Y                  (UI_DEGUG_UI_Y+UI_DEGUG_UI_H+UI_GAP)
+#define UI_DEGUG_APP_W                  190
+#define UI_DEGUG_APP_H                  (COLUMN_BOTTOM_Y - UI_DEGUG_APP_Y)
+
 
 /******************************************************************************
 * For all Buttons

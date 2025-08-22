@@ -131,7 +131,8 @@ void _draw_top_layout_lables(HWND hwnd) { // Labels
     ui11_create_label(hwnd, L" TOC", UI_TOC_X, UI_TOC_Y, UI_TOC_W, UI_TOC_H);
 
     ui11_create_label(hwnd, L" Non-manual Input Devices", UI_NONMANUAL_X, UI_NONMANUAL_Y, UI_NONMANUAL_W, UI_NONMANUAL_H);
-    ui11_create_label(hwnd, L" Debug", UI_DEGUG_X, UI_DEGUG_Y, UI_DEGUG_W, UI_DEGUG_H);
+    ui11_create_label(hwnd, L" Debug UI", UI_DEGUG_UI_X, UI_DEGUG_UI_Y, UI_DEGUG_UI_W, UI_DEGUG_UI_H);
+    ui11_create_label(hwnd, L" Debug APP", UI_DEGUG_APP_X, UI_DEGUG_APP_Y, UI_DEGUG_APP_W, UI_DEGUG_APP_H);
 }
 
 void _create_most_widgets(HWND hwnd) {
@@ -144,7 +145,8 @@ void _create_most_widgets(HWND hwnd) {
     extern void ui_create_machineroom(HWND hwnd, int x, int y);
     extern void ui_create_toc(HWND hwnd, int x, int y);
     extern void ui_create_button_nonmanual(HWND hwnd, int gx, int gy);
-    extern void ui_create_button_debug(HWND hwnd, int gx, int gy);
+    extern void ui_create_button_debug_ui(HWND hwnd, int gx, int gy);
+    extern void ui_create_button_debug_app(HWND hwnd, int gx, int gy);
     //[2]create each block
     // leds
     // ui_create_led_output(hwnd, UI_VERSION_X + 7, UI_VERSION_Y + 20, UI_BUTTON_W, UI_BUTTON_H);
@@ -173,7 +175,8 @@ void _create_most_widgets(HWND hwnd) {
     // non manual
     ui_create_button_nonmanual(hwnd, UI_NONMANUAL_X, UI_NONMANUAL_Y);
     // debug
-    ui_create_button_debug(hwnd, UI_DEGUG_X, UI_DEGUG_Y);
+    ui_create_button_debug_ui(hwnd, UI_DEGUG_UI_X, UI_DEGUG_UI_Y);
+    ui_create_button_debug_app(hwnd, UI_DEGUG_APP_X, UI_DEGUG_APP_Y);
 }
 
 void _init_data(HWND hwnd) {
@@ -232,7 +235,8 @@ void _input_process_1of2(void) {
         }
     }
     if (cnt_event_this_cycle > 0) {
-        ui_internal_printf("---sees %d events in loop %d.", cnt_event_this_cycle, _ui_presenter.ui_timer_cnt);
+        ui_internal_printf("---sees %d event(s) in loop %d.", 
+            cnt_event_this_cycle, _ui_presenter.ui_timer_cnt);
     }
 }
 void _input_process_2of2(void) {
@@ -371,6 +375,22 @@ void ui4_test_loop_example() {
     _input_process_2of2();//update last value for next cycle
 }
 
+
+void ui4_ani_loop() {
+    //_ui_presenter.ui_timer_cnt++;
+    //_input_process_1of2(); // events are generated here
+
+    //// your code to read the events and process your business logics here:
+    //{
+    //    //disp_stru.car1_height = ?
+    //    //disp_stru.door1_position = ?
+    //    _ui_presenter.car_box_y = ui_convert_car_y_pix(disp_stru.car1_height);
+    //    _ui_presenter.door_opening_width = ui_convert_door_opening(disp_stru.door1_position);
+    //}
+
+    //_input_process_2of2(); // update last value for next cycle
+}
+
 /*******************************************************************************
 ****************************** Callback functions ******************************
 *******************************************************************************/
@@ -494,7 +514,8 @@ void ui_callback_type_lock_step1(HWND hwnd, int id) {
     case ID_COP2_ENABLE:
     case ID_TOC_ENABLE:
         ui_input.pin[id].value = (ui_input.pin[id].value == 0) ? 1 : 0;
-        ui_internal_printf("lock-type pin: %s=%d", ui_input.pin[id].name, ui_input.pin[id].value);
+        ui_internal_printf("lock-type pin: %s=%d", 
+            ui_input.pin[id].name, ui_input.pin[id].value);
         ui30_draw_custom_button_trigger_redraw(hwnd, id); // Force redraw
         break;
 
@@ -695,28 +716,30 @@ void ui_callback_type_radio(int id) {
  * @return xxxx
  *******************************************************************************/
 void ui_callback_type_click(int id) {
-    if (ID_01_UP <= id && id <= ID_12_CAR) {
+    // #########################################
+    //for H.W. simulated buttons, UI does this for other modules like 'CORE' to read 'ui_input' data 
+    if (ID_01_UP <= id && id <= ID_TOC_DOWN) {
         UI_RECORD_CLICK_PIN(id); // simulate a pin level change
     }
 
-    if (id == ID_SHOW_IO_LIST) {
+    // #########################################
+    //for UI related buttons.
+    if (id == ID_SHOW_IO_LIST) { //Show UI's IOs
         on_click_show_io_list();
     }
 
-    if (id == SAVE_PRINT) {
+    if (id == SAVE_PRINT) { //UI Save Logbox content to a file
         ui_logbox_save_content_to_file();
     }
 
-    //    case RESET:  //TODO
-    //app_reset(hWnd);
-    //app_init(hWnd, param2);
-    //break;
-
-    if (id == STOP_LOG) {
+    if (id == STOP_LOG) { //UI stop logging
         ui63_stop_logging();
     }
 
-
+    //    case ID_APP_RESET:  //TODO
+    //app_reset(hWnd);
+    //app_init(hWnd, param2);
+    //break;
 
 //case OPEN_DOOR:
 //    sim_door_set_cmd(&_door1, ENUM_DOOR_CMD_OPEN);

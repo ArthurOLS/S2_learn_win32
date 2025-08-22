@@ -120,7 +120,7 @@ void ui2_init(HWND hwnd);
 void ui3_draw_all(HDC hdc);
 void ui3_doublebuffer_paint(HWND hWnd, int car_height_mm);
 void ui4_test_loop_example();
-
+void ui4_ani_loop();
 
 
 

@@ -134,11 +134,20 @@ BUTTON_STRU button_nonmanual[] = {
     { L"SMOKE5_PIT",ID_SMOKE5_PIT, 0 },
 };
 
-BUTTON_STRU button_debug[] = {
+
+BUTTON_STRU button_debug_ui[] = {
+
+    { L"Show UI's IOs",ID_SHOW_IO_LIST, 0 },
+    { L"Stop Logging",STOP_LOG, 0 },
+    { L"Save Logbox",SAVE_PRINT, 0 }, // save the printf logbox to a file
+
+};
+
+BUTTON_STRU button_debug_app[] = {
+    { L"RESET",ID_APP_RESET,  0 },// this will reset and automatically start logging.
     { L"X_APP",X_APP, 0 },  // Simulator Stop
     { L"X_CORE",X_CORE, 0 }, // Simulator Start
     { L"X_SIM",X_SIM, 0 },
-    { L"Show IO list",ID_SHOW_IO_LIST, 0 },
 
     { L"COP_UP",COP_UP, 0 },
     { L"COP_DN",COP_DN, 0 },
@@ -160,13 +169,14 @@ BUTTON_STRU button_debug[] = {
     { L"GOTO 1M",Go_1m, 0 },  // test traction to goto 1m abs
     { L"GOTO 5M",Go_5m,  0 }, // test traction to goto 2m abs
 
-    { L"RESET",RESET,  0 },// this will reset and automatically start logging.
-    { L"STOP_LOG",STOP_LOG, 0 },
-    { L"SAVE_PRINT",SAVE_PRINT, 0 }, // save the printf logbox to a file
+
     { L"OPEN_DOOR",OPEN_DOOR, 0 },
     { L"CLOSE_DOOR",CLOSE_DOOR, 0 },
     { L"HOLD_DOOR",HOLD_DOOR, 0 },
 };
+
+
+
 
 /*******************************************************************************
 ********************************* Private macro ********************************
@@ -409,15 +419,27 @@ void ui_create_button_nonmanual(HWND hwnd, int gx, int gy) {
  * @param  gx,gy: parent group position
  * @return xxxx
  *******************************************************************************/
-void ui_create_button_debug(HWND hwnd, int gx, int gy) {
-    int num = (sizeof(button_debug)) / sizeof(BUTTON_STRU);
+void ui_create_button_debug_ui(HWND hwnd, int gx, int gy) {
+    int num = (sizeof(button_debug_ui)) / sizeof(BUTTON_STRU);
 
     for (int i = 0; i < num; i++) {
-        HWND b1 = CreateWindow(L"BUTTON", button_debug[i].text, WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON,
+        HWND b1 = CreateWindow(L"BUTTON", button_debug_ui[i].text, WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON,
             gx + 15,
             gy + i * (UI_BUTTON_H+UI_BUTTON_GAP_ROW)+20,
             UI_BUTTON_W_WIDE, UI_BUTTON_H, // button width and height
-            hwnd, (HMENU)(INT_PTR)(button_debug[i].id), NULL, NULL);
+            hwnd, (HMENU)(INT_PTR)(button_debug_ui[i].id), NULL, NULL);
+        ui10_apply_font_to_control(b1, UI_FONT_9PT);
+    }
+}
+void ui_create_button_debug_app(HWND hwnd, int gx, int gy) {
+    int num = (sizeof(button_debug_app)) / sizeof(BUTTON_STRU);
+
+    for (int i = 0; i < num; i++) {
+        HWND b1 = CreateWindow(L"BUTTON", button_debug_app[i].text, WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON,
+            gx + 15,
+            gy + i * (UI_BUTTON_H+UI_BUTTON_GAP_ROW)+20,
+            UI_BUTTON_W_WIDE, UI_BUTTON_H, // button width and height
+            hwnd, (HMENU)(INT_PTR)(button_debug_app[i].id), NULL, NULL);
         ui10_apply_font_to_control(b1, UI_FONT_9PT);
     }
 }

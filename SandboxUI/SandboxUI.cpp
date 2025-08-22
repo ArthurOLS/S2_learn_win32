@@ -8,7 +8,8 @@
 *******************************************************************************/
 #include "00-app/top.h"
 #include "01-ui/button_id.h"
-#include "01-ui/ui.h" //to use ui datatype#include "01-ui/ui_logbox.h"
+
+#include "01-ui/ui.h" //to use ui datatype
 #include "01-ui/ui_animation.h"
 #include "01-ui/ui_logbox.h"
 
@@ -135,8 +136,9 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
 //
 LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
+    // #########################################
     int car_height_mm = disp_stru.car1_height;
-
+    // #########################################
     switch (message)
     {
     case WM_COMMAND:
@@ -175,7 +177,6 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
     case WM_PAINT:
         // #########################################
         ui3_doublebuffer_paint(hWnd, car_height_mm);
-
         // #########################################
         break;
 
@@ -195,7 +196,6 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
             // ui_internal_printf("Invalidate %d, %d, %d, %d.", rec_car_region.left, rec_car_region.top, rec_car_region.right, rec_car_region.bottom);
             ui4_test_loop_example(); //handling model changes
             ui_ani_invaldate_rec(hWnd, car_height_mm);
-
             // #########################################
         }
 
