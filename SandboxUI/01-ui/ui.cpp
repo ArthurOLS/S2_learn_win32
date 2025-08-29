@@ -23,8 +23,15 @@
 #include <windows.h> //to use HWND
 #include <stdio.h> //use sprintf()
 
-#include "00-app/top.h"
 #include "button_id.h"
+#include "00-app/top.h"
+
+#ifdef APP_SANDBOXUI
+#include "00-app/top_core_datatype.h"
+#else
+#include "03-core/core.h"
+#endif
+
 #include "ui.h" //to use ui datatype
 #include "ui_lowlevel.h"
 #include "ui_logbox.h"
@@ -234,7 +241,7 @@ void _init_data(HWND hwnd) {
  *******************************************************************************/
 void _input_process_1of2(void) {
     int cnt_event_this_cycle = 0;
-    for (int i = 0; i < TOTAL_BUTTION_NUM; i++) {
+    for (int i = 0; i < CORE_IO_INPUT_NUM; i++) {
         if (ui_input.pin[i].value_last_cycle != ui_input.pin[i].value) {
             ui_input.pin[i].event_flag_this_cycle = 1;
             ui_input.pin[i].event_cnt++;
@@ -248,7 +255,7 @@ void _input_process_1of2(void) {
     }
 }
 void _input_process_2of2(void) {
-    for (int i = 0; i < TOTAL_BUTTION_NUM; i++) {
+    for (int i = 0; i < CORE_IO_INPUT_NUM; i++) {
         ui_input.pin[i].value_last_cycle = ui_input.pin[i].value;
     }
 }
@@ -309,7 +316,7 @@ void ui3_draw_all(HDC hdc ) {
     if ((SIM_SHAFT_FINAL_BOTTOM <= disp_stru.car1_height) && (disp_stru.car1_height < SIM_SHAFT_TOP_FINAL)) {
         bool car_is_idle = (disp_stru.lv1_state == LV1_STATE_IDLE);
         char label[32] = "";
-        sprintf_s(label, "%d\n%.1f", disp_stru.car1_height, disp_stru.current_landing_f); 
+        sprintf_s(label, "%d\n%.1f\n%d", disp_stru.car1_height, disp_stru.current_landing_f, disp_stru.determined_next_landing); 
         ui32_draw_cab_box(hdc, UI_ANIMATION_X, _ui_presenter.car_box_y, car_is_idle);
         ui36_draw_door(hdc, UI_ANIMATION_X, _ui_presenter.car_box_y, _ui_presenter.door_opening_width);
         ui32_draw_cab_label(hdc, UI_ANIMATION_X, _ui_presenter.car_box_y, label);
@@ -529,7 +536,13 @@ void ui_callback_type_lock_step1(HWND hwnd, int id) {
     case ID_MACHINEROOM_ENABLE:
     case ID_COP2_ENABLE:
     case ID_TOC_ENABLE:
-        ui_input.pin[id].value = (ui_input.pin[id].value == 0) ? 1 : 0;
+        //ui_input.pin[id].value = (ui_input.pin[id].value) ? 0 : 1;
+        if (ui_input.pin[id].value) {
+            ui_input.pin[id].value = 0;
+        }
+        else {
+            ui_input.pin[id].value = 1;
+        }
         ui_internal_printf("lock-type pin: %s=%d", 
             ui_input.pin[id].name, ui_input.pin[id].value);
         ui30_draw_custom_button_trigger_redraw(hwnd, id); // Force redraw
@@ -733,6 +746,14 @@ void ui_callback_type_radio(int id) {
  *******************************************************************************/
 void ui_callback_type_click(int id) {
     // #########################################
+    int skipid[] = { ID_MACHINEROOM_ENABLE, ID_COP2_ENABLE, ID_TOC_ENABLE };
+    int count = sizeof(skipid) / sizeof(skipid[0]);
+    for (int i = 0; i < count; i++) {
+        if (id == skipid[i]) {
+            return; //we need to skip the type_lock buttons.
+        }
+    }
+
     //for H.W. simulated buttons, UI does this for other modules like 'CORE' to read 'ui_input' data 
     if (ID_01_UP <= id && id <= ID_TOC_DOWN) {
         UI_RECORD_CLICK_PIN(id); // simulate a pin level change

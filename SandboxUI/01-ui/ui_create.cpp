@@ -24,7 +24,6 @@
 #include <stdio.h> //use sprintf()
 
 #include "00-app/top.h"
-#include "button_id.h"
 #include "ui.h" //to use ui datatype
 #include "ui_config.h"//UI_LABELBOX_X
 

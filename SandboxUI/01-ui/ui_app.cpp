@@ -22,7 +22,6 @@
 #include <stdio.h> //use sprintf()
 
 #include "00-app/top.h"
-#include "button_id.h"
 #include "ui.h" //to use ui datatype
 #include "ui_logbox.h" //use ui_printf()
 
@@ -41,6 +40,7 @@
 /*******************************************************************************
 ******************************* Private variables ******************************
 *******************************************************************************/
+extern UI_INPUT_STRU ui_input;
 
 /*******************************************************************************
 ************************** Private function prototypes *************************
@@ -49,7 +49,6 @@
 /*******************************************************************************
 ******************************* Private functions ******************************
 *******************************************************************************/
-
 
 /*******************************************************************************
 ******************************* Public Variables *******************************
@@ -63,14 +62,14 @@
 /*******************************************************************************
  * @brief  Brief_description_of_the_function
  * @param  ui_input, from ui.cpp
- * @param  TOTAL_BUTTION_NUM, from ui.h
+ * @param  CORE_IO_INPUT_NUM, from ui.h
  * @return xxxx
  *******************************************************************************/
 void on_click_show_io_list(void) {
 #define BUFFER_SIZE 1000
     char buf[BUFFER_SIZE] = "Showing IO list:";
     // show all io pins status in logbox
-    for (int i = 0; i < TOTAL_BUTTION_NUM; i++) {
+    for (int i = 0; i < CORE_IO_INPUT_NUM; i++) {
         char temp[16] = "";
         if (ui_input.pin[i].value != 0) {
             sprintf_s(temp, "%d", i);

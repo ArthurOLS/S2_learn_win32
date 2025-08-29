@@ -38,6 +38,7 @@
 
 #define VERSION_CODE                    "2.0.2"
 #define APP_MAIN_TITLE                  L"SandboxUI"
+#define APP_SANDBOXUI                   1
 
 // Elevator mode for the title bar
 typedef enum {

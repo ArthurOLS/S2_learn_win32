@@ -23,7 +23,15 @@
 #include <stdio.h> //use sprintf()
 
 #include "00-app/top.h"
-#include "button_id.h"
+#ifdef APP_SANDBOXUI
+    #include "00-app/top_core_datatype.h"
+    #include "00-app/top_sim_datatype.h"
+#else
+    #include "03-core/core.h" 
+    #include "02-simulator/sim.h"
+#endif
+
+
 #include "ui.h" //to use ui datatype
 #include "ui_config.h"//UI_LABELBOX_X
 

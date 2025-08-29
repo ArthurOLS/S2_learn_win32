@@ -24,7 +24,6 @@
 
 // clang-format off
 //Need to include "top_config.h".
-//Need to include "button_id.h".
 #include "button_id.h"
 
 /*******************************************************************************
@@ -65,7 +64,7 @@ typedef struct {
     int         lv3_state;
     int         lv4_state;
     int         lv5_state; // for door control state    
-    int         calltable[APP_FLOOR_NUM][3];
+    int         calltable[APP_FLOOR_NUM][3];//0=not latched, !0=latched
     int         current_landing;     // 0=not at a landing, 1..N the landing number
     float       current_landing_f; // float type current landing, display like '3.85'
     int         determined_next_landing; //current target landing
@@ -85,7 +84,7 @@ typedef struct {
 //[2] outer layer, data other module gets data from ui
 typedef struct {
     int cnt;
-    DIO_STRUCT pin[TOTAL_BUTTION_NUM]; //all the input pins, each has an unique pin id
+    DIO_STRUCT pin[CORE_IO_INPUT_NUM]; //all the input pins, each has an unique pin id
 
 } UI_INPUT_STRU;
 
@@ -100,7 +99,6 @@ typedef struct {
 *******************************************************************************/
 
 extern DISP_STRU            disp_stru;
-extern UI_INPUT_STRU        ui_input;
 
 
 
